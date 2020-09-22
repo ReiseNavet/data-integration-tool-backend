@@ -3,9 +3,11 @@ import ui.BasicSemanticMatcher;
 
 public class App {
   public static void main(String[] args) throws Exception {
+    int PORT = 7000;
+
     Javalin app = Javalin.create(config -> {
       config.enableCorsForAllOrigins();
-    }).start(7000);
+    }).start(PORT);
 
     /**
      * Demo endpoint for use in frontend testing.
@@ -15,5 +17,6 @@ public class App {
     app.get("/", ctx -> {
       ctx.result("{ \"value\": \""+ result +"\" }");
     });
+    System.out.println("Listening on port: " + PORT);
   }
 }
