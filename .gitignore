@@ -20,3 +20,9 @@
 ehthumbs.db
 Thumbs.db
 /target/
+
+
+# Other stuff #
+###############
+.factorypath
+.vscode
