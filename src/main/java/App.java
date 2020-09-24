@@ -1,5 +1,5 @@
+import algorithms.ui.BasicSemanticMatcher;
 import io.javalin.Javalin;
-import ui.BasicSemanticMatcher;
 
 public class App {
   public static void main(String[] args) throws Exception {
