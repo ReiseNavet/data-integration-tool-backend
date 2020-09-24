@@ -30,8 +30,8 @@ import rita.wordnet.jwnl.JWNLException;
 public class BasicSemanticMatcher {
 	
 	
-	static File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-	static File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
+	static File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
+	static File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-302.rdf");
 	static String finalAlignmentStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/FINAL_ALIGNMENT/";
 
 	
@@ -75,7 +75,7 @@ public class BasicSemanticMatcher {
     long endTimeMatchingProcess = System.currentTimeMillis();
 
     System.out.println("The semantic matching operation took "
-        + (endTimeMatchingProcess - startTimeMatchingProcess) / 1000 + " seconds.");
+        + String.format("%.1f", (endTimeMatchingProcess - startTimeMatchingProcess) / 1000f) + " seconds.");
 
     return textFromURIAlignment(combinedEQAlignment);
   }
@@ -102,7 +102,7 @@ public class BasicSemanticMatcher {
 		URIAlignment BEMAlignment = BasicEQMatcher.returnBasicEQMatcherAlignment(ontoFile1, ontoFile2);	
 		eqAlignments.add(BEMAlignment);
 		long endTimeBEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeBEM - startTimeBWM)  / 1000 + " seconds.\n");
+		System.out.print("... " + String.format("%.1f", (endTimeBEM - startTimeBWM)  / 1000f) + " seconds.\n");
 
 		return eqAlignments;
 
