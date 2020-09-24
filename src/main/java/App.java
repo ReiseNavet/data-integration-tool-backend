@@ -17,6 +17,18 @@ public class App {
     app.get("/", ctx -> {
       ctx.result("{ \"value\": \""+ result +"\" }");
     });
+
+    app.post("/", ctx -> {
+      // Saving the files as strings for now. Might need some exception handling.
+      String source = new String(ctx.uploadedFile("source").getContent().readAllBytes());
+      String target = new String(ctx.uploadedFile("target").getContent().readAllBytes());
+
+      System.out.println(source);
+      System.out.println(target);
+
+      ctx.result("{ \"value\": \"Files uploaded\" }");
+    });
+
     System.out.println("Listening on port: " + PORT);
   }
 }
