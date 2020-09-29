@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import org.semanticweb.owl.align.AlignmentException;
@@ -15,7 +14,6 @@ import algorithms.evaluation.general.EvaluationScore;
 import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import fr.inrialpes.exmo.align.impl.eval.PRecEvaluator;
 import fr.inrialpes.exmo.align.parser.AlignmentParser;
 
 /**

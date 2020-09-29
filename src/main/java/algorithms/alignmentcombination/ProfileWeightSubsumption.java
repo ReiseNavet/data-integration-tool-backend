@@ -73,7 +73,6 @@ public class ProfileWeightSubsumption {
 		File folder = new File(folderName);
 		File[] filesInDir = folder.listFiles();
 
-		int counter = 0;
 		for (int i = 0; i < filesInDir.length; i++) {
 			
 			//only the 0.0 cut threshold files should be considered
@@ -92,20 +91,11 @@ public class ProfileWeightSubsumption {
 
 			}
 			
-			counter++;
 
 		}
 		
-		URI onto1URI = null;
-		URI onto2URI = null;
 		
 		for (URIAlignment a : alignmentSet) {
-			
-			if (a.getOntology1URI() != null && a.getOntology2URI() != null) {
-				onto1URI = a.getOntology1URI();
-				onto2URI = a.getOntology2URI();
-			}
-			
 			for (Cell c : a) {
 				profileWeightingSubsumptionAlignment.addAlignCell(c.getId(), c.getObject1(), c.getObject2(), c.getRelation(), c.getStrength());
 			}
@@ -186,10 +176,9 @@ public class ProfileWeightSubsumption {
 	private static Relation[][] createSimMatrix (Alignment a) throws AlignmentException, IOException {
 
 		ArrayList<Relation> relArray = new ArrayList<Relation>();
-		Relation rel = null;
 
 		for (Cell c : a) {
-			relArray.add(rel = new Relation(c.getId(), c.getObject1().toString().replaceAll("[<|>]", ""), c.getObject2().toString().replaceAll("[<|>]", ""), c.getRelation().getRelation(), c.getStrength()));
+			relArray.add(new Relation(c.getId(), c.getObject1().toString().replaceAll("[<|>]", ""), c.getObject2().toString().replaceAll("[<|>]", ""), c.getRelation().getRelation(), c.getStrength()));
 		}
 
 		Collections.sort(relArray, new RelationComparator());

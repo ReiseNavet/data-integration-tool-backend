@@ -5,17 +5,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owl.align.Relation;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
@@ -143,14 +140,12 @@ public class AverageAggregation {
 			}
 		}
 
-		int counter = 0;
 		ArrayList<Cell> processed = new ArrayList<Cell>();
 		ArrayList<Cell> toKeep = new ArrayList<Cell>();
 		double thisStrength;
 		double averageStrength;
 
-		for (Cell currentCell : allCells) {			
-			counter++;
+		for (Cell currentCell : allCells) {		
 			//System.out.println("Processing cell " + counter + " of " + allCellsSize);
 
 			//get the strength of currentCell
@@ -213,7 +208,6 @@ public class AverageAggregation {
 			}
 
 		}
-		counter++;
 		
 		aggregatedAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
 

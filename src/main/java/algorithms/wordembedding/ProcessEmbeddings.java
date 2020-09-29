@@ -13,10 +13,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import algorithms.utilities.StringUtilities;
-import fr.inrialpes.exmo.ontosim.vector.CosineVM;
 
 
 public class ProcessEmbeddings {
@@ -161,7 +158,7 @@ public class ProcessEmbeddings {
 	}
 
 
-	private static double computeCosSim(ArrayList<Double> a1, ArrayList<Double> a2) {
+	/*private static double computeCosSim(ArrayList<Double> a1, ArrayList<Double> a2) {
 		double sim = 0;
 
 		double[] vec1 = ArrayUtils.toPrimitive(a1.toArray((new Double[a1.size()])));	
@@ -177,7 +174,7 @@ public class ProcessEmbeddings {
 		}
 
 		return sim;
-	}
+	}*/
 
 	/**
 	 * Removes vectors that do not represent words from a corpus. 

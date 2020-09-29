@@ -3,7 +3,6 @@ package algorithms.evaluation.general;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,40 +10,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Chart;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFChart;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBoolean;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTCatAx;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTLegend;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumRef;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTScaling;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTSerTx;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTStrRef;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTValAx;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STAxPos;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STBarDir;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STLegendPos;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STOrientation;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STTickLblPos;
+import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 
@@ -448,83 +416,7 @@ public class Evaluator {
 	 * @throws FileNotFoundException 
 	 */
 	public static void runCompleteEvaluation (String alignmentsFolder, String referenceAlignment, String outputPath, String datasetName) throws AlignmentException, URISyntaxException, FileNotFoundException {
-
-		File allIndividualAlignments = new File(alignmentsFolder);
-
-		File[] folders = allIndividualAlignments.listFiles();
-		System.err.println("Size of folders: " + folders.length);
-
-		XSSFWorkbook workbook = new XSSFWorkbook();		
-
-		XSSFSheet spreadsheet = null;
-
-
-		//get a map<matcherName, fMeasureValue>
-		Map<String, EvaluationScore> evalMap = evaluateAlignmentFolderMap(alignmentsFolder, referenceAlignment);
-
-		spreadsheet = workbook.createSheet(datasetName);
-
-
-		Cell cell = null;
-
-		//Create a new font and alter it.
-		XSSFFont font = workbook.createFont();
-		font.setFontHeightInPoints((short) 30);
-		font.setItalic(true);
-		font.setBold(true);
-
-		//Set font into style
-		CellStyle style = workbook.createCellStyle();
-		style.setFont(font);
-
-		int rowNum = 0;
-
-		Row headerRow = spreadsheet.createRow(0);
-
-		//style=row.getRowStyle();
-		headerRow.createCell(0).setCellValue("Matcher");
-		headerRow.createCell(1).setCellValue("Precision");
-		headerRow.createCell(2).setCellValue("Recall");
-		headerRow.createCell(3).setCellValue("F-measure");
-
-		EvaluationScore es = new EvaluationScore();
-		double precision = 0;
-		double recall = 0;
-		double fMeasure = 0;
-
-		for (Entry<String, EvaluationScore> e : evalMap.entrySet()) {
-
-			es = e.getValue();
-			precision = es.getPrecision();
-			recall = es.getRecall();
-			fMeasure = es.getfMeasure();
-
-			int cellnum = 0;
-
-			Row evalRow = spreadsheet.createRow(rowNum++);
-			cell = evalRow.createCell(cellnum++);
-			cell.setCellValue(e.getKey());
-			cell = evalRow.createCell(cellnum++);
-			cell.setCellValue(precision);
-			cell = evalRow.createCell(cellnum++);
-			cell.setCellValue(recall);
-			cell = evalRow.createCell(cellnum++);
-			cell.setCellValue(fMeasure);
-
-		}
-
-		try {
-			FileOutputStream outputStream = 
-					new FileOutputStream(new File(outputPath));
-			workbook.write(outputStream);
-			outputStream.close();
-			System.out.println("Excel written successfully..");
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		throw new NotImplementedException("Look at earlier versions for function body. It was almost completely unused");
 	}
 
 	
@@ -538,134 +430,7 @@ public class Evaluator {
 	   Jul 16, 2019
 	 */
 	public static void evaluateSingleMatcherThresholds (Map<String, EvaluationScore> evaluationMap, String output) throws AlignmentException, URISyntaxException, IOException {
-		
-		System.out.println("Creating charts...");
-		
-		Workbook wb = new XSSFWorkbook();
-		
-		
-		Sheet sheet = wb.createSheet("Sheet1");
-
-		Row row;
-		Cell cell;
-		
-		row = sheet.createRow(0);
-		row.createCell(0);
-
-		int counter = 0;
-		
-		//add the confidence thresholds in the first row
-		for (Entry<String, EvaluationScore> e : evaluationMap.entrySet()) {
-			counter++;
-			row.createCell(counter).setCellValue(e.getKey());
-
-		}
-		
-
-		//in the second row add all precision values
-		row = sheet.createRow(1);
-		cell = row.createCell(0);
-		cell.setCellValue("Precision");
-		
-		int precisionCounter = 0;
-		for (Entry<String, EvaluationScore> e : evaluationMap.entrySet()) {
-			precisionCounter++;
-			cell = row.createCell(precisionCounter);
-			cell.setCellValue(e.getValue().getPrecision());
-		}
-		
-		//in the third row add all recall values
-		row = sheet.createRow(2);
-		cell = row.createCell(0);
-		cell.setCellValue("Recall");
-		int recallCounter = 0;
-		
-		for (Entry<String, EvaluationScore> e : evaluationMap.entrySet()) {
-			recallCounter++;
-			cell = row.createCell(recallCounter);
-			cell.setCellValue(e.getValue().getRecall());
-		}
-		
-		//in the third row add all F-measure values
-		row = sheet.createRow(3);
-		cell = row.createCell(0);
-		cell.setCellValue("F-measure");
-		int fMeasureCounter = 0;
-
-		for (Entry<String, EvaluationScore> e : evaluationMap.entrySet()) {
-			fMeasureCounter++;
-			cell = row.createCell(fMeasureCounter);
-			cell.setCellValue(e.getValue().getfMeasure());
-		}
-
-		Drawing drawing = sheet.createDrawingPatriarch();
-		ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 5, 8, 20);
-
-		Chart chart = drawing.createChart(anchor);
-
-		CTChart ctChart = ((XSSFChart)chart).getCTChart();
-		CTPlotArea ctPlotArea = ctChart.getPlotArea();
-		CTBarChart ctBarChart = ctPlotArea.addNewBarChart();
-		CTBoolean ctBoolean = ctBarChart.addNewVaryColors();
-		ctBoolean.setVal(true);
-		ctBarChart.addNewBarDir().setVal(STBarDir.COL);
-
-		for (int r = 2; r < 6; r++) {
-			CTBarSer ctBarSer = ctBarChart.addNewSer();
-			CTSerTx ctSerTx = ctBarSer.addNewTx();
-			CTStrRef ctStrRef = ctSerTx.addNewStrRef();
-			ctStrRef.setF("Sheet1!$A$" + r);
-			ctBarSer.addNewIdx().setVal(r-2);  
-			CTAxDataSource cttAxDataSource = ctBarSer.addNewCat();
-			ctStrRef = cttAxDataSource.addNewStrRef();
-			ctStrRef.setF("Sheet1!$B$1:$J$1"); 
-			CTNumDataSource ctNumDataSource = ctBarSer.addNewVal();
-			CTNumRef ctNumRef = ctNumDataSource.addNewNumRef();
-			ctNumRef.setF("Sheet1!$B$" + r + ":$J$" + r);
-
-			//at least the border lines in Libreoffice Calc ;-)
-			ctBarSer.addNewSpPr().addNewLn().addNewSolidFill().addNewSrgbClr().setVal(new byte[] {0,0,0});   
-
-		} 
-
-		//telling the BarChart that it has axes and giving them Ids
-		ctBarChart.addNewAxId().setVal(123456);
-		ctBarChart.addNewAxId().setVal(123457);
-
-		//cat axis
-		CTCatAx ctCatAx = ctPlotArea.addNewCatAx(); 
-		ctCatAx.addNewAxId().setVal(123456); //id of the cat axis
-		CTScaling ctScaling = ctCatAx.addNewScaling();
-		ctScaling.addNewOrientation().setVal(STOrientation.MIN_MAX);
-		ctCatAx.addNewDelete().setVal(false);
-		ctCatAx.addNewAxPos().setVal(STAxPos.B);
-		ctCatAx.addNewCrossAx().setVal(123457); //id of the val axis
-		ctCatAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO);
-
-		//val axis
-		CTValAx ctValAx = ctPlotArea.addNewValAx(); 
-		ctValAx.addNewAxId().setVal(123457); //id of the val axis
-		ctScaling = ctValAx.addNewScaling();
-		ctScaling.addNewOrientation().setVal(STOrientation.MIN_MAX);
-		ctValAx.addNewDelete().setVal(false);
-		ctValAx.addNewAxPos().setVal(STAxPos.L);
-		ctValAx.addNewCrossAx().setVal(123456); //id of the cat axis
-		ctValAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO);
-
-		//legend
-		CTLegend ctLegend = ctChart.addNewLegend();
-		ctLegend.addNewLegendPos().setVal(STLegendPos.B);
-		ctLegend.addNewOverlay().setVal(false);
-
-		//System.out.println(ctChart);
-
-		FileOutputStream fileOut = new FileOutputStream(output+".xlsx");
-		wb.write(fileOut);
-		fileOut.close();
-		
-		System.out.println("Chart written to disk.");
-		
-
+		throw new NotImplementedException("Look at earlier versions for function body. It was almost completely unused");
 	}
 
 }

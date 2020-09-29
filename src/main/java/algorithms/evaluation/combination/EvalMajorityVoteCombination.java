@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import org.semanticweb.owl.align.AlignmentException;
@@ -28,7 +27,6 @@ import algorithms.mismatchdetection.MismatchDetection;
 import algorithms.utilities.AlignmentOperations;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import fr.inrialpes.exmo.align.impl.eval.PRecEvaluator;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import fr.inrialpes.exmo.align.parser.AlignmentParser;
 import rita.wordnet.jwnl.JWNLException;

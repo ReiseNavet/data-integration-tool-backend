@@ -206,7 +206,7 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 
 		long endTimeMatchingProcess = System.currentTimeMillis();
 
-		//System.out.println("The matching operation took " + (endTimeMatchingProcess - startTimeMatchingProcess) / 1000 + " seconds.");
+		System.out.println("The matching operation took " + (endTimeMatchingProcess - startTimeMatchingProcess) / 1000 + " seconds.");
 	}
 
 

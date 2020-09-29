@@ -31,7 +31,6 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
-import fr.inrialpes.exmo.align.impl.rel.A5BaseRelation;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import rita.wordnet.jwnl.JWNLException;
 import services.interfaces.Algorithm;
@@ -138,10 +137,8 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 		try {
 			hyponymMapOnto1 = createHyponymMap(sourceOntology);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JWNLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -149,10 +146,8 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 		try {
 			hyponymMapOnto2 = createHyponymMap(targetOntology);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JWNLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

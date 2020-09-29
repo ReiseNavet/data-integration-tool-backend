@@ -95,12 +95,10 @@ public class AlignmentConflictResolution {
 						//System.out.println("...." + thisCell.getId() + " and " + alt.getId() + " contain the same objects and the same confidence");
 
 						//check the profile scores and add the cell with the highest profile score to the extractionList
-						//TODO: include the profile score along with the matcher´s identifier in the matching algorithm, e.g. WordEmbeddingMatcher123_0.80_ so that we can easily extract the profile score (0.80). 
 						//ideally the Alignment Format could be extended to allow for a separate tag for this...
 						double object1ProfileScore = Double.parseDouble(getProfileScore(thisCell.getId()));
 						double object2ProfileScore = Double.parseDouble(getProfileScore(alt.getId()));
 
-						//TODO: improve this functionality, in principle there might be more than two cells having the same objects and the same confidence
 						if (object1ProfileScore > object2ProfileScore) {
 							//System.out.println("......Adding " + thisCell.getId() + " to extractionList");
 							extractionList.add(thisCell);

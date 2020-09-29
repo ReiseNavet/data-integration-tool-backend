@@ -4,25 +4,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
@@ -30,18 +24,14 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.PrefixManager;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 //import org.semanticweb.owlapi.search.EntitySearcher;
-import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
-import com.clarkparsia.pellet.owlapiv3.Reasoner;
 
 import fr.inrialpes.exmo.ontosim.string.StringDistances;
 import rita.wordnet.jwnl.JWNLException;
@@ -64,12 +54,6 @@ public class OntologyOperations {
 	 * The OWLReasonerFactory represents a reasoner creation point.
 	 */
 	static OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-
-	/**
-	 * A HashMap holding an OWLEntity as key and an ArrayList of instances
-	 * associated with the OWLEntity
-	 */
-	private static HashMap<OWLEntity, ArrayList<String>> instanceMap = new HashMap<OWLEntity, ArrayList<String>>();
 
 	static StringDistances ontoString = new StringDistances();
 
@@ -727,7 +711,6 @@ public class OntologyOperations {
 			classesTwoStepsAway.remove(cls);
 		}
 
-		//TODO: need to check that cls is not in the set
 		return classesTwoStepsAway;
 	}
 

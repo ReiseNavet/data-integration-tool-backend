@@ -1,23 +1,16 @@
 package algorithms.graph;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import org.neo4j.graphalgo.GraphAlgoFactory;
-import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
-import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterable;
 import org.neo4j.graphdb.ResourceIterator;
@@ -33,7 +26,6 @@ import algorithms.utilities.OntologyOperations;
 
 /**
  * Implementation of methods using the Neo4J DB to create and navigate ontology graphs. 
- * TODO: The code needs significant re-factoring and some methods are spread
  * @author audunvennesland
  *
  */
@@ -60,8 +52,6 @@ public class Graph {
 	final static String key = "classname";
 
 	public Graph(GraphDatabaseService db) {
-
-		this.db = db;
 
 	}
 
@@ -99,13 +89,10 @@ public class Graph {
 				Node n = iter.next();
 				if (n.hasProperty("classname")) {
 					String thisClassName = n.getProperty("classname").toString();
-					String superClass = null;
 					// check if thisClassName equals any of the keys in superClassMap
 					for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
 						// if this graph node matches a key in the map...
 						if (thisClassName.equals(entry.getKey())) {
-							// get the superclass that belongs to the key in the map
-							superClass = superClassMap.get(entry.getKey());
 							// find the "superclass-node" that matches the map value belonging to this key
 							Node superClassNode = db.findNode(label, "classname",
 									(Object) superClassMap.get(thisClassName));
@@ -122,11 +109,7 @@ public class Graph {
 				}
 			}
 
-			// TODO:create the individuals
-
-			// TODO:create the object property relations
-
-			// TODO:create the datatype properties
+			//Remaining is to create the individuals, the object property relations and the datatype properties
 
 			tx.success();
 		}
