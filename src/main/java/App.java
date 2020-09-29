@@ -3,7 +3,7 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 
-import algorithms.ui.BasicSemanticMatcher;
+import fr.inrialpes.exmo.align.impl.URIAlignment;
 import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
 import services.Manager;
@@ -63,7 +63,7 @@ public class App {
       System.out.println(useEquivalence);
       System.out.println(useSubsumption);
 
-      Object result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
+      URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
 
 
       ctx.result(result.toString());
