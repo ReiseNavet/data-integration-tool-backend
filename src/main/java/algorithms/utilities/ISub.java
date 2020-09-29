@@ -40,8 +40,6 @@ public class ISub {
 		
 		double common = 0;
 		int best = 2;
-
-		int max = Math.min(l1, l2); // the maximal length of a subs
 	
 		while( s1.length() >0 && s2.length() >0 && best !=0 ){
 			best = 0; // the best subs length so far
@@ -168,7 +166,6 @@ public class ISub {
 		
 		StringBuffer strBuf = new StringBuffer(); 
 		
-		int j=0;
 		for( int i=0 ; i<str.length() ; i++ ){
 			if( str.charAt( i ) != remo )
 				strBuf.append( str.charAt( i ) );

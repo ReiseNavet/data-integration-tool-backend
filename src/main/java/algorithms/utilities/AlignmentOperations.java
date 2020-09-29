@@ -1,14 +1,9 @@
 package algorithms.utilities;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,10 +33,8 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.EvaluationScore;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
-import fr.inrialpes.exmo.align.impl.BasicRelation;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
@@ -50,6 +43,14 @@ import fr.inrialpes.exmo.align.parser.AlignmentParser;
 /**
  * @author audunvennesland
  * 19. aug. 2017 
+ * 
+ * Deleted methods:
+ * createSubsumptionReferenceAlignment(BasicAlignment)
+ * transformSMatchAlignment(File, File)
+ * createAllRelations(File, File)
+ * convertFromComaToAlignmentAPI(String, OWLOntology, OWLOntology)
+ * convertToComaFormat(File, File, File)
+ * fixEntityOrder(BasicAlignment)
  */
 public class AlignmentOperations {
 	
@@ -107,9 +108,6 @@ public class AlignmentOperations {
 	
 	public static void extractAllConfidenceThresholds (String alignmentPath, String storePath, String ontoFile1, String ontoFile2) throws AlignmentException, IOException, OWLOntologyCreationException {
 		
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology onto1 = manager.loadOntologyFromOntologyDocument(new File(ontoFile1));
-		OWLOntology onto2 = manager.loadOntologyFromOntologyDocument(new File(ontoFile2));
 		
 		String matcher = "AML";
 		
@@ -378,7 +376,8 @@ public class AlignmentOperations {
 			writer.println(relation + "," + c.getObject2AsURI().getFragment() + "," + targetDef.toString() + "," + targetSubs.toString() + "," + targetSupers + "," + targetOPs.toString() + "," + targetDPs.toString() + "," + targetRanges.toString());
 			writer.println(" ---- ");
 		}
-
+		writer.flush();
+		writer.close();
 		
 	}
 	
@@ -524,7 +523,7 @@ public class AlignmentOperations {
 		equivalenceAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
 		
 		for (Cell c : inputAlignment) {
-			if (c.getRelation().getRelation().equals("=") || c.getRelation().equals("=")) {
+			if (c.getRelation().getRelation().equals("=")) {
 				equivalenceAlignment.addAlignCell(c.getObject1(), c.getObject2(), c.getRelation().getRelation(), c.getStrength());
 				System.out.println("Extracting " + c.getObject1() + " " + c.getObject2() + " " +  c.getRelation().getRelation() + " " +  c.getStrength());
 			} 
@@ -660,373 +659,4 @@ public class AlignmentOperations {
 
 		return rangeMap;
 	}
-	
-	/**
-	 * Creates a subsumption reference alignment based on logical entailment from an equivalence reference alignment as input parameter.
-	 * @param equivalenceReferenceAlignment the alignment holding equivalence relations from which subsumption relations will be entailed.
-	 * @return a subsumption alignment created from sub- and superclasses of equivalent concepts
-	 * @throws OWLOntologyCreationException
-	 * @throws AlignmentException
-	 * @throws URISyntaxException
-	 */
-	private static BasicAlignment createSubsumptionReferenceAlignment(BasicAlignment equivalenceReferenceAlignment) throws OWLOntologyCreationException, AlignmentException, URISyntaxException {
-
-		BasicAlignment subsumptionReferenceAlignment = new URIAlignment();
-
-
-		URI onto1URI = equivalenceReferenceAlignment.getOntology1URI();
-		URI onto2URI = equivalenceReferenceAlignment.getOntology2URI();
-
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		subsumptionReferenceAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
-
-		File ontoFile1 = new File(equivalenceReferenceAlignment.getFile1().getRawPath());
-		File ontoFile2 = new File(equivalenceReferenceAlignment.getFile2().getRawPath());
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-
-		//get the ontologies from the alignment file
-		OWLOntology onto1 = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology onto2 = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		Map<String, Set<String>> onto1ClassesAndSubclasses = OntologyOperations.getSubclasses(onto1);
-		Map<String, Set<String>> onto2ClassesAndSubclasses = OntologyOperations.getSubclasses(onto2);
-		Map<String, Set<String>> onto1ClassesAndSuperclasses = OntologyOperations.getDirectSuperclasses(onto1);
-		Map<String, Set<String>> onto2ClassesAndSuperclasses = OntologyOperations.getDirectSuperclasses(onto2);
-
-
-		//for each cell in the alignment
-		//get all subclasses of e1 and make them subsumed by e2			
-		Set<String> subclasses = null;
-		for (Cell c : equivalenceReferenceAlignment) {
-
-			if (onto1ClassesAndSubclasses.containsKey(c.getObject1().toString())) {
-
-				subclasses = onto1ClassesAndSubclasses.get(c.getObject1().toString());
-
-
-				for (String sc : subclasses) {
-					subsumptionReferenceAlignment.addAlignCell(new URI(sc), c.getObject2AsURI(), "<", 1.0);
-					//print justification for entailed subsumption relation
-					System.out.println(StringUtilities.getLabelWithoutPrefix(sc) + " < " + c.getObject2AsURI().getFragment() + " because: " + 
-							c.getObject1AsURI().getFragment() + " = " + c.getObject2AsURI().getFragment());
-
-				}
-
-				//then get all subclasses of e2 and make them subsumed by e1
-			} if (onto2ClassesAndSubclasses.containsKey(c.getObject2().toString())) {
-
-				subclasses = onto2ClassesAndSubclasses.get(c.getObject2().toString());
-
-				for (String sc : subclasses) {
-					subsumptionReferenceAlignment.addAlignCell(c.getObject1AsURI(), new URI(sc), ">", 1.0);
-					//print justification for entailed subsumption relation
-					System.out.println(c.getObject2AsURI().getFragment() + " > " + StringUtilities.getLabelWithoutPrefix(sc)+  " because: " + 
-							c.getObject1AsURI().getFragment() + " = " + c.getObject2AsURI().getFragment());
-
-				}
-
-			}
-		}
-
-		//for each cell in the alignment
-		//get all superclasses of e1 and make them subsume e2
-		//then get all subclasses of e2 and make them subsume e1
-		Set<String> superclasses = null;
-		for (Cell c : equivalenceReferenceAlignment) {
-
-			if (onto1ClassesAndSuperclasses.containsKey(c.getObject1().toString())) {
-				superclasses = onto1ClassesAndSuperclasses.get(c.getObject1().toString());
-
-				for (String sc : superclasses) {
-					subsumptionReferenceAlignment.addAlignCell(new URI(sc), c.getObject2AsURI(), ">", 1.0);
-					//print justification for entailed subsumption relation
-					System.out.println(StringUtilities.getLabelWithoutPrefix(sc) + " > " + c.getObject2AsURI().getFragment() + " because: " + 
-							c.getObject1AsURI().getFragment() + " = " + c.getObject2AsURI().getFragment());
-
-				}
-			} if (onto2ClassesAndSuperclasses.containsKey(c.getObject2().toString())) {
-				superclasses = onto2ClassesAndSuperclasses.get(c.getObject2().toString());
-
-				for (String sc : superclasses) {
-					subsumptionReferenceAlignment.addAlignCell(c.getObject1AsURI(), new URI(sc), "<", 1.0);
-					//print justification for entailed subsumption relation
-					System.out.println(c.getObject1AsURI().getFragment() + " < " + StringUtilities.getLabelWithoutPrefix(sc) +  " because: " + 
-							c.getObject1AsURI().getFragment() + " = " + c.getObject2AsURI().getFragment());
-
-					//System.out.println("Adding " + sc + " as superclass to " + c.getObject1AsURI());
-				}
-			}
-		}
-
-
-		return subsumptionReferenceAlignment;
-	}
-	
-	/**
-	 * Used for transforming a mapping file generated by S-Match to the Alignment Format.
-	 * @param representativeAlignmentFile an Alignment API alignment file including the ontology URIs of the two ontologies being matched.
-	 * @param sMatchFile the alignment file generated by S-Match which is transformed to an alignment file formatted according to the Alignment API. 
-	 * @return a BasicAlignment representing an alignment produced by the S-Match matching system.
-	 * @throws IOException
-	 * @throws AlignmentException
-	 * @throws URISyntaxException
-	 * @throws OWLOntologyCreationException
-	   Jul 17, 2019
-	 */
-	private static BasicAlignment transformSMatchAlignment(File representativeAlignmentFile, File sMatchFile) throws IOException, AlignmentException, URISyntaxException, OWLOntologyCreationException {
-
-		BasicAlignment transformedAlignment = new URIAlignment();
-
-		AlignmentParser parser = new AlignmentParser();
-		BasicAlignment representativeAlignment = (BasicAlignment) parser.parse(representativeAlignmentFile.toURI().toString());
-
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		URI onto1URI = representativeAlignment.getOntology1URI();
-		URI onto2URI = representativeAlignment.getOntology2URI();
-		
-		File ontoFile = new File("./files/ESWC_WordEmbedding_Experiment/ATMONTO-AIRM-O/ontologies/ATMOntoCoreMerged.owl");
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology onto = manager.loadOntologyFromOntologyDocument(ontoFile);
-		
-		System.out.println("Test: The URIs are " + onto1URI.toString() + " and " + onto2URI.toString());
-
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		transformedAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
-
-		// Open the file
-		FileInputStream fstream = new FileInputStream(sMatchFile);
-		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-		String strLine;
-
-		URI concept1 = null;
-		URI concept2 = null;
-		String relation = null;
-
-		//Read File Line By Line
-		while ((strLine = br.readLine()) != null)   {
-
-			String[] array = strLine.split("\t");
-
-			for (int i = 0; i < array.length; i++) {
-
-				System.out.println("Concept 1 is " + array[0].substring(array[0].lastIndexOf("\\") +1));
-				OWLClass cls = OntologyOperations.getClassFromLabel(array[0].substring(array[0].lastIndexOf("\\") +1), onto);
-				if (cls != null) {
-				concept1 = URI.create(onto1URI.toString()+OntologyOperations.getClassFromLabel(array[0].substring(array[0].lastIndexOf("\\") +1), onto).getIRI().getFragment());
-				} else {
-					concept1 = URI.create(onto1URI.toString() + array[0].substring(array[0].lastIndexOf("\\") +1));
-				}
-				relation = array[1];
-				concept2 = URI.create(onto2URI.toString() + array[2].substring(array[2].lastIndexOf("\\") +1));
-
-				transformedAlignment.addAlignCell(concept1, concept2, relation, 0);
-
-			}
-
-		}
-
-		br.close();
-
-		return transformedAlignment;
-
-	}
-	
-	/**
-	 * Imports two ontologies and creates an alignment holding all possible relations between all concepts in the two ontologies
-	 * @param ontoFile1 the source ontology
-	 * @param ontoFile2 the target ontology
-	 * @return an alignment holding all possible relations between all concepts in two ontologies
-	 * @throws OWLOntologyCreationException
-	 * @throws AlignmentException
-	   Feb 26, 2019
-	 */
-	private static URIAlignment createAllRelations(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology onto1 = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology onto2 = manager.loadOntologyFromOntologyDocument(ontoFile2);
-		URIAlignment alignment = new URIAlignment();
-		
-		URI onto1URI = onto1.getOntologyID().getOntologyIRI().toURI();
-		URI onto2URI = onto2.getOntologyID().getOntologyIRI().toURI();
-		System.out.println("Test: The URIs are " + onto1URI.toString() + " and " + onto2URI.toString());
-
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		alignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
-		
-		
-		for (OWLClass s : onto1.getClassesInSignature()) {
-			for (OWLClass t : onto2.getClassesInSignature()) {
-				alignment.addAlignCell(s.getIRI().toURI(), t.getIRI().toURI(), "=", 0.0);
-			}
-		}
-		
-		
-		return alignment;
-
-	}
-	
-	/**
-	 * Converts an alignment generated by COMA to Alignment API format. The input file is formatted like this: [Class1] [Class2] = [Confidence]
-	 * @param comaTextFilePath the alignment file generated by the COMA matcher.
-	 * @param onto1 source ontology
-	 * @param onto2 target ontology
-	 * @return an URIAlignment formatted according to the Alignment API.
-	 * @throws AlignmentException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	   Dec 17, 2018
-	 */
-	private static URIAlignment convertFromComaToAlignmentAPI (String comaTextFilePath, OWLOntology onto1, OWLOntology onto2) throws AlignmentException, FileNotFoundException, IOException {
-		
-		URIAlignment convertedAlignment = new URIAlignment();
-		URI onto1URI = onto1.getOntologyID().getOntologyIRI().toURI();
-		URI onto2URI = onto2.getOntologyID().getOntologyIRI().toURI();
-		
-		System.out.println("onto1URI: " + onto1URI);
-		System.out.println("onto2URI: " + onto2URI);
-		
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		convertedAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
-		
-		File comaTextFile = new File(comaTextFilePath);
-		
-		try (BufferedReader br = new BufferedReader(new FileReader(comaTextFile))) {
-		    String line;
-		    while ((line = br.readLine()) != null) {
-
-		    	String[] lineArray = line.split(" ");
-		    	convertedAlignment.addAlignCell(URI.create(onto1URI + "#" + lineArray[0]), URI.create(onto2URI + "#" + lineArray[1]), "=", Double.valueOf(lineArray[2]));
-
-		    }
-		}
-
-		return convertedAlignment;
-		
-	}
-	
-
-	/**
-	 * This method converts an alignment in the Alignment API format to a format that is accepted by the STROMA enrichment system. Basically the path (superclasses) to each object in a cell is added as prefix to the object,
-	 * and <-> is used to separate the object paths (meaning = in this case) and after : comes the confidence value.
-	 * @param inputAlignmentFile the original alignment file in Alignment Format
-	 * @param ontoFile1
-	 * @param ontoFile2
-	 * @throws AlignmentException
-	 * @throws OWLOntologyCreationException
-	   26. okt. 2018
-	 */
-	private static void convertToComaFormat(File inputAlignmentFile, File ontoFile1, File ontoFile2) throws AlignmentException, OWLOntologyCreationException {
-
-		AlignmentParser parser = new AlignmentParser();
-		BasicAlignment inputAlignment = (BasicAlignment) parser.parse(inputAlignmentFile.toURI().toString());
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology onto1 = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology onto2 = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		Map<String, Set<String>> super1 = OntologyOperations.getSuperclasses(onto1);
-		System.out.println("Printing superclasses in ATMONTO");
-		for (Entry<String, Set<String>> e : super1.entrySet()) {
-			System.out.println("Class: " + e.getKey());
-			for (String s : e.getValue()) {
-				System.out.println("Superclass: " + s);
-			}
-		}
-		
-		Map<String, Set<String>> super2 = OntologyOperations.getSuperclasses(onto2);
-
-		for (Cell c : inputAlignment) {
-			Set<String> superclasses1 = super1.get(c.getObject1AsURI().toString());
-			Set<String> superclasses2 = super2.get(c.getObject2AsURI().toString());
-
-			StringBuffer path1 = null;
-			StringBuffer path2 = null;
-			String fullPath1 = null;
-			String fullPath2 = null;
-			
-			//if object1 has superclasses -> append them all to path1
-			if (superclasses1 != null) {
-				
-				path1 = new StringBuffer();
-				fullPath1 = new String();
-				for (String s : superclasses1) {
-					path1.append(StringUtilities.getLabelWithoutPrefix(s) + ".");
-				}
-				fullPath1 = path1.toString() + c.getObject1AsURI().getFragment();
-			} else {
-				fullPath1 = c.getObject1AsURI().getFragment();
-			}
-
-			if (superclasses2 != null) {
-				
-				path2 = new StringBuffer();
-				fullPath2 = new String();
-			for (String t : superclasses2) {
-				path2.append(StringUtilities.getLabelWithoutPrefix(t) + ".");
-			}
-			fullPath2 = path2.toString() + c.getObject2AsURI().getFragment();
-			} else {
-				fullPath2 = c.getObject2AsURI().getFragment();
-			}
-
-			System.out.println("- " + fullPath1 + " <-> " + fullPath2 +  ": " + c.getStrength());
-		}
-	}
-	
-	
-
-	/**
-	 * Ensures that the entities in a cell are represented in the same order as the ontology URIs
-	 * @param inputAlignment
-	 * @return a BasicAlignment with entities in the correct order
-	 * @throws AlignmentException
-	 */
-	private static URIAlignment fixEntityOrder (BasicAlignment inputAlignment) throws AlignmentException {
-		URIAlignment newReferenceAlignment = new URIAlignment();
-
-		URI onto1URI = inputAlignment.getOntology1URI();
-		URI onto2URI = inputAlignment.getOntology2URI();
-
-		URI entity1 = null;
-		URI entity2 = null;
-		String relation = null;
-		double threshold = 1.0;
-
-		//need to initialise the alignment with ontology URIs and the type of relation (e.g. A5AlgebraRelation) otherwise exceptions are thrown
-		newReferenceAlignment.init( onto1URI, onto2URI, A5AlgebraRelation.class, BasicConfidence.class );
-
-		for (Cell c : inputAlignment) {
-			if (c.getObject1AsURI().toString().contains(onto1URI.toString())) {
-				entity1 = c.getObject1AsURI();
-				entity2 = c.getObject2AsURI();
-				relation = c.getRelation().getRelation();
-				newReferenceAlignment.addAlignCell(entity1, entity2, relation, threshold);
-
-			} else if (c.getObject2().toString().contains(onto1URI.toString())) {
-				System.out.println(c.getObject2AsURI());
-				entity1 = c.getObject2AsURI();
-				entity2 = c.getObject1AsURI();
-				relation = c.getRelation().getRelation();
-
-				if (relation.equals(">")) {
-					relation = "<";
-				} else if (relation.equals("<")) {
-					relation = ">";
-				} else {
-					relation = "=";
-				}
-
-				newReferenceAlignment.addAlignCell(entity1, entity2, relation, threshold);
-
-			}
-
-		}
-
-
-		return newReferenceAlignment;
-	}
-
-
 }

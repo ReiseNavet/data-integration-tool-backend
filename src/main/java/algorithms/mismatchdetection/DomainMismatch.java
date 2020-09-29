@@ -1,13 +1,10 @@
 package algorithms.mismatchdetection;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.Set;
 
-import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.Cell;
 
@@ -18,7 +15,6 @@ import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
-import fr.inrialpes.exmo.align.parser.AlignmentParser;
 import rita.wordnet.jwnl.JWNLException;
 
 /**
@@ -29,14 +25,6 @@ import rita.wordnet.jwnl.JWNLException;
 public class DomainMismatch {
 	
 	public static void main(String[] args) throws AlignmentException, URISyntaxException, FileNotFoundException, JWNLException {
-		
-		String alignmentFile = "./files/_PHD_EVALUATION/ATMONTO-AIRM/MISMATCHES/initialAlignment.rdf";
-		
-		AlignmentParser aparser = new AlignmentParser(0);
-		BasicAlignment alignment =  (BasicAlignment) aparser.parse(new URI(StringUtilities.convertToFileURL(alignmentFile)));
-		
-		URIAlignment filteredAlignment = filterAlignment(alignment);
-		
 		
 	}
 
@@ -67,9 +55,6 @@ public class DomainMismatch {
 		Set<String> wordListEntity1 = null;
 		Set<String> wordListEntity2 = null;
 
-		Set<String> domainsEntity1 = new HashSet<String>();
-		Set<String> domainsEntity2 = new HashSet<String>();
-
 		//requires that the minimum jaccard similarity of sets of domains is 50 % (that is, half of the domains associated with the two entities have to be equal)
 		double minJaccard = 0.30;
 
@@ -84,10 +69,6 @@ public class DomainMismatch {
 
 			wordListEntity1 = StringUtilities.getWordsAsSetFromCompound(c.getObject1AsURI().getFragment());
 			wordListEntity2 = StringUtilities.getWordsAsSetFromCompound(c.getObject2AsURI().getFragment());
-
-			domainsEntity1 = WNDomain.getDomainsFromString(c.getObject1AsURI().getFragment().toLowerCase());
-			domainsEntity2 = WNDomain.getDomainsFromString(c.getObject2AsURI().getFragment().toLowerCase());
-			
 			
 			//*** Operation 1: if both entities are syntactically equal we add them to the alignment without checking with WordNet Domains ***
 			if (c.getObject1AsURI().getFragment().equals(c.getObject2AsURI().getFragment())) {

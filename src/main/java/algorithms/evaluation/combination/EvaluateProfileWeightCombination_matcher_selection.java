@@ -2,7 +2,6 @@ package algorithms.evaluation.combination;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,21 +11,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentVisitor;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import algorithms.alignmentcombination.AlignmentConflictResolution;
 import algorithms.alignmentcombination.ProfileWeight;
 import algorithms.alignmentcombination.ProfileWeightSubsumption;
-import algorithms.equivalencematching.DefinitionEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.GraphEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.LexicalEquivalenceMatcherSigmoid;
-import algorithms.equivalencematching.PropertyEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.WordEmbeddingMatcherSigmoid;
 import algorithms.evaluation.general.ComputeSyntacticEvaluationScores;
 import algorithms.evaluation.general.EvaluationScore;
@@ -37,12 +32,10 @@ import algorithms.mismatchdetection.StructureMismatch;
 import algorithms.ontologyprofiling.OntologyProfiler;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
-import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import algorithms.utilities.AlignmentOperations;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import fr.inrialpes.exmo.align.impl.eval.PRecEvaluator;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import fr.inrialpes.exmo.align.parser.AlignmentParser;
 import rita.wordnet.jwnl.JWNLException;
@@ -217,9 +210,6 @@ public class EvaluateProfileWeightCombination_matcher_selection {
 		//evaluate merged final EQ-SUB alignment
 		System.err.println("Evaluating the merged EQ and SUB alignment:");
 		Evaluator.evaluateSingleAlignment(nonConflictedMergedAlignment, referenceAlignmentEQAndSUB);
-
-		//evaluate the profile weight alignment at different thresholds
-		URIAlignment refalign = (URIAlignment) aparser.parse(new URI(StringUtilities.convertToFileURL(referenceAlignmentEQAndSUB)));
 
 		Map<String, EvaluationScore> evaluationMap = new TreeMap<String, EvaluationScore>();
 

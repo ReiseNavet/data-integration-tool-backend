@@ -22,7 +22,6 @@ import algorithms.evaluation.general.Evaluator;
 import algorithms.graph.SimpleGraph;
 import algorithms.utilities.ISub;
 import algorithms.utilities.Sigmoid;
-import algorithms.utilities.StringUtilities;
 
 import com.google.common.graph.MutableGraph;
 
@@ -34,7 +33,6 @@ import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
 import services.interfaces.Algorithm;
 
-@SuppressWarnings("deprecation")
 /**
  * This matcher identifies the structural proximity of two nodes using the following steps:
  * <ul>

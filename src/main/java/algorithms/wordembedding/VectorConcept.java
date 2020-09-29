@@ -2,7 +2,6 @@ package algorithms.wordembedding;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,7 +17,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import algorithms.utilities.Cosine;
 import algorithms.utilities.MathUtils;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.ontosim.vector.CosineVM;
@@ -54,10 +52,6 @@ public class VectorConcept {
 	
 
 	public VectorConcept() {}
-
-	private String getConceptURI() {
-		return conceptURI;
-	}
 
 	public String getConceptLabel() {
 		return conceptLabel;
@@ -362,7 +356,7 @@ public static void printGlobalSim(File vectorFileDir, double threshold) throws F
 	//printing cosine sim based on label vectors and global vectors
 	public static void main(String[] args) throws FileNotFoundException {
 		
-		final File vectorFileDir = new File("./files/wordembedding/vector-files-single-ontology");
+		/*final File vectorFileDir = new File("./files/wordembedding/vector-files-single-ontology");
 		double threshold = 0.6;
 		
 		VectorConcept vc = new VectorConcept();
@@ -383,7 +377,7 @@ public static void printGlobalSim(File vectorFileDir, double threshold) throws F
 			
 			System.out.println(d);
 			}
-		}
+		}*/
 		
 		
 		

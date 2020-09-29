@@ -140,7 +140,6 @@ public class SemanticMatcher {
 	 * @throws AlignmentException
 	 * @throws URISyntaxException
 	   Jul 15, 2019
-	   TODO: Omit matchers if their corresponding profile score is below a threshold (e.g. 0.5)
 	 */
 	private static ArrayList<URIAlignment> computeEQAlignments(File ontoFile1, File ontoFile2, Map<String, Double> ontologyProfilingScores, String vectorFile) throws OWLOntologyCreationException, AlignmentException, URISyntaxException {
 
@@ -230,7 +229,6 @@ public class SemanticMatcher {
 	 * @throws OWLOntologyCreationException
 	 * @throws AlignmentException
 	   Jul 15, 2019
-	   TODO: Omit matchers if their corresponding profile score is below a threshold (e.g. 0.5)
 	 */
 	private static ArrayList<URIAlignment> computeSUBAlignments(File ontoFile1, File ontoFile2, Map<String, Double> ontologyProfilingScores) throws OWLOntologyCreationException, AlignmentException {
 

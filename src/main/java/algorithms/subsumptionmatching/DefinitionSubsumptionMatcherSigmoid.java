@@ -1,7 +1,6 @@
 package algorithms.subsumptionmatching;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -10,10 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
@@ -29,7 +25,6 @@ import algorithms.mismatchdetection.ConfirmSubsumption;
 import algorithms.utilities.OntologyOperations;
 import algorithms.utilities.Sigmoid;
 import algorithms.utilities.StringUtilities;
-import algorithms.utilities.WNDomain;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
@@ -76,13 +71,13 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {
 
 
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/ATMONTO-AIRM/ONTOLOGIES/ATMOntoCoreMerged.owl");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/ATMONTO-AIRM/ONTOLOGIES/airm-mono.owl");
+		File ontoFile1 = new File("./files/TEST/Ontology1.owl");
+		File ontoFile2 = new File("./files/TEST/Ontology2.owl");
 		String referenceAlignment = "./files/_PHD_EVALUATION/ATMONTO-AIRM/REFALIGN/ReferenceAlignment-ATMONTO-AIRM-SUBSUMPTION.rdf";
 
-		//		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		//		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		//		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-SUBSUMPTION.rdf";
+		//				File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
+		//				File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
+		//				String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-SUBSUMPTION.rdf";
 
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
@@ -103,10 +98,15 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 		definitionsSubsumptionMatcherAlignment = (BasicAlignment) (a.clone());
 
 		System.out.println("The 0.0 alignment contains " + definitionsSubsumptionMatcherAlignment.nbCells() + " relations");
+		System.out.println("Printing relations at 0.0:");
+		for (Cell c : definitionsSubsumptionMatcherAlignment) {
+			System.out.println(c.getObject1() + " " + c.getRelation().getRelation() + " " + c.getObject2() + c.getStrength());
+
+		}
 
 		definitionsSubsumptionMatcherAlignment.cut(0.6);
 		Evaluator.evaluateSingleAlignment(definitionsSubsumptionMatcherAlignment, referenceAlignment);
-		System.out.println("Printing relations at 0.6:");
+		System.out.println("\nPrinting relations at 0.6:");
 		for (Cell c : definitionsSubsumptionMatcherAlignment) {
 			System.out.println(c.getObject1() + " " + c.getRelation().getRelation() + " " + c.getObject2() + c.getStrength());
 
@@ -146,13 +146,21 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
 
+		//lexico-syntactic patterns
+		List<String> patterns = new ArrayList<String>();
+		patterns.add("including");
+		patterns.add("includes");
+		patterns.add("e.g.");
+		patterns.add("such as");
+		patterns.add("for example");
+
 		try {
-			defMapSource = getDefMapTokens(sourceOntology);
+			defMapSource = getDefMapTokens(sourceOntology, patterns);
 		} catch (JWNLException | IOException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			defMapTarget = getDefMapTokens(targetOntology);
+			defMapTarget = getDefMapTokens(targetOntology, patterns);
 		} catch (JWNLException | IOException e1) {
 			e1.printStackTrace();
 		}
@@ -173,9 +181,13 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 					String source = ontology1().getEntityName(sourceObject).toLowerCase();
 					String target = ontology2().getEntityName(targetObject).toLowerCase();
 
+					System.out.println("source is " + source + " and target is " + target);
+
 					if (defMapSource.containsKey(source)) {
 
 						sourceDefinition = defMapSource.get(source);
+
+						System.out.println("sourceDefinition contains " + sourceDefinition);
 
 						//iterate all sourceDefinition tokens and check if they match the target concept and if these are from the same domain
 						for (String s : sourceDefinition) {
@@ -210,23 +222,23 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 						for (String t : targetDefinition) {
 
 							if (t.equalsIgnoreCase(source)) {
-								
+
 								//if any of the compounds in source and target are from the same domain according to WNDomain, we return a confidence of 1.0
 								if (ConfirmSubsumption.conceptsFromSameDomain(ontology1().getEntityName(sourceObject), ontology2().getEntityName(targetObject))
 										&& !ConfirmSubsumption.isMeronym(ontology1().getEntityName(sourceObject), ontology2().getEntityName(targetObject))) {	
-								
-								addAlignCell("DefinitionSubsumptionMatcherSigmoid" +idCounter, sourceObject, targetObject, "&lt;", 
-										Sigmoid.weightedSigmoid(slope, 1.0, Sigmoid.transformProfileWeight(profileScore, rangeMin, rangeMax)));
-								
+
+									addAlignCell("DefinitionSubsumptionMatcherSigmoid" +idCounter, sourceObject, targetObject, "&lt;", 
+											Sigmoid.weightedSigmoid(slope, 1.0, Sigmoid.transformProfileWeight(profileScore, rangeMin, rangeMax)));
+
 								} else if (ConfirmSubsumption.conceptsFromSameDomain(ontology1().getEntityName(sourceObject), ontology2().getEntityName(targetObject))
 										|| !ConfirmSubsumption.isMeronym(ontology1().getEntityName(sourceObject), ontology2().getEntityName(targetObject))) {
-									
+
 									addAlignCell("DefinitionSubsumptionMatcherSigmoid" +idCounter, sourceObject, targetObject, "&lt;", 
 											Sigmoid.weightedSigmoid(slope, 0.75, Sigmoid.transformProfileWeight(profileScore, rangeMin, rangeMax)));
 								}
-							
+
 							}
-							
+
 							else {
 								addAlignCell("DefinitionSubsumptionMatcher" +idCounter + "_" + profileScore + "_", sourceObject, targetObject, "!", 0.0);
 							}
@@ -247,7 +259,7 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	}
 
 
-	private static Map<String, List<String>> getDefMapTokens(OWLOntology onto) throws JWNLException, IOException {
+	private static Map<String, List<String>> getDefMapTokens(OWLOntology onto, List<String> patterns) throws JWNLException, IOException {
 
 		Map<String, List<String>> defMap = new HashMap<String, List<String>>();
 		String extract = null;
@@ -256,129 +268,65 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 		String refined = null;
 
 
-		for (OWLClass c : onto.getClassesInSignature()) {
+		for (String pattern : patterns) {
 
-			def = OntologyOperations.getClassDefinitionFull(onto, c).toLowerCase();
+			for (OWLClass c : onto.getClassesInSignature()) {
 
-			//include only those definitions that contain lexico-syntactic patterns
+				def = OntologyOperations.getClassDefinitionFull(onto, c).toLowerCase();
 
-			if (def.contains("including")) {
-				extract = def.substring(def.indexOf("including")+10, def.length());
-				if (extract.contains(".")) { //include only current sentence if more than one sentence in definition.
-					cut = extract.substring(0, extract.indexOf("."));
-					refined = removeStopWordsAndDigits(cut);
-				} else {
+				//include only those definitions that contain lexico-syntactic patterns
+				if (def.contains(pattern)) {
+					extract = def.substring(def.indexOf(pattern)+pattern.length(), def.length());
+					if (extract.contains(".")) { //include only current sentence if more than one sentence in definition.
+						cut = extract.substring(0, extract.indexOf("."));
+						refined = removeStopWordsAndDigits(cut);
+					} else {
 
-					refined = removeStopWordsAndDigits(extract);
-				}				
+						refined = removeStopWordsAndDigits(extract);
+					}				
 
-				List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);				
+					List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);				
 
-				defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
-			}
-
-			else if (def.contains("includes")) {
-				extract = def.substring(def.indexOf("includes")+9, def.length());
-				if (extract.contains(".")) {
-					cut = extract.substring(0, extract.indexOf("."));
-					refined = removeStopWordsAndDigits(cut);
-				} else {
-
-					refined = removeStopWordsAndDigits(extract);
-				}				
-
-
-				List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);
-
-				defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
-			}
-
-			else if (def.contains("such as")) {
-				extract = def.substring(def.indexOf("such as")+8, def.length());
-
-				if (extract.contains(".")) {
-					cut = extract.substring(0, extract.indexOf("."));
-					refined = removeStopWordsAndDigits(cut);
-				} else {
-
-					refined = removeStopWordsAndDigits(extract);
+					defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
 				}
-
-				List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);
-
-				defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
-			} 
-
-
-			else if (def.contains("e.g.")) {
-				extract = def.substring(def.indexOf("e.g.")+5, def.length());
-
-				if (extract.contains(".")) {
-					cut = extract.substring(0, extract.indexOf("."));
-					refined = removeStopWordsAndDigits(cut);
-				} else {
-
-					refined = removeStopWordsAndDigits(extract);
-				}
-
-				List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);
-
-				defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
 			}
+		}
 
-
-			else if (def.contains("for example")) {
-				extract = def.substring(def.indexOf("for example")+12, def.length());
-
-				if (extract.contains(".")) {
-					cut = extract.substring(0, extract.indexOf("."));
-					refined = removeStopWordsAndDigits(cut);
-				} else {
-
-					refined = removeStopWordsAndDigits(extract);
-				}				
-
-				List<String> tokens = StringUtilities.tokenizeAndLemmatizeToList(refined, true);
-
-				defMap.put(c.getIRI().getFragment().toLowerCase(), tokens);
-			}
+			return defMap;
 
 		}
 
-		return defMap;
-	}
 
 
+		private static String removeStopWordsAndDigits (String inputString) {
 
-	private static String removeStopWordsAndDigits (String inputString) {
+			List<String> stopWordsList = Arrays.asList(
+					"a", "an", "and", "are", "as", "at", "be", "but", "by",
+					"etc", "for", "if", "in", "into", "is", "it",
+					"no", "not", "of", "on", "or", "such",
+					"that", "the", "their", "then", "there", "these",
+					"they", "this", "to", "was", "will", "with"
+					);
 
-		List<String> stopWordsList = Arrays.asList(
-				"a", "an", "and", "are", "as", "at", "be", "but", "by",
-				"etc", "for", "if", "in", "into", "is", "it",
-				"no", "not", "of", "on", "or", "such",
-				"that", "the", "their", "then", "there", "these",
-				"they", "this", "to", "was", "will", "with"
-				);
+			String[] words = inputString.split(" ");
+			ArrayList<String> wordsList = new ArrayList<String>();
+			StringBuffer sb = new StringBuffer();
 
-		String[] words = inputString.split(" ");
-		ArrayList<String> wordsList = new ArrayList<String>();
-		StringBuffer sb = new StringBuffer();
-
-		for(String word : words)
-		{
-			String wordCompare = word.toLowerCase();
-			if(!stopWordsList.contains(wordCompare))
+			for(String word : words)
 			{
-				wordsList.add(word);
+				String wordCompare = word.toLowerCase();
+				if(!stopWordsList.contains(wordCompare))
+				{
+					wordsList.add(word);
+				}
 			}
-		}
 
-		for (String str : wordsList){
-			sb.append(str + " ");
-		}
+			for (String str : wordsList){
+				sb.append(str + " ");
+			}
 
-		return sb.toString().replaceAll("[0-9]","").replaceAll("\\s{2,}", " ").trim();
+			return sb.toString().replaceAll("[0-9]","").replaceAll("\\s{2,}", " ").trim();
+
+		}
 
 	}
-
-}

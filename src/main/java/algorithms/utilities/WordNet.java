@@ -1,6 +1,5 @@
 package algorithms.utilities;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +13,6 @@ import edu.cmu.lti.ws4j.impl.Resnik;
 import edu.cmu.lti.ws4j.util.WS4JConfiguration;
 
 import rita.RiWordNet;
-import rita.wordnet.jwnl.JWNL;
 import rita.wordnet.jwnl.JWNLException;
 import rita.wordnet.jwnl.dictionary.Dictionary;
 import rita.wordnet.jwnl.wndata.IndexWord;

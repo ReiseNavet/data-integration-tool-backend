@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentVisitor;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -48,7 +47,6 @@ public class EvalMismatchDetectionSingleAlignment {
 		
 		//get the reference alignment
 		AlignmentParser aparser = new AlignmentParser(0);
-		Alignment referenceAlignment = aparser.parse(new URI(StringUtilities.convertToFileURL(referenceAlignmentPath)));
 		BasicAlignment initialAlignment = (BasicAlignment) aparser.parse(new URI(StringUtilities.convertToFileURL(amlAlignment)));
 
 		//URIAlignment alcomoMismatchAlignment = new URIAlignment();

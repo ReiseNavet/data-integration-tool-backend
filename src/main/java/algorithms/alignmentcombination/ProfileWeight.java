@@ -200,10 +200,9 @@ public class ProfileWeight {
 	private static Relation[][] createSimMatrix (Alignment a) throws AlignmentException, IOException {
 
 		ArrayList<Relation> relArray = new ArrayList<Relation>();
-		Relation rel = null;
 
 		for (Cell c : a) {
-			relArray.add(rel = new Relation(c.getId(), c.getObject1().toString().replaceAll("[<|>]", ""), c.getObject2().toString().replaceAll("[<|>]", ""), c.getRelation().getRelation(), c.getStrength()));
+			relArray.add(new Relation(c.getId(), c.getObject1().toString().replaceAll("[<|>]", ""), c.getObject2().toString().replaceAll("[<|>]", ""), c.getRelation().getRelation(), c.getStrength()));
 		}
 
 		Collections.sort(relArray, new RelationComparator());

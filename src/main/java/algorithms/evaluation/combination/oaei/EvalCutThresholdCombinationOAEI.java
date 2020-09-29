@@ -2,7 +2,6 @@ package algorithms.evaluation.combination.oaei;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import org.semanticweb.owl.align.Alignment;
@@ -31,7 +29,6 @@ import algorithms.utilities.AlignmentOperations;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import fr.inrialpes.exmo.align.impl.eval.PRecEvaluator;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import fr.inrialpes.exmo.align.parser.AlignmentParser;

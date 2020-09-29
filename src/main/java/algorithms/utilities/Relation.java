@@ -1,7 +1,5 @@
 package algorithms.utilities;
 
-import java.util.Comparator;
-
 /**
  * A class that defines a semantic relation through the two concepts involved in the relation, the type of relation and the confidence measure associated with the relation
  * Implements Comparable in order to sort relations.
@@ -59,11 +57,9 @@ public class Relation implements Comparable<Relation> {
 		return id;
 	}
 
-	//TODO: Should implement functionality for getting the fragment after "/" as well
 	public String getConcept1Fragment() {
 		return concept1.substring(concept1.lastIndexOf("#") +1);
 	}
-	//TODO: Should implement functionality for getting the fragment after "/" as well
 	public String getConcept2Fragment() {
 		return concept2.substring(concept2.lastIndexOf("#") +1);
 	}

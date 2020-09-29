@@ -233,7 +233,6 @@ public class VectorExtractor {
 		int numVectors = 300;
 
 		//if there also are comment vectors, we average the label vector and the comment vector (already averaged between all token vectors for each comment) into a global vector
-		//TODO: Simplify this computation of averages
 		if (labelVectors != null && !labelVectors.isEmpty() && commentVectors!= null && !commentVectors.isEmpty()) {
 
 			double average = 0;
@@ -400,7 +399,7 @@ public class VectorExtractor {
 
 	}
 	
-	private static double[] getAVGVectorsToArray(ArrayList<ArrayList<Double>> a_input, int numVectors) {
+	/*private static double[] getAVGVectorsToArray(ArrayList<ArrayList<Double>> a_input, int numVectors) {
 
 		ArrayList<Double> avgList = new ArrayList<Double>();
 
@@ -425,7 +424,7 @@ public class VectorExtractor {
 
 
 		return avgArray;
-	}
+	}*/
 
 	
 	
@@ -473,9 +472,6 @@ public class VectorExtractor {
 	 * @return a set of vectors (as a string) associated with the label
 	 */
 	public static ArrayList<Double> getLemmatizedLabelVector(String lemmatizedConceptName, Map<String, ArrayList<Double>> vectorMap) {
-
-		StringBuffer sb = new StringBuffer();
-
 		ArrayList<Double> labelVectors = new ArrayList<Double>();
 		Map<String, ArrayList<Double>> compoundVectors = new HashMap<String, ArrayList<Double>>();
 		ArrayList<Double> labelVector = new ArrayList<Double>();

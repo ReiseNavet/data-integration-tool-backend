@@ -2,7 +2,6 @@ package algorithms.equivalencematching;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +12,6 @@ import java.util.Set;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -26,7 +24,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.ISub;
 import algorithms.utilities.Sigmoid;
 import algorithms.utilities.SimilarityMetrics;

@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -32,8 +30,6 @@ public class GraphCreator {
 	static GraphDatabaseService db;
 
 	public GraphCreator(GraphDatabaseService db) {
-		
-		this.db = db;
 		
 	}
 
@@ -74,13 +70,10 @@ public class GraphCreator {
 				Node n = iter.next();
 				if (n.hasProperty("classname")) {
 					String thisClassName = n.getProperty("classname").toString();
-					String superClass = null;
 					//check if thisClassName equals any of the keys in superClassMap
 					for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
 						//if this graph node matches a key in the map...
 						if (thisClassName.equals(entry.getKey())) {
-							//get the superclass that belongs to the key in the map
-							superClass = superClassMap.get(entry.getKey());
 							//find the "superclass-node" that matches the map value belonging to this key class
 							Node superClassNode = db.findNode(label, "classname", (Object) superClassMap.get(thisClassName));
 							//create an isA relationship from this graph node to its superclass
@@ -161,16 +154,6 @@ public class GraphCreator {
 
 		String ontologyName = manager.getOntologyDocumentIRI(o1).getFragment();
 		System.out.println("The name of the ontology is " + ontologyName);
-
-		Label label = DynamicLabel.label( ontologyName );
-		
-		GraphCreator loader = new GraphCreator(db);
-		
-		System.out.println("Trying to create a graph...");
-
-		loader.createOntologyGraph(o1, label);
-		
-		System.out.println("Graph created successfully!");
 		
 	}
 }
