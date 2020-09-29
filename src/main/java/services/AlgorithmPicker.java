@@ -32,7 +32,7 @@ import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import algorithms.ui.BasicSemanticMatcher;
 
 /*
-Takes in input from user and return the most fitted algorithm for the use
+* Takes in input from user and return the most fitted algorithm for the use
 */
 public class AlgorithmPicker {
 
@@ -42,8 +42,6 @@ public class AlgorithmPicker {
   public AlgorithmPicker(OWLOntology source, OWLOntology target){
 
     initializeMatchingAlgorithms(source, target);
-    //TODO: initializeOtherAlgorithms(source, target);
-
   }
 
   /*
@@ -78,22 +76,6 @@ public class AlgorithmPicker {
     matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
 
     return matchingAlgorithms;
-  }
-
-  //TODO: Initialize missing algorithms
-  public List<AlignmentProcess> initializeOtherAlgorithms(OWLOntology source, OWLOntology target) {
-    /*
-    * alignmentcombination
-    * evaluation
-    * graph
-    * mismatchdetection
-    * ontologyprofiling
-    * ui
-    * utilities
-    * wordembedding
-    */
-
-    return otherAlgorithms;
   }
 
   public static AlignmentProcess pickAlgorithm(
