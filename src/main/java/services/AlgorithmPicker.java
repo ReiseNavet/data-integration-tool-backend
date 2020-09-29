@@ -16,7 +16,6 @@ import algorithms.subsumptionmatching.BasicSubsumptionMatcher;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
-import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import services.interfaces.Algorithm;
 
