@@ -1,37 +1,23 @@
 package services;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import services.interfaces.Algorithm;
-
-import com.clarkparsia.sparqlowl.parser.antlr.SparqlOwlParser.sourceSelector_return;
 
 import org.semanticweb.owl.align.AlignmentProcess;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import algorithms.equivalencematching.BasicEQMatcher;
-import algorithms.equivalencematching.DefinitionEquivalenceMatcher;
 import algorithms.equivalencematching.DefinitionEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.GraphEquivalenceMatcherSigmoid;
-import algorithms.equivalencematching.LexicalEquivalenceMatcher;
 import algorithms.equivalencematching.LexicalEquivalenceMatcherSigmoid;
-import algorithms.equivalencematching.PropertyEquivalenceMatcher;
 import algorithms.equivalencematching.PropertyEquivalenceMatcherSigmoid;
-import algorithms.equivalencematching.WordEmbeddingMatcher;
 import algorithms.equivalencematching.WordEmbeddingMatcherSigmoid;
 import algorithms.subsumptionmatching.BasicSubsumptionMatcher;
-import algorithms.subsumptionmatching.CompoundMatcher;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
-import algorithms.subsumptionmatching.ContextSubsumptionMatcher;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
-import algorithms.subsumptionmatching.DefinitionSubsumptionMatcher;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid_revised;
-import algorithms.subsumptionmatching.LexicalSubsumptionMatcher;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
-import algorithms.ui.BasicSemanticMatcher;
 
 /*
 * Takes in input from user and return the most fitted algorithm for the use
