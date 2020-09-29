@@ -26,8 +26,9 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
 import rita.wordnet.jwnl.JWNLException;
+import services.interfaces.Algorithm;
 
-public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	//static RiWordNet database = new RiWordNet("/Users/audunvennesland/Documents/PhD/Development/WordNet/WordNet-3.0/dict");
 	Map<String, Double> matchingMap = new HashMap<String, Double>();
@@ -40,6 +41,7 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	double rangeMin;
 	double rangeMax;
 
+	public LexicalSubsumptionMatcherSigmoid(){}
 
 	public LexicalSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -50,7 +52,14 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 		this.rangeMax = rangeMax;
 	}
 
-	
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+    double profileScore = 0.9;
+
+		return returnLSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
+	}
 	
 	public static URIAlignment returnLSMAlignment (File ontoFile1, File ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) throws OWLOntologyCreationException, AlignmentException {
 

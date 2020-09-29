@@ -20,6 +20,7 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
 /**
  * CompoundMatcherSigmoid identifies subsumption relations based on so-called compounds, that is, a word comprised of individual words (e.g. electronicBook)
@@ -27,7 +28,7 @@ import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
  * @author audunvennesland
  *
  */
-public class CompoundMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class CompoundMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	//these attributes are used to calculate the weight associated with the matcher's confidence value
 	double profileScore;
@@ -38,10 +39,11 @@ public class CompoundMatcherSigmoid extends ObjectAlignment implements Alignment
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
 
+	public CompoundMatcherSigmoid(){}
+
 	public CompoundMatcherSigmoid(double profileScore) {
 		this.profileScore = profileScore;
 	}
-
 
 	public CompoundMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -50,6 +52,15 @@ public class CompoundMatcherSigmoid extends ObjectAlignment implements Alignment
 		this.slope = slope;
 		this.rangeMin = rangeMin;
 		this.rangeMax = rangeMax;
+	}
+
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+    double profileScore = 0.9;
+
+		return returnCMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}
 
 	

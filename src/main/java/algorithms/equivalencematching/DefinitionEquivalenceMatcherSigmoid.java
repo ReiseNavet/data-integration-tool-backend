@@ -28,12 +28,13 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
 /**
  * The Definitions Equivalence Matcher identifies equivalent concepts from the cosine similarity between embedding vectors associated with their labels and definitions.
  * In this class weights are imposed from the ontology profiling scores.
  */
-public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 	
 	//these attributes are used to calculate the weight associated with the matcher's confidence value
 	double profileScore;
@@ -48,6 +49,8 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 	static Map<String, double[]> sourceVectorMap = new HashMap<String, double[]>();
 	static Map<String, double[]> targetVectorMap = new HashMap<String, double[]>();
 
+	public DefinitionEquivalenceMatcherSigmoid(){}
+	
 	//constructor for sigmoid weighting scenario
 	public DefinitionEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, String vectorFile, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.profileScore = profileScore;
@@ -59,6 +62,15 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 		this.vectorFile = vectorFile;
 	}
 
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+		double profileScore = 0.9;
+
+		return returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMax, rangeMin);
+	} 
 	
 	//test method
 	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {

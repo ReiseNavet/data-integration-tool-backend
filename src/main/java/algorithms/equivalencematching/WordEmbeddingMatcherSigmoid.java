@@ -26,13 +26,14 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
 /**
  * The WordEmbeddingMatcher matches concepts from two ontologies based on their associated embedding vectors.
  * @author audunvennesland
  *
  */
-public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	//these attributes are used to calculate the weight associated with the matcher's confidence value
 	double profileScore;
@@ -46,6 +47,8 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 	static Map<String, double[]> vectorMapSourceOntology = new HashMap<String, double[]>();
 	static Map<String, double[]> vectorMapTargetOntology = new HashMap<String, double[]>();
 
+	public WordEmbeddingMatcherSigmoid(){}
+
 	public WordEmbeddingMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, String vectorFile, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.profileScore = profileScore;
 		this.slope = slope;
@@ -54,6 +57,15 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 		this.sourceOntology = onto1;
 		this.targetOntology = onto2;
 		this.vectorFile = vectorFile;
+	}
+
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+		double profileScore = 0.9;
+
+		return returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMin, rangeMax);
 	}
 	
 	//test method

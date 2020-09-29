@@ -26,8 +26,9 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
-public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
@@ -44,6 +45,8 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	static Map<String, Set<String>> classesAndSuperclassesMapOnto1 = new HashMap<String, Set<String>>();
 	static Map<String, Set<String>> classesAndSuperclassesMapOnto2 = new HashMap<String, Set<String>>();
 
+	public ContextSubsumptionMatcherSigmoid(){}
+	
 	public ContextSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
 		this.targetOntology = onto2;
@@ -51,6 +54,15 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 		this.slope = slope;
 		this.rangeMin = rangeMin;
 		this.rangeMax = rangeMax;
+	}
+
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+    double profileScore = 0.9;
+
+		return returnCSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}
 	
 	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {

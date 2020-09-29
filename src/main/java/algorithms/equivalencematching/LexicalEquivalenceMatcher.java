@@ -55,7 +55,9 @@ public class LexicalEquivalenceMatcher extends ObjectAlignment implements Alignm
 		targetOntology = onto2;
 	}
 
-
+	public static URIAlignment run(File ontoFile1, File ontoFile2, double weight) throws OWLOntologyCreationException, AlignmentException {
+		return returnLEMAlignment(ontoFile1, ontoFile2, weight);
+	}
 
 	//test method
 	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {

@@ -34,8 +34,9 @@ import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.align.impl.rel.A5BaseRelation;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import rita.wordnet.jwnl.JWNLException;
+import services.interfaces.Algorithm;
 
-public class BasicSubsumptionMatcher extends ObjectAlignment implements AlignmentProcess {
+public class BasicSubsumptionMatcher extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
@@ -44,10 +45,18 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 	static Map<String, Set<String>> hyponymMapOnto1 = new HashMap<String, Set<String>>();
 	static Map<String, Set<String>> hyponymMapOnto2 = new HashMap<String, Set<String>>();
 
+	public BasicSubsumptionMatcher(){}
+
 	public BasicSubsumptionMatcher(OWLOntology onto1, OWLOntology onto2) {
 		this.sourceOntology = onto1;
 		this.targetOntology = onto2;
 	}
+
+	//run method
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		return returnBasicSUBMatcherAlignment(ontoFile1, ontoFile2);
+	}
+
 	
 	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {
 
