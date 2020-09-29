@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import services.interfaces.Algorithm;
+
 import com.clarkparsia.sparqlowl.parser.antlr.SparqlOwlParser.sourceSelector_return;
 
 import org.semanticweb.owl.align.AlignmentProcess;

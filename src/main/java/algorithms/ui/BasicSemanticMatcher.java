@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentVisitor;
+import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import algorithms.alignmentcombination.AlignmentConflictResolution;
 import algorithms.alignmentcombination.ProfileWeight;
 import algorithms.alignmentcombination.ProfileWeightSubsumption;
 import algorithms.equivalencematching.BasicEQMatcher;
@@ -21,6 +21,7 @@ import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import rita.wordnet.jwnl.JWNLException;
+import services.parsers.CellParser;
 
 /**
  * A basic semantic matching prototype without any ontology profiling, mismatch detection and with only two matchers (basic EQ matcher and basic SUB matcher)
@@ -39,14 +40,16 @@ public class BasicSemanticMatcher {
     runBasicSemanticMatching();
   }
 
-  //TODO: move to correct location
   public static String textFromURIAlignment(URIAlignment uriAlignment){
       ArrayList<String> list = new ArrayList<String>();
       
-      for(org.semanticweb.owl.align.Cell cell : uriAlignment.getArrayElements()){
-        list.add("Source: " + cell.getObject1().toString().split("#")[1] + ", Target: " + cell
-        .getObject2().toString().split("#")[1] + ", Relation: " + "=" + ", Confidence: " + cell.getStrength());
-      }
+      for(Cell cell : uriAlignment){
+		String source = CellParser.getSource(cell);
+		String target = CellParser.getTarget(cell);
+		String relation = CellParser.getRelation(cell);
+		String confidence = CellParser.getConfidence(cell);
+        list.add("Source: " + source + ", Target: " + target + ", Relation: " + relation + ", Confidence: " + confidence);
+	  }
       return String.join(" | ", list);
   }
   
