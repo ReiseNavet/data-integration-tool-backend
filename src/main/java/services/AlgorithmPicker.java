@@ -58,7 +58,6 @@ public class AlgorithmPicker {
     matchingAlgorithms.add(new CompoundMatcherSigmoid());
     matchingAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
     matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
     matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
 
     return matchingAlgorithms;
