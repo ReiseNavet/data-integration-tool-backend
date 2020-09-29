@@ -16,7 +16,7 @@ import algorithms.subsumptionmatching.BasicSubsumptionMatcher;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
-import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid_revised;
+import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import services.interfaces.Algorithm;
 
@@ -59,7 +59,7 @@ public class AlgorithmPicker {
     matchingAlgorithms.add(new CompoundMatcherSigmoid());
     matchingAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
     matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid_revised());
+    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
     matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
 
     return matchingAlgorithms;
