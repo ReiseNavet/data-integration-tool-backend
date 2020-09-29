@@ -43,6 +43,7 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
 /**
  * The Property Matcher measures the similarity of the properties associated with the concepts to be matched. 
@@ -52,7 +53,7 @@ import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
  * @author audunvennesland
  *
  */
-public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 
 	static OWLOntology onto1;
@@ -75,6 +76,8 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	static Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
 	static Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
 
+	public PropertyEquivalenceMatcherSigmoid(){}
+
 	public PropertyEquivalenceMatcherSigmoid(OWLOntology ontoFile1, OWLOntology ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		onto1 = ontoFile1;
 		onto2 = ontoFile2;
@@ -82,6 +85,15 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 		this.slope = slope;
 		this.rangeMin = rangeMin;
 		this.rangeMax = rangeMax;
+	}
+
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+		double profileScore = 0.9;
+
+		return returnPEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
+import services.interfaces.Algorithm;
 
 /**
  * This is a basic string matcher based on ISUB, see:
@@ -28,7 +29,7 @@ import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
  * @author audunvennesland
  *
  */
-public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess {
+public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 
 	static OWLOntology onto1;
@@ -38,6 +39,7 @@ public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess 
 	//The ISUB confidence used in the combined Jaccard/ISub similarity measure
 	final double confidence = 0.6;
 
+	public BasicEQMatcher(){}
 
 	public BasicEQMatcher(OWLOntology ontoFile1, OWLOntology ontoFile2) {
 		onto1 = ontoFile1;
@@ -45,6 +47,9 @@ public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess 
 
 	}
 
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		return returnBasicEQMatcherAlignment(ontoFile1, ontoFile2);
+	}
 
 	//test method
 	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {

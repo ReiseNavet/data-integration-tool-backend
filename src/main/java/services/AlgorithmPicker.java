@@ -39,7 +39,7 @@ import algorithms.ui.BasicSemanticMatcher;
 public class AlgorithmPicker {
 
   private List<AlignmentProcess> matchingAlgorithms;
-  private List<AlignmentProcess> otherAlgorithms;
+
 
   public AlgorithmPicker(OWLOntology source, OWLOntology target){
 
@@ -52,30 +52,30 @@ public class AlgorithmPicker {
   public List<AlignmentProcess> initializeMatchingAlgorithms(OWLOntology source, OWLOntology target){
 
     matchingAlgorithms = new ArrayList<AlignmentProcess>();
+
+    /* Values used as default in each alorithm's run method
+    String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+    double profileScore = 0.9;
+    */
     
     //equivalencematching added to matchingAlgorithms
-    matchingAlgorithms.add(new BasicEQMatcher(ontoFile1, ontoFile2));
-    matchingAlgorithms.add(new DefinitionEquivalenceMatcher(onto1, onto2, vectorFile, weight));
-    matchingAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid(onto1, onto2, vectorFile, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new GraphEquivalenceMatcherSigmoid(sourceOntology, targetOntology, profileScore, slope, rangeMin, rangeMax);
-    matchingAlgorithms.add(new LexicalEquivalenceMatcher(ontoFile1, ontoFile2, weight));
-    matchingAlgorithms.add(new LexicalEquivalenceMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new PropertyEquivalenceMatcher(ontoFile1, ontoFile2, weight));
-    matchingAlgorithms.add(new PropertyEquivalenceMatcherSigmoid(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new WordEmbeddingMatcher(onto1, onto2, vectorFile, weight));
-    matchingAlgorithms.add(new WordEmbeddingMatcherSigmoid(onto1, onto2, vectorFile, weight));
+    matchingAlgorithms.add(new BasicEQMatcher());
+    matchingAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid());
+    matchingAlgorithms.add(new GraphEquivalenceMatcherSigmoid());
+    matchingAlgorithms.add(new LexicalEquivalenceMatcherSigmoid());
+    matchingAlgorithms.add(new PropertyEquivalenceMatcherSigmoid());
+    matchingAlgorithms.add(new WordEmbeddingMatcherSigmoid());
 
     //subsumptionmatching added to matchingAlgorithms
-    matchingAlgorithms.add(new BasicSubsumptionMatcher(onto1, onto2));
-    matchingAlgorithms.add(new CompoundMatcher(onto1, onto2, profileScore));
-    matchingAlgorithms.add(new CompoundMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax);
-    matchingAlgorithms.add(new ContextSubsumptionMatcher(ontoFile1, ontoFile2, profileScore));
-    matchingAlgorithms.add(new ContextSubsumptionMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcher(onto1, onto2, profileScore));
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid_revised(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
-    matchingAlgorithms.add(new LexicalSubsumptionMatcher(onto1, onto2, profileScore));
-    matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid(onto1, onto2, profileScore, slope, rangeMin, rangeMax));
+    matchingAlgorithms.add(new BasicSubsumptionMatcher());
+    matchingAlgorithms.add(new CompoundMatcherSigmoid());
+    matchingAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
+    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
+    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid_revised());
+    matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
 
     return matchingAlgorithms;
   }

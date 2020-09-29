@@ -56,7 +56,10 @@ public class DefinitionEquivalenceMatcher extends ObjectAlignment implements Ali
 		this.vectorFile = vectorFile;
 	}
 
-	
+	public static URIAlignment run(File ontoFile1, File ontoFile2, String vectorFile, double weight) throws OWLOntologyCreationException, AlignmentException {
+		return returnDEMAlignment(ontoFile1, ontoFile1, vectorFile, weight);
+	}
+
 	//test method
 	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {	
 		

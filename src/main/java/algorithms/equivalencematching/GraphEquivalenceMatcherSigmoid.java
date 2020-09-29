@@ -32,6 +32,7 @@ import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
+import services.interfaces.Algorithm;
 
 @SuppressWarnings("deprecation")
 /**
@@ -46,7 +47,7 @@ import fr.inrialpes.exmo.ontowrap.OntowrapException;
  * @author audunvennesland
  *
  */
-public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	//these attributes are used to calculate the weight associated with the matcher's confidence value
 	double profileScore;
@@ -67,6 +68,7 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 	 */
 	private static final double THRESHOLD = 0.9;
 
+	public GraphEquivalenceMatcherSigmoid(){}
 
 	public GraphEquivalenceMatcherSigmoid(OWLOntology sourceOntology, OWLOntology targetOntology, double profileScore, int slope, double rangeMin, double rangeMax) {
 
@@ -78,6 +80,14 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 		this.targetOntology = targetOntology;
 	}
 	
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+		double profileScore = 0.9;
+
+		return returnGEMAlignment (ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
+	}
 
 	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {
 
@@ -257,9 +267,6 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 
 		return GEMAlignment;
 
-	}	
-
-
-
+	}
 
 }

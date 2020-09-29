@@ -25,6 +25,7 @@ import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
+import services.interfaces.Algorithm;
 
 /**
  * The Lexical Equivalence Matcher uses WordNet as a lexical resource for computing equivalence relations between ontology concepts.
@@ -32,7 +33,7 @@ import fr.inrialpes.exmo.ontowrap.OntowrapException;
  * @author audunvennesland
  *
  */
-public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess {
+public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
 	//these attributes are used to calculate the weight associated with the matcher's confidence value
 	double profileScore;
@@ -43,6 +44,8 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	static OWLOntology sourceOntology;
 	static OWLOntology targetOntology;
 	
+	public LexicalEquivalenceMatcherSigmoid(){}
+	
 	public LexicalEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		sourceOntology = onto1;
 		targetOntology = onto2;
@@ -52,6 +55,14 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 		this.rangeMax = rangeMax;
 	}
 
+	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		int slope = 3; 
+		double rangeMin = 0.5; 
+		double rangeMax = 0.7;
+		double profileScore = 0.9;
+		
+		return returnLEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
+	}
 
 	/**
 	 * Returns an alignment from the Lexical Equivalence Matcher (LEM)
