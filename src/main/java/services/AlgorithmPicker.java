@@ -18,6 +18,7 @@ import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid_revised;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
+import services.interfaces.Algorithm;
 
 /*
 * Takes in input from user and return the most fitted algorithm for the use
@@ -26,16 +27,14 @@ public class AlgorithmPicker {
 
   private List<AlignmentProcess> matchingAlgorithms;
 
-
-  public AlgorithmPicker(OWLOntology source, OWLOntology target){
-
-    initializeMatchingAlgorithms(source, target);
+  public AlgorithmPicker(){
+    initializeMatchingAlgorithms();
   }
 
   /*
   * Manually add all existing algorithms to the list when initializing class
   */
-  public List<AlignmentProcess> initializeMatchingAlgorithms(OWLOntology source, OWLOntology target){
+  public List<AlignmentProcess> initializeMatchingAlgorithms(){
 
     matchingAlgorithms = new ArrayList<AlignmentProcess>();
 
@@ -66,20 +65,14 @@ public class AlgorithmPicker {
     return matchingAlgorithms;
   }
 
-  public static AlignmentProcess pickAlgorithm(
-    OWLOntology source, 
-    OWLOntology target, 
-    boolean equivalence, 
-    boolean subsumption
-    ){
+  public static Algorithm[] pickAlgorithms(OWLOntology source, OWLOntology target, boolean equivalence, boolean subsumption) {
 
-      /*
-      For now this will take the input and always return the 
-      EquivalenceAlgorithm (used in BasicMatcher). Should, in 
-      the end, return fitting algorithms for the input. 
-      */
+    /*
+    For now this will take the input and always return the 
+    EquivalenceAlgorithm (used in BasicMatcher). Should, in 
+    the end, return fitting algorithms for the input. 
+    */
+    return new Algorithm[] { new BasicEQMatcher(source, target) };
+  }
 
-      return new BasicEQMatcher(source, target);
-
-    }
 }
