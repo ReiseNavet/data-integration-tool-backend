@@ -24,3 +24,4 @@
   * ```java --version```
   * ```mvn -v```
    Gå inn på repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
+   
