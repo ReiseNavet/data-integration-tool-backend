@@ -7,6 +7,9 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
 import services.Manager;
+import services.parsers.CellParser;
+
+import org.semanticweb.owl.align.Cell;
 
 public class App {
 
@@ -65,9 +68,15 @@ public class App {
 
       URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
 
-
-      ctx.result(result.toString());
-
+      String json = "[";
+      for (Cell cell: result.getArrayElements()) {
+        json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},"
+          , CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
+      }
+      
+      json = json.substring(0, json.length() - 1) + "]";
+      
+      ctx.result(json);
 
       // Clean up temporary files.
       File tempDirectory = new File(baseSaveLocation);
