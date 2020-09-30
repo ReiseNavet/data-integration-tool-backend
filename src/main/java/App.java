@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Locale;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ public class App {
 
   public static void main(String[] args) throws Exception {
     int PORT = 7000;
+    Locale.setDefault(Locale.ENGLISH);
 
     Manager manager = new Manager(); 
 
