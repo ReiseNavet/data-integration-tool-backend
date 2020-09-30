@@ -1,9 +1,6 @@
 package services;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang.NotImplementedException;
+import java.io.File;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import services.interfaces.Algorithm;
@@ -20,11 +17,14 @@ public class Manager {
   }
 
 
-  public Object handle (String sourceFilePath, String targetFilePath, boolean useEquivalence, boolean useSubsumption) {
+  public URIAlignment handle (String sourceFilePath, String targetFilePath, boolean useEquivalence, boolean useSubsumption) {
 
-    Algorithm[] pickedAlgorithms = algorithmPicker.pickAlg(sourceFilePath, targetFilePath, useEquivalence, useSubsumption);
+    File sourceFile = new File(sourceFilePath);
+    File targetFile = new File(targetFilePath);
 
-    URIAlignment[] alignments = algorithmRunner.run(sourceFilePath, targetFilePath, pickedAlgorithms);
+    Algorithm[] pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceFile, targetFile, useEquivalence, useSubsumption);
+
+    URIAlignment[] alignments = algorithmRunner.run(sourceFile, targetFile, pickedAlgorithms);
     
     URIAlignment finalAlignment = alignmentCombiner.combine(alignments);
 

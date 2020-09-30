@@ -1,10 +1,13 @@
 package services;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.semanticweb.owl.align.AlignmentProcess;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import algorithms.equivalencematching.BasicEQMatcher;
 import algorithms.equivalencematching.DefinitionEquivalenceMatcherSigmoid;
@@ -63,14 +66,27 @@ public class AlgorithmPicker {
     return matchingAlgorithms;
   }
 
-  public static Algorithm[] pickAlgorithms(OWLOntology source, OWLOntology target, boolean equivalence, boolean subsumption) {
+  /*
+   * For now this will take the input and always return the 
+   * EquivalenceAlgorithm (used in BasicMatcher). Should, in 
+   * the end, return fitting algorithms for the input. 
+   */
+  public Algorithm[] pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption) {
 
-    /*
-    For now this will take the input and always return the 
-    EquivalenceAlgorithm (used in BasicMatcher). Should, in 
-    the end, return fitting algorithms for the input. 
-    */
-    return new Algorithm[] { new BasicEQMatcher(source, target) };
+    OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
+    OWLOntology sourceOntology;
+    OWLOntology targetOntology;
+    try {
+      sourceOntology = ontologyManager.loadOntologyFromOntologyDocument(source); 
+      targetOntology = ontologyManager.loadOntologyFromOntologyDocument(target);
+    } 
+    catch(Exception e) {
+      e.printStackTrace();
+      return new Algorithm[]{};
+    }
+
+    return new Algorithm[] { new BasicEQMatcher(sourceOntology, targetOntology) };
+
   }
 
 }
