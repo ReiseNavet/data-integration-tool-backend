@@ -2,7 +2,6 @@ package algorithms.subsumptionmatching;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,14 +12,12 @@ import java.util.Properties;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.mismatchdetection.ConfirmSubsumption;
 import algorithms.utilities.OntologyOperations;
 import algorithms.utilities.Sigmoid;
@@ -66,57 +63,6 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
     double profileScore = 0.9;
 
 		return returnDSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
-	}
-
-	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {
-
-
-		File ontoFile1 = new File("./files/TEST/Ontology1.owl");
-		File ontoFile2 = new File("./files/TEST/Ontology2.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/ATMONTO-AIRM/REFALIGN/ReferenceAlignment-ATMONTO-AIRM-SUBSUMPTION.rdf";
-
-		//				File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		//				File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		//				String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-SUBSUMPTION.rdf";
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		double profileScore = 0.29;
-		int slope = 3;
-		double rangeMin = 0.5;
-		double rangeMax = 0.7;
-
-		AlignmentProcess a = new DefinitionSubsumptionMatcherSigmoid(sourceOntology, targetOntology, profileScore, slope, rangeMin, rangeMax);
-		a.init(ontoFile1.toURI(), ontoFile2.toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment definitionsSubsumptionMatcherAlignment = new BasicAlignment();
-
-		definitionsSubsumptionMatcherAlignment = (BasicAlignment) (a.clone());
-
-		System.out.println("The 0.0 alignment contains " + definitionsSubsumptionMatcherAlignment.nbCells() + " relations");
-		System.out.println("Printing relations at 0.0:");
-		for (Cell c : definitionsSubsumptionMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getRelation().getRelation() + " " + c.getObject2() + c.getStrength());
-
-		}
-
-		definitionsSubsumptionMatcherAlignment.cut(0.6);
-		Evaluator.evaluateSingleAlignment(definitionsSubsumptionMatcherAlignment, referenceAlignment);
-		System.out.println("\nPrinting relations at 0.6:");
-		for (Cell c : definitionsSubsumptionMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getRelation().getRelation() + " " + c.getObject2() + c.getStrength());
-
-		}
-
-		System.out.println("Evaluation with threshold 0.9:");
-		System.out.println("Number of relations: " + definitionsSubsumptionMatcherAlignment.nbCells());
-		definitionsSubsumptionMatcherAlignment.cut(0.9);
-		Evaluator.evaluateSingleAlignment(definitionsSubsumptionMatcherAlignment, referenceAlignment);
-
 	}
 
 	public static URIAlignment returnDSMAlignment (File ontoFile1, File ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) throws OWLOntologyCreationException, AlignmentException {

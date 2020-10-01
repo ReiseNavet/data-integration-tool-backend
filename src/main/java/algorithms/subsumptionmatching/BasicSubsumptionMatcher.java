@@ -1,12 +1,7 @@
 package algorithms.subsumptionmatching;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,22 +11,18 @@ import java.util.Set;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.AlignmentVisitor;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.WordNet;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
 import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
-import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import rita.wordnet.jwnl.JWNLException;
 import services.interfaces.Algorithm;
 
@@ -56,56 +47,6 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 		return returnBasicSUBMatcherAlignment(ontoFile1, ontoFile2);
 	}
 
-	
-	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {
-
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-SUBSUMPTION.rdf";
-		
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-
-		AlignmentProcess a = new BasicSubsumptionMatcher(sourceOntology, targetOntology);
-		a.init(ontoFile1.toURI(), ontoFile2.toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment BasicSubsumptionMatcherAlignment = new BasicAlignment();
-
-		BasicSubsumptionMatcherAlignment = (BasicAlignment) (a.clone());
-		
-		//store alignment
-		String fileAlignmentStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/FINAL_ALIGNMENT/";
-		File outputAlignment = new File(fileAlignmentStorePath + "BasicSubsumptionMatcherAlignment.rdf");
-
-		PrintWriter writer = new PrintWriter(
-				new BufferedWriter(
-						new FileWriter(outputAlignment)), true); 
-		AlignmentVisitor renderer = new RDFRendererVisitor(writer);
-
-		BasicSubsumptionMatcherAlignment.render(renderer);
-
-		writer.flush();
-		writer.close();
-		
-		System.out.println("Evaluation with threshold 0.9:");
-		BasicSubsumptionMatcherAlignment.cut(0.9);
-		System.out.println("\nThe alignment contains " + BasicSubsumptionMatcherAlignment.nbCells() + " relations");
-		Evaluator.evaluateSingleAlignment(BasicSubsumptionMatcherAlignment, referenceAlignment);
-		
-		
-		System.out.println("Printing relations at 0.9:");
-		for (Cell c : BasicSubsumptionMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getObject2() + " " + c.getRelation().getRelation() + " " + c.getStrength());
-		}
-
-	}
-
-	
 	public static URIAlignment returnBasicSUBMatcherAlignment (File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
 
 		URIAlignment BasicSUBMatcherAlignment = new URIAlignment();

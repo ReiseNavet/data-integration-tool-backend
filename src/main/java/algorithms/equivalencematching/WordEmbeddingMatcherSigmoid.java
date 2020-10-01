@@ -2,7 +2,6 @@ package algorithms.equivalencematching;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,14 +10,12 @@ import java.util.Properties;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.Sigmoid;
 import algorithms.wordembedding.VectorExtractor;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
@@ -67,68 +64,6 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 
 		return returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMin, rangeMax);
 	}
-	
-	//test method
-	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {
-
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-EQUIVALENCE.rdf";
-		String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		double testProfileScore = 0.84;
-		int testSlope = 12;
-		double testRangeMin = 0.5;
-		double testRangeMax = 0.7;
-
-		AlignmentProcess a = new WordEmbeddingMatcherSigmoid(sourceOntology, targetOntology, vectorFile, testProfileScore, testSlope, testRangeMin, testRangeMax);
-		
-		
-		a.init(ontoFile1.toURI(), ontoFile2.toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment WordEmbeddingMatcherSigmoidAlignment = new BasicAlignment();
-
-		WordEmbeddingMatcherSigmoidAlignment = (BasicAlignment) (a.clone());
-
-		WordEmbeddingMatcherSigmoidAlignment.normalise();
-
-		System.out.println("\nThe alignment contains " + WordEmbeddingMatcherSigmoidAlignment.nbCells() + " relations");
-
-		System.out.println("Evaluation with no cut threshold:");
-		Evaluator.evaluateSingleAlignment(WordEmbeddingMatcherSigmoidAlignment, referenceAlignment);
-
-
-		System.out.println("Evaluation with threshold 0.2:");
-		WordEmbeddingMatcherSigmoidAlignment.cut(0.2);
-		Evaluator.evaluateSingleAlignment(WordEmbeddingMatcherSigmoidAlignment, referenceAlignment);
-		
-		System.out.println("Printing relations at 0.2:");
-		for (Cell c : WordEmbeddingMatcherSigmoidAlignment) {
-			System.out.println(c.getObject1() + " " + c.getObject2() + " " + c.getRelation().getRelation() + " " + c.getStrength());
-		}
-
-		System.out.println("Evaluation with threshold 0.4:");
-		WordEmbeddingMatcherSigmoidAlignment.cut(0.4);
-		Evaluator.evaluateSingleAlignment(WordEmbeddingMatcherSigmoidAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.6:");
-		WordEmbeddingMatcherSigmoidAlignment.cut(0.6);
-		Evaluator.evaluateSingleAlignment(WordEmbeddingMatcherSigmoidAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.9:");
-		WordEmbeddingMatcherSigmoidAlignment.cut(0.9);
-		Evaluator.evaluateSingleAlignment(WordEmbeddingMatcherSigmoidAlignment, referenceAlignment);
-
-
-	}
-	
-	
 	
 	/**
 	 * Returns an alignment holding relations computed by the Word Embedding Matcher (WEM).

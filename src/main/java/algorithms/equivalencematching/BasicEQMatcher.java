@@ -1,20 +1,16 @@
 package algorithms.equivalencematching;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.ISub;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
@@ -50,44 +46,6 @@ public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess,
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
 		return returnBasicEQMatcherAlignment(ontoFile1, ontoFile2);
 	}
-
-	//test method
-	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {
-		
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-EQUIVALENCE.rdf";
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		AlignmentProcess a = new BasicEQMatcher(sourceOntology, targetOntology);
-		a.init(ontoFile1.toURI(), ontoFile2.toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment BasicStringMatcherAlignment = new BasicAlignment();
-
-		BasicStringMatcherAlignment = (BasicAlignment) (a.clone());
-
-		BasicStringMatcherAlignment.normalise();
-
-		//include only relations having a confidence of 0.6 or higher
-		BasicStringMatcherAlignment.cut(0.6);
-		System.out.println("Evaluation with threshold 0.6:");
-		System.out.println("\nThe alignment contains " + BasicStringMatcherAlignment.nbCells() + " relations");
-		System.out.println("\nPrinting relations at 0.6:");
-		for (Cell c : BasicStringMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getObject2() + " " + c.getRelation().getRelation() + " " + c.getStrength());
-		}
-		
-		Evaluator.evaluateSingleAlignment(BasicStringMatcherAlignment, referenceAlignment);
-
-	}
-
-	
-
 
 	/**
 	 * Creates an alignment that on the basis of class and property similarity obtains a similarity score assigned to each relation in the alignment.
