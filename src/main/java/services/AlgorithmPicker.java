@@ -15,6 +15,7 @@ import algorithms.equivalencematching.GraphEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.LexicalEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.PropertyEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.WordEmbeddingMatcherSigmoid;
+import algorithms.ontologyprofiling.OntologyProfiler;
 import algorithms.subsumptionmatching.BasicSubsumptionMatcher;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
@@ -84,9 +85,20 @@ public class AlgorithmPicker {
       e.printStackTrace();
       return new Algorithm[]{};
     }
+    String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
+    List toReturn;
 
-    return new Algorithm[] { new BasicEQMatcher(sourceOntology, targetOntology) };
+    Object profiles  = OntologyProfiler.computeOntologyProfileScores();
+    if (lexiProfil >= 0.5)
+      eq.add(lexicalEq)
 
+    if (equivalence) {
+      toReturn.addAll(eq);
+    }
+    if (subsumption) {
+      toReturn.addAll(sub);
+    }
+    return toReturn;
   }
 
 }
