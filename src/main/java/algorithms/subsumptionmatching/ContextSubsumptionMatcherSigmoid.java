@@ -1,8 +1,6 @@
 package algorithms.subsumptionmatching;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,13 +10,11 @@ import java.util.Set;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.OntologyOperations;
 import algorithms.utilities.Sigmoid;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
@@ -64,45 +60,7 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 
 		return returnCSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}
-	
-	public static void main(String[] args) throws AlignmentException, IOException, URISyntaxException, OWLOntologyCreationException {
 
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-SUBSUMPTION.rdf";
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		double testProfileScore = 0.58;
-		int testSlope = 3;
-		double testRangeMin = 0.5;
-		double testRangeMax = 0.7;
-
-		AlignmentProcess a = new ContextSubsumptionMatcherSigmoid(sourceOntology, targetOntology, testProfileScore, testSlope, testRangeMin, testRangeMax);
-		a.init(ontoFile1.toURI(), ontoFile2.toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment contextSubsumptionMatcherAlignment = new BasicAlignment();
-
-		contextSubsumptionMatcherAlignment = (BasicAlignment) (a.clone());
-
-		System.out.println("Evaluation with threshold 0.6:");
-		contextSubsumptionMatcherAlignment.cut(0.6);
-		System.out.println("\nThe alignment contains " + contextSubsumptionMatcherAlignment.nbCells() + " relations");
-		Evaluator.evaluateSingleAlignment(contextSubsumptionMatcherAlignment, referenceAlignment);
-		
-		
-		System.out.println("Printing relations at 0.6:");
-		for (Cell c : contextSubsumptionMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getObject2() + " " + c.getRelation().getRelation() + " " + c.getStrength());
-		}
-
-	}
-
-	
 	public static URIAlignment returnCSMAlignment (File ontoFile1, File ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) throws OWLOntologyCreationException, AlignmentException {
 
 		URIAlignment CSMAlignment = new URIAlignment();

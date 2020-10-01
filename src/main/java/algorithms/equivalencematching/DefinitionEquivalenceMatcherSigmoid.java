@@ -3,7 +3,6 @@ package algorithms.equivalencematching;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,14 +11,12 @@ import java.util.Properties;
 import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import algorithms.evaluation.general.Evaluator;
 import algorithms.utilities.OntologyOperations;
 import algorithms.utilities.Sigmoid;
 import algorithms.wordembedding.VectorExtractor;
@@ -70,72 +67,6 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 		double profileScore = 0.9;
 
 		return returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMax, rangeMin);
-	} 
-	
-	//test method
-	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException, URISyntaxException, IOException {
-		
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/ATMONTO-AIRM/ONTOLOGIES/ATMOntoCoreMerged.owl");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/ATMONTO-AIRM/ONTOLOGIES/airm-mono.owl");
-		String referenceAlignment = "./files/_PHD_EVALUATION/ATMONTO-AIRM/REFALIGN/ReferenceAlignment-ATMONTO-AIRM-EQUIVALENCE.rdf";
-		String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/skybrary_embeddings.txt";
-		
-//		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-//		File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-//		String referenceAlignment = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/REFALIGN/ReferenceAlignment-BIBFRAME-SCHEMAORG-EQUIVALENCE.rdf";
-//		String vectorFile = "./files//_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-		
-//		File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301304/301304-301.rdf");
-//		File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301304/301304-304.rdf");
-//		String referenceAlignment = "./files/_PHD_EVALUATION/OAEI2011/REFALIGN/301304/301-304-EQUIVALENCE.rdf";
-//		String vectorFile = "./files//_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology sourceOntology = manager.loadOntologyFromOntologyDocument(ontoFile1);
-		OWLOntology targetOntology = manager.loadOntologyFromOntologyDocument(ontoFile2);
-
-		double testProfileScore = 0.84;
-		int testSlope = 12;
-		double testRangeMin = 0.5;
-		double testRangeMax = 0.7;
-
-		AlignmentProcess a = new DefinitionEquivalenceMatcherSigmoid(sourceOntology, targetOntology, vectorFile, testProfileScore, testSlope, testRangeMin, testRangeMax);
-		a.init(sourceOntology.getOntologyID().getOntologyIRI().toURI(), targetOntology.getOntologyID().getOntologyIRI().toURI());
-		Properties params = new Properties();
-		params.setProperty("", "");
-		a.align((Alignment)null, params);	
-		BasicAlignment definitionEquivalenceMatcherAlignment = new BasicAlignment();
-
-		definitionEquivalenceMatcherAlignment = (BasicAlignment) (a.clone());
-
-		definitionEquivalenceMatcherAlignment.normalise();
-
-		System.out.println("\nThe alignment contains " + definitionEquivalenceMatcherAlignment.nbCells() + " relations");
-
-		System.out.println("Evaluation with no cut threshold:");
-		Evaluator.evaluateSingleAlignment(definitionEquivalenceMatcherAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.2:");
-		definitionEquivalenceMatcherAlignment.cut(0.2);
-		Evaluator.evaluateSingleAlignment(definitionEquivalenceMatcherAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.4:");
-		definitionEquivalenceMatcherAlignment.cut(0.4);
-		Evaluator.evaluateSingleAlignment(definitionEquivalenceMatcherAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.6:");
-		definitionEquivalenceMatcherAlignment.cut(0.6);
-		Evaluator.evaluateSingleAlignment(definitionEquivalenceMatcherAlignment, referenceAlignment);
-
-		System.out.println("Evaluation with threshold 0.9:");
-		definitionEquivalenceMatcherAlignment.cut(0.9);
-		Evaluator.evaluateSingleAlignment(definitionEquivalenceMatcherAlignment, referenceAlignment);
-
-		System.out.println("Printing relations at 0.9:");
-		for (Cell c : definitionEquivalenceMatcherAlignment) {
-			System.out.println(c.getObject1() + " " + c.getObject2() + " " + c.getRelation().getRelation() + " " + c.getStrength());
-		}
-
 	}
 	
 	/**
