@@ -3,6 +3,7 @@ package services;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.semanticweb.owl.align.AlignmentProcess;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -22,41 +23,14 @@ import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 /*
 * Takes in input from user and return the most fitted algorithm for the use
 */
 public class AlgorithmPicker {
-
-  private List<AlignmentProcess> matchingAlgorithms;
-
   public AlgorithmPicker(){
-    initializeMatchingAlgorithms();
-  }
-
-  /*
-  * Manually add all existing algorithms to the list when initializing class
-  */
-  public List<AlignmentProcess> initializeMatchingAlgorithms(){
-
-    matchingAlgorithms = new ArrayList<AlignmentProcess>();
     
-    //equivalencematching added to matchingAlgorithms
-    matchingAlgorithms.add(new BasicEQMatcher());
-    matchingAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid());
-    matchingAlgorithms.add(new GraphEquivalenceMatcherSigmoid());
-    matchingAlgorithms.add(new LexicalEquivalenceMatcherSigmoid());
-    matchingAlgorithms.add(new PropertyEquivalenceMatcherSigmoid());
-    matchingAlgorithms.add(new WordEmbeddingMatcherSigmoid());
-
-    //subsumptionmatching added to matchingAlgorithms
-    matchingAlgorithms.add(new BasicSubsumptionMatcher());
-    matchingAlgorithms.add(new CompoundMatcherSigmoid());
-    matchingAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
-    matchingAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
-    matchingAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
-
-    return matchingAlgorithms;
   }
 
   /*
@@ -64,33 +38,48 @@ public class AlgorithmPicker {
    * EquivalenceAlgorithm (used in BasicMatcher). Should, in 
    * the end, return fitting algorithms for the input. 
    */
-  public Algorithm[] pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption) {
+  public Algorithm[] pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption){
 
-    OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
-    OWLOntology sourceOntology;
-    OWLOntology targetOntology;
-    try {
-      sourceOntology = ontologyManager.loadOntologyFromOntologyDocument(source); 
-      targetOntology = ontologyManager.loadOntologyFromOntologyDocument(target);
-    } 
-    catch(Exception e) {
-      e.printStackTrace();
-      return new Algorithm[]{};
+    String vectorFile = AlgorithmSettings.VECTORFILE;
+    ArrayList<AlignmentProcess> toReturn = new ArrayList<AlignmentProcess>();
+    ArrayList<AlignmentProcess> eqAlgorithms = new ArrayList<AlignmentProcess>();
+    ArrayList<AlignmentProcess> subAlgorithms = new ArrayList<AlignmentProcess>();
+
+    //Getting the profile-scores for each of the algorithms on how well they will perform on our source and target and corpus
+    Map<String, Double> profiles  = OntologyProfiler.computeOntologyProfileScores(source, target, vectorFile);
+
+    //Adding the algorithms to be returned if their profile-score is >=0.5
+    eqAlgorithms.add(new BasicEQMatcher());
+    subAlgorithms.add(new BasicSubsumptionMatcher());
+
+    if (profiles.get("cf") >= 0.5){
+      subAlgorithms.add(new CompoundMatcherSigmoid())
     }
-    String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-    List toReturn;
-
-    Object profiles  = OntologyProfiler.computeOntologyProfileScores();
-    if (lexiProfil >= 0.5)
-      eq.add(lexicalEq)
+    if (profiles.get("cc") >= 0.5){
+      eqAlgorithms.add(new WordEmbeddingMatcherSigmoid());
+    }
+    if (profiles.get("dc") >= 0.5){
+      eqAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid());
+      subAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
+    }
+    if (profiles.get("pf") >= 0.5){
+      eqAlgorithms.add(new PropertyEquivalenceMatcherSigmoid());
+    }
+    if (profiles.get("sp") >= 0.5){
+      eqAlgorithms.add(new GraphEquivalenceMatcherSigmoid());
+      subAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
+    }
+    if (profiles.get("lc") >= 0.5){
+      eqAlgorithms.add(new LexicalEquivalenceMatcherSigmoid());
+      subAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
+    }
 
     if (equivalence) {
-      toReturn.addAll(eq);
+      toReturn.addAll(eqAlgorithms);
     }
     if (subsumption) {
-      toReturn.addAll(sub);
+      toReturn.addAll(subAlgorithms);
     }
-    return toReturn;
+    return (Algorithm[])toReturn.toArray();
   }
-
 }
