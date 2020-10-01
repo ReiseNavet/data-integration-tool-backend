@@ -24,8 +24,11 @@ import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 /**
+ * 
+ * 
  * The WordEmbeddingMatcher matches concepts from two ontologies based on their associated embedding vectors.
  * @author audunvennesland
  *
@@ -57,10 +60,10 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 	}
 
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-		double profileScore = 0.9;
+		int slope = AlgorithmSettings.SLOPE; 
+		double rangeMin = AlgorithmSettings.RANGEMIN; 
+		double rangeMax = AlgorithmSettings.RANGEMAX;
+		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMin, rangeMax);
 	}

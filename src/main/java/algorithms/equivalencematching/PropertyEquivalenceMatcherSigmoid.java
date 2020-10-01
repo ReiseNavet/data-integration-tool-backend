@@ -41,11 +41,15 @@ import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 /**
- * The Property Matcher measures the similarity of the properties associated with the concepts to be matched. 
- * Both object properties and data properties where the concepts to be matched represent the domain or range class are 
+ *  The Property Matcher measures the similari
+ * y of the properties associated with the concepts to be matched. 
+ * * Both object properties and data properties where the concepts to be match
  collected into single sets C_x_prop and C_y_prop and compared with Jaccard. 
+ * 
+ * 
  * This class computes confidence scores for each relation using the scores from the ontology profiling.
  * @author audunvennesland
  *
@@ -85,10 +89,10 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	}
 
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-		double profileScore = 0.9;
+		int slope = AlgorithmSettings.SLOPE; 
+		double rangeMin = AlgorithmSettings.RANGEMIN; 
+		double rangeMax = AlgorithmSettings.RANGEMAX;
+		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnPEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}

@@ -40,14 +40,6 @@ public class AlgorithmPicker {
   public List<AlignmentProcess> initializeMatchingAlgorithms(){
 
     matchingAlgorithms = new ArrayList<AlignmentProcess>();
-
-    /* Values used as default in each alorithm's run method
-    String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-    double profileScore = 0.9;
-    */
     
     //equivalencematching added to matchingAlgorithms
     matchingAlgorithms.add(new BasicEQMatcher());
