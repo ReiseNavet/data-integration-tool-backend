@@ -60,6 +60,7 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 	}
 
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
+		String vectorFile = AlgorithmSettings.VECTORFILE;
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
