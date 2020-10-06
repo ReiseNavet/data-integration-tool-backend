@@ -143,6 +143,11 @@ public class OntologyProfiler {
 		System.out.println("\nOntology Profiling results are stored at " + storedOntologyProfileFile.getPath());
 	}
 
+	//See function returned
+	public static Map<String, Double> computeOntologyProfileScores(File ontoFile1, File ontoFile2, String embeddings) throws OWLOntologyCreationException, JWNLException, IOException {
+		return computeOntologyProfileScores(ontoFile1, ontoFile2, embeddings, true, true);
+	}
+
 	/**
 	 * Creates a map that for two input ontologies represents the ontology profiling scores.
 	 * @param ontoFile1 source ontology
