@@ -10,7 +10,8 @@ public class CellParser {
         return cell.getObject2().toString().split("#")[1];
     }
     public static String getRelation(Cell cell){
-        return cell.getRelation().getRelation();
+        String relation = cell.getRelation().getRelation();
+        return relation.equals("&lt;") ? "<" : relation;
     }
     public static String getConfidence(Cell cell){
         return String.format("%.2f", cell.getStrength());  
