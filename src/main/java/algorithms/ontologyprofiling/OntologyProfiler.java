@@ -147,7 +147,7 @@ public class OntologyProfiler {
 	 * Creates a map that for two input ontologies represents the ontology profiling scores.
 	 * @param ontoFile1 source ontology
 	 * @param ontoFile2 target ontology
-	 * @param corpus a file with word embeddings used to compute the Corpus Coverage (CC) measure.
+	 * @param embeddings a file with word embeddings used to compute the Corpus Coverage (CC) measure.
 	 * @return a map where the short name of the ontology profiling metric is key and the score from the ontology profiling is value.
 	 * @throws OWLOntologyCreationException
 	 * @throws JWNLException
@@ -155,14 +155,17 @@ public class OntologyProfiler {
 	   Jul 18, 2019
 	 * @throws net.sf.extjwnl.JWNLException 
 	 */
-	public static Map<String, Double> computeOntologyProfileScores(File ontoFile1, File ontoFile2, String corpus) throws OWLOntologyCreationException, JWNLException, IOException {
+	public static Map<String, Double> computeOntologyProfileScores(File ontoFile1, File ontoFile2, String embeddings, Boolean equivalence, Boolean subsumption) throws OWLOntologyCreationException, JWNLException, IOException {
 
 		Map<String, Double> ontologyProfileScores = new HashMap<String, Double>();
-		
-		ontologyProfileScores.put("cf", computeCompoundFraction(ontoFile1, ontoFile2));
-		ontologyProfileScores.put("cc", computeCorpusCoverage(ontoFile1, ontoFile2, corpus));
+		if (subsumption){
+			ontologyProfileScores.put("cf", computeCompoundFraction(ontoFile1, ontoFile2));
+		}
+		if (equivalence){
+			ontologyProfileScores.put("cc", computeCorpusCoverage(ontoFile1, ontoFile2, embeddings));
+			ontologyProfileScores.put("pf", computePropertyFraction(ontoFile1, ontoFile2));
+		}
 		ontologyProfileScores.put("dc", computeDefinitionCoverage(ontoFile1, ontoFile2));
-		ontologyProfileScores.put("pf", computePropertyFraction(ontoFile1, ontoFile2));
 		ontologyProfileScores.put("sp", computeStructuralProfile(ontoFile1, ontoFile2));
 		ontologyProfileScores.put("lc", computeLexicalCoverage(ontoFile1, ontoFile2));
 		//ontologyProfileScores.put("sr", computeSynonymRichnessWordNet(ontoFile1, ontoFile2));
