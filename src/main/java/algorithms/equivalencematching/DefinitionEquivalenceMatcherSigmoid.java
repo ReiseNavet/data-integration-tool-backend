@@ -30,8 +30,8 @@ import services.settings.AlgorithmSettings;
 
 /**
  * 
- *  The Definitions Equivalence Matcher identifies equivalent con
- * epts from the cosine similarity between embedding vectors associated with their labels and definitions.
+ * The Definitions Equivalence Matcher identifies equivalent concepts 
+ * from the cosine similarity between embedding vectors associated with their labels and definitions.
  * In this class weights are imposed from the ontology profiling scores.
  */
 public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {

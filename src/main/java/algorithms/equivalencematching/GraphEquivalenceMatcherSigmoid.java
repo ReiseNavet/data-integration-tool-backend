@@ -37,13 +37,11 @@ import services.settings.AlgorithmSettings;
 /**
  * 
  * This matcher identifies the structural proximity of two nodes using the following steps:
- * ul>
- * 
- * 
- * <li>Calculate the distance (number of edges) from the two nodes n_1 and n_2 (
- * ntology concepts to be matched) to their root (thing) as n_1_dist and n_2_dist respectively.</li>
- * <li>Identify the set of ancestor nodes to n_1 and n_2 with similarity above a
- * certain threshold.</li>
+ * <ul>
+ *  <li>Calculate the distance (number of edges) from the two nodes n_1 and n_2
+ *  (ontology concepts to be matched) to their root (thing) as n_1_dist and n_2_dist respectively.</li>
+ *  <li>Identify the set of ancestor nodes to n_1 and n_2 with similarity above a
+ *  certain threshold.</li>
  *  <li>Calculate the distance from each pair of ancestor nodes to the respective graph's root and calculate the average distance avg_Anc_dist.</li>
  * </ul>
  *  Then, when the above distances have been 

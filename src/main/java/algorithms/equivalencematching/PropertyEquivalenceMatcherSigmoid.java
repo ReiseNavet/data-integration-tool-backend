@@ -44,11 +44,9 @@ import services.interfaces.Algorithm;
 import services.settings.AlgorithmSettings;
 
 /**
- *  The Property Matcher measures the similari
- * y of the properties associated with the concepts to be matched. 
- * * Both object properties and data properties where the concepts to be match
- collected into single sets C_x_prop and C_y_prop and compared with Jaccard. 
- * 
+ * The Property Matcher measures the similarity of the properties associated with the concepts to be matched. 
+ * Both object properties and data properties where the concepts to be match collected into single sets 
+ * C_x_prop and C_y_prop and compared with Jaccard. 
  * 
  * This class computes confidence scores for each relation using the scores from the ontology profiling.
  * @author audunvennesland
