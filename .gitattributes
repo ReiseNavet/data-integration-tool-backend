@@ -1,0 +1,6 @@
+*.adj text eol=lf
+*.adv text eol=lf
+*.verb text eol=lf
+*.noun text eol=lf
+*.tcl text eol=lf
+*.c text eol=lf

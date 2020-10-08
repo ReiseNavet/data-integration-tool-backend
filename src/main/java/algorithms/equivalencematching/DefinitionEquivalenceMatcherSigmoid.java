@@ -26,9 +26,12 @@ import fr.inrialpes.exmo.align.impl.ObjectAlignment;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 /**
- * The Definitions Equivalence Matcher identifies equivalent concepts from the cosine similarity between embedding vectors associated with their labels and definitions.
+ * 
+ * The Definitions Equivalence Matcher identifies equivalent concepts 
+ * from the cosine similarity between embedding vectors associated with their labels and definitions.
  * In this class weights are imposed from the ontology profiling scores.
  */
 public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
@@ -60,11 +63,11 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 	}
 
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-		double profileScore = 0.9;
+		String vectorFile = AlgorithmSettings.VECTORFILE;
+		int slope = AlgorithmSettings.SLOPE; 
+		double rangeMin = AlgorithmSettings.RANGEMIN; 
+		double rangeMax = AlgorithmSettings.RANGEMAX;
+		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMax, rangeMin);
 	}

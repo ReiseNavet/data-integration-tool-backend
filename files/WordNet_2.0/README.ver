@@ -1,0 +1,13 @@
+In order to use WordNet 2.0 on the same system as version 1.7.1, you must do the following to ensure that you are using the correct database with each version.
+
+1 - Both versions must be insalled in the default locations. 
+	1.7.1	C:\Program Files\WordNet\1.7.1
+	2.0	C:\Program Files\WordNet\2.0
+
+2 - You need to remove the environment variable WNHOME.  To do this, right-click on "My Computer" and select "Properties". Next, select the "Advanced" tab.  Select "Environment Variables" and scroll through the "User Variables" until you find "WNHOME".  Highlight "WNHOME" and then click the "Delete" button.
+
+3 - Reboot your computer
+
+After this, when you run version 1.7.1 you will be using the 1.7.1 database, and when you run 2.0 you will use the 2.0 database.
+
+If you don't do this, then after installing 2.0, no matter which interface you run, it will always access the 2.0 database. 

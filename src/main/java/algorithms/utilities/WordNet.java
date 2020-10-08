@@ -33,7 +33,7 @@ public class WordNet {
 	//final static String JWNL_FILE = "./files/WordNet-3.0/file_property.xml";
 	
 	//Note that the WNDomains classification relies on WordNet-2.0
-	static RiWordNet database = new RiWordNet("./files/WordNet-2.0/dict");
+	static RiWordNet database = new RiWordNet("./files/WordNet_2.0/dict");
 	
 	public static void main(String[] args) throws FileNotFoundException, JWNLException {
 		

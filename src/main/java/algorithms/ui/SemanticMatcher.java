@@ -325,7 +325,7 @@ private static URIAlignment mergeEQAndSubAlignments (URIAlignment eqAlignment, U
  * @throws IOException
    Jul 15, 2019
  */
-private static URIAlignment removeMismatches (URIAlignment combinedEQAlignment, String mismatchStorePath) throws AlignmentException, OWLOntologyCreationException, JWNLException, URISyntaxException, IOException {
+public static URIAlignment removeMismatches (URIAlignment combinedEQAlignment, String mismatchStorePath) throws AlignmentException, OWLOntologyCreationException, JWNLException, URISyntaxException, IOException {
 
 	//store the merged alignment
 	File initialAlignment = new File(mismatchStorePath + "/initialAlignment.rdf");

@@ -29,6 +29,7 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import rita.wordnet.jwnl.JWNLException;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
@@ -57,10 +58,10 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	}
 
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-    double profileScore = 0.9;
+		int slope = AlgorithmSettings.SLOPE; 
+		double rangeMin = AlgorithmSettings.RANGEMIN; 
+		double rangeMax = AlgorithmSettings.RANGEMAX;
+		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnDSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}

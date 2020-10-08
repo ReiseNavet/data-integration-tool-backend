@@ -14,10 +14,7 @@ import org.semanticweb.owl.align.Cell;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import algorithms.alignmentcombination.ProfileWeight;
-import algorithms.alignmentcombination.ProfileWeightSubsumption;
 import algorithms.equivalencematching.BasicEQMatcher;
-import algorithms.subsumptionmatching.BasicSubsumptionMatcher;
-import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import rita.wordnet.jwnl.JWNLException;
@@ -94,7 +91,6 @@ public class BasicSemanticMatcher {
 	 * @throws AlignmentException
 	 * @throws URISyntaxException
 	   Jul 15, 2019
-	   TODO: Omit matchers if their corresponding profile score is below a threshold (e.g. 0.5)
 	 */
 	private static ArrayList<URIAlignment> computeEQAlignments(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException, URISyntaxException {
 
@@ -127,72 +123,5 @@ public class BasicSemanticMatcher {
 		return combinedEQAlignment;
 
 	}
-
-	
-	/**
-	 * This method makes a call to the individual subsumption matchers which produce their alignments.
-	 * @param ontoFile1 source ontology
-	 * @param ontoFile2 target ontology
-	 * @param ontologyProfilingScores a map holding scores from the ontology profiling process
-	 * @return an ArrayList of URIAlignments produced by the individual subsumption matchers.
-	 * @throws OWLOntologyCreationException
-	 * @throws AlignmentException
-	   Jul 15, 2019
-	   TODO: Omit matchers if their corresponding profile score is below a threshold (e.g. 0.5)
-	 * @throws IOException 
-	 */
-	private static ArrayList<URIAlignment> computeSUBAlignments(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException, IOException {
-
-		
-		ArrayList<URIAlignment> subAlignments = new ArrayList<URIAlignment>();
-
-
-		System.out.print("Computing Basic Subsumption Matcher Alignment");
-		long startTimeBSM = System.currentTimeMillis();
-		URIAlignment BSMAlignment = BasicSubsumptionMatcher.returnBasicSUBMatcherAlignment(ontoFile1, ontoFile2);		
-		
-		subAlignments.add(BSMAlignment);
-		long endTimBSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimBSM - startTimeBSM)  / 1000 + " seconds.\n");
-		
-		
-		return subAlignments;
-
-	}
-
-	/**
-	 * Combines individual subsumption alignments into a single alignment
-	 * @param inputAlignments individual alignments produced by an emsemble of matchers
-	 * @return a URIAlignment holding subsumption relations produced by an ensemble of matchers
-	 * @throws AlignmentException
-	 * @throws IOException
-	 * @throws URISyntaxException
-	   Jul 15, 2019
-	 */
-	private static URIAlignment combineSUBAlignments (ArrayList<URIAlignment> inputAlignments) throws AlignmentException, IOException, URISyntaxException {
-
-		URIAlignment combinedSUBAlignment = ProfileWeightSubsumption.computeProfileWeightingSubsumption(inputAlignments);
-
-		return combinedSUBAlignment;
-
-	}
-
-/**
- * Merges an alignment holding equivalence relations with an alignment holding subsumption relations.
- * @param eqAlignment the input equivalence alignment
- * @param subAlignment the input subsumption alignment
- * @return a merged URIAlignment holding both equivalence and subsumption relations.
- * @throws AlignmentException
-   Jul 15, 2019
- */
-private static URIAlignment mergeEQAndSubAlignments (URIAlignment eqAlignment, URIAlignment subAlignment) throws AlignmentException {
-
-	URIAlignment mergedEQAndSubAlignment = AlignmentOperations.combineEQAndSUBAlignments(eqAlignment, subAlignment);
-
-	return mergedEQAndSubAlignment;
-
-}
-
-
 
 }

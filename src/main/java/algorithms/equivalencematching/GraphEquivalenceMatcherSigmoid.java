@@ -32,15 +32,21 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
 import services.interfaces.Algorithm;
+import services.settings.AlgorithmSettings;
 
 /**
+ * 
  * This matcher identifies the structural proximity of two nodes using the following steps:
  * <ul>
- *  <li>Calculate the distance (number of edges) from the two nodes n_1 and n_2 (ontology concepts to be matched) to their root (thing) as n_1_dist and n_2_dist respectively.</li>
- *  <li>Identify the set of ancestor nodes to n_1 and n_2 with similarity above a certain threshold.</li>
+ *  <li>Calculate the distance (number of edges) from the two nodes n_1 and n_2
+ *  (ontology concepts to be matched) to their root (thing) as n_1_dist and n_2_dist respectively.</li>
+ *  <li>Identify the set of ancestor nodes to n_1 and n_2 with similarity above a
+ *  certain threshold.</li>
  *  <li>Calculate the distance from each pair of ancestor nodes to the respective graph's root and calculate the average distance avg_Anc_dist.</li>
  * </ul>
- * Then, when the above distances have been retrieved, compute the equivalence score between two nodes as follows:
+ *  Then, when the above distances have been 
+ * etrieved, compute the 
+ * 
  * GraphSim(n_1,n_2) = ((2 * avg_Anc_dist) / (n_1_dist + n_2_dist)) 
  * @author audunvennesland
  *
@@ -79,10 +85,10 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 	}
 	
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
-		int slope = 3; 
-		double rangeMin = 0.5; 
-		double rangeMax = 0.7;
-		double profileScore = 0.9;
+		int slope = AlgorithmSettings.SLOPE; 
+		double rangeMin = AlgorithmSettings.RANGEMIN; 
+		double rangeMax = AlgorithmSettings.RANGEMAX;
+		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnGEMAlignment (ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}

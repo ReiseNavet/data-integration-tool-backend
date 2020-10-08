@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.owl.align.Alignment;
@@ -85,7 +86,7 @@ public class ProfileWeight {
 	}
 	
 	//used for evaluation of sigmoid parameters
-	public static URIAlignment computeProfileWeightingEquivalence(ArrayList<URIAlignment> inputAlignments) throws AlignmentException, IOException, URISyntaxException {
+	public static URIAlignment computeProfileWeightingEquivalence(List<URIAlignment> inputAlignments) throws AlignmentException, IOException, URISyntaxException {
 		Set<URIAlignment> alignmentSet = new HashSet<URIAlignment>();
 		URIAlignment highestCellAlignment = new URIAlignment();
 		URIAlignment profileWeightingEquivalenceAlignment = new URIAlignment();
