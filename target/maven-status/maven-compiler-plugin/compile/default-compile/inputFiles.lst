@@ -1,75 +1,75 @@
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\oaei\EvaluateProfileWeightCombinationOAEI.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\AlignmentOperations.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\wordembedding\VectorConcept.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\EvalMajorityVoteCombination.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\CompoundMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\DefinitionSubsumptionMatcherSigmoid_revised.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\MathUtils.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\mismatchdetection\EvalMismatchDetectionSingleAlignment.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\ProfileWeightSubsumption.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\WordNet.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\App.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\AlignmentConflictResolution.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\graph\Graph.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\mismatchdetection\StructureMismatch.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\DefinitionSubsumptionMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\EvaluateProfileWeightCombination_matcher_selection.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\ontologyprofiling\OntologyProfiler.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\WNDomain.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\ContextSubsumptionMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\CutThreshold.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\DefinitionEquivalenceMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\EvalCutThresholdCombination.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\StringUtilities.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\mismatchdetection\ConfirmSubsumption.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\Sigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\LexicalConcept.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\general\ComputeSyntacticEvaluationScores.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\NaiveDescendingExtraction.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\Relation.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\PropertyEquivalenceMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\matchers\EvalAllMatchersBasicWeight.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\ContextSubsumptionMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\EvalAverageAggregationCombination.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\WordEmbeddingMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\EvaluateProfileWeightCombination.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\oaei\EvalCutThresholdCombinationOAEI.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\ui\SemanticMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\RelationComparator.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\general\Evaluator.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\oaei\EvaluateProfileWeightCombinationOAEI_matcher_selection.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\SimilarityMetrics.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\ui\BasicSemanticMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\general\EvaluationScore.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\oaei\EvalAverageAggregationCombinationOAEI.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\mismatchdetection\ConceptScopeMismatch.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\graph\GraphCreator.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\mismatchdetection\MismatchDetection.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\DefinitionEquivalenceMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\LexicalSubsumptionMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\ProfileWeight.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\competition\EvaluateCompetitionSemPrecRec.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\CompoundMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\mismatchdetection\EvalMismatchDetection.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\GraphEquivalenceMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\WordEmbeddingMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\matchers\EvalAllMatchersSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\wordembedding\VectorExtractor.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\Cosine.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\ISub.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\OntologyOperations.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\LexicalSubsumptionMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\utilities\RelationComparatorConfidence.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\competition\EvaluateCompetition.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\wordembedding\ProcessEmbeddings.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\BasicSubsumptionMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\subsumptionmatching\DefinitionSubsumptionMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\BasicEQMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\evaluation\combination\oaei\EvalMajorityVoteCombinationOAEI.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\PropertyEquivalenceMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\MajorityVote.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\LexicalEquivalenceMatcher.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\equivalencematching\LexicalEquivalenceMatcherSigmoid.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\alignmentcombination\AverageAggregation.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\mismatchdetection\DomainMismatch.java
-C:\Users\sebas\Documents\Git\Kundestyrt prosjekt\integration-tool-backend\src\main\java\graph\SimpleGraph.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\AverageAggregation.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\competition\EvaluateCompetition.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\ISub.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\OntologyOperations.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\EvalCutThresholdCombination.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\LexicalSubsumptionMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\BasicEQMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\EvaluateProfileWeightCombination.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\Sigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\mismatchdetection\MismatchDetection.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\GraphEquivalenceMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\AlignmentOperations.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\oaei\EvalCutThresholdCombinationOAEI.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\general\EvaluationScore.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\WNDomain.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\graph\Graph.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\oaei\EvalMajorityVoteCombinationOAEI.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\CompoundMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\DefinitionSubsumptionMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\oaei\EvaluateProfileWeightCombinationOAEI_matcher_selection.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\App.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\wordembedding\VectorConcept.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\WordNet.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\LexicalEquivalenceMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\graph\GraphCreator.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\mismatchdetection\ConceptScopeMismatch.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\mismatchdetection\DomainMismatch.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\ui\SemanticMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\DefinitionEquivalenceMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\wordembedding\ProcessEmbeddings.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\general\ComputeSyntacticEvaluationScores.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\WordEmbeddingMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\mismatchdetection\EvalMismatchDetectionSingleAlignment.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\Relation.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\ui\BasicSemanticMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\StringUtilities.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\mismatchdetection\ConfirmSubsumption.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\LexicalSubsumptionMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\matchers\EvalAllMatchersBasicWeight.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\Cosine.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\PropertyEquivalenceMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\matchers\EvalAllMatchersSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\CutThreshold.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\MajorityVote.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\CompoundMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\competition\EvaluateCompetitionSemPrecRec.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\general\Evaluator.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\graph\SimpleGraph.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\ContextSubsumptionMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\LexicalEquivalenceMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\oaei\EvalAverageAggregationCombinationOAEI.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\EvaluateProfileWeightCombination_matcher_selection.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\WordEmbeddingMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\mismatchdetection\EvalMismatchDetection.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\ontologyprofiling\OntologyProfiler.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\mismatchdetection\StructureMismatch.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\PropertyEquivalenceMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\DefinitionSubsumptionMatcherSigmoid_revised.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\ProfileWeight.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\ContextSubsumptionMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\AlignmentConflictResolution.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\NaiveDescendingExtraction.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\equivalencematching\DefinitionEquivalenceMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\alignmentcombination\ProfileWeightSubsumption.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\EvalMajorityVoteCombination.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\LexicalConcept.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\wordembedding\VectorExtractor.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\BasicSubsumptionMatcher.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\RelationComparator.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\SimilarityMetrics.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\subsumptionmatching\DefinitionSubsumptionMatcherSigmoid.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\oaei\EvaluateProfileWeightCombinationOAEI.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\MathUtils.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\evaluation\combination\EvalAverageAggregationCombination.java
+C:\Users\eivin\Documents\GithubProjects\integration-tool-backend\src\main\java\algorithms\utilities\RelationComparatorConfidence.java
