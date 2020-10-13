@@ -90,7 +90,6 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	public void align( Alignment alignment, Properties param ) throws AlignmentException {
 
 		//System.out.println("\nStarting Lexical Subsumption Matcher...");
-		long startTimeMatchingProcess = System.currentTimeMillis();
 
 		LexicalConcept sourceLexicalConcept = new LexicalConcept();
 		LexicalConcept targetLexicalConcept = new LexicalConcept();
@@ -204,10 +203,6 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 			}
 
 		} catch (Exception e) { e.printStackTrace(); }
-
-		long endTimeMatchingProcess = System.currentTimeMillis();
-
-		System.out.println("The matching operation took " + (endTimeMatchingProcess - startTimeMatchingProcess) / 1000 + " seconds.");
 	}
 
 
