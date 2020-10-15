@@ -247,7 +247,7 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 			propsSynonyms = new HashSet<String>();
 
 			for (String p : props) {
-				propsSynonyms = WordNet.getAllSynonymSet(p.toLowerCase().replaceAll("\\s+", "")); //use the lemma + need to remove whitespace before querying WordNet
+				propsSynonyms = WordNet.getAllSynonymSetCached(p.toLowerCase().replaceAll("\\s+", "")); //use the lemma + need to remove whitespace before querying WordNet
 			}
 
 			props.addAll(propsSynonyms);				
