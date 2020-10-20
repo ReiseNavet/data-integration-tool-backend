@@ -37,9 +37,9 @@ import rita.wordnet.jwnl.JWNLException;
 public class SemanticMatcher {
 	
 	
-	static File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
+	//static File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
 	//static File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-	//static File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
+	static File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
 	static File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-302.rdf");
 	static String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
 	static String mismatchStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/MISMATCHES";
@@ -160,7 +160,7 @@ public class SemanticMatcher {
 		URIAlignment WEMAlignment = WordEmbeddingMatcherSigmoid.returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, ontologyProfilingScores.get("cc"), slope, rangeMin, rangeMax);	
 		eqAlignments.add(WEMAlignment);
 		long endTimeWEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeWEM - startTimeWEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeWEM - startTimeWEM)  / 1000f) + " seconds.\n");
 		}
 
 		if (dc >= 0.5) {
@@ -169,7 +169,7 @@ public class SemanticMatcher {
 		URIAlignment DEMAlignment = DefinitionEquivalenceMatcherSigmoid.returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, ontologyProfilingScores.get("cc"), slope, rangeMin, rangeMax);
 		eqAlignments.add(DEMAlignment);
 		long endTimeDEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeDEM - startTimeDEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeDEM - startTimeDEM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (sp >= 0.5) {
@@ -178,7 +178,7 @@ public class SemanticMatcher {
 		URIAlignment GEMAlignment = GraphEquivalenceMatcherSigmoid.returnGEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("sp"), slope, rangeMin, rangeMax);	
 		eqAlignments.add(GEMAlignment);
 		long endTimeGEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeGEM - startTimeGEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeGEM - startTimeGEM)  / 1000f) + " seconds.\n");
 		}
 
 		if (pf >= 0.5) {
@@ -187,7 +187,7 @@ public class SemanticMatcher {
 		URIAlignment PEMAlignment = PropertyEquivalenceMatcherSigmoid.returnPEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("pf"), slope, rangeMin, rangeMax);
 		eqAlignments.add(PEMAlignment);
 		long endTimePEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimePEM - startTimePEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimePEM - startTimePEM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (lc >= 0.5) {
@@ -196,7 +196,7 @@ public class SemanticMatcher {
 		URIAlignment LEMAlignment = LexicalEquivalenceMatcherSigmoid.returnLEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("lc"), slope, rangeMin, rangeMax);
 		eqAlignments.add(LEMAlignment);
 		long endTimeLEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeLEM - startTimeLEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeLEM - startTimeLEM)  / 1000f) + " seconds.\n");
 		}
 
 
@@ -248,7 +248,7 @@ public class SemanticMatcher {
 		URIAlignment CMAlignment = CompoundMatcherSigmoid.returnCMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("cf"), slope, rangeMin, rangeMax);		
 		subAlignments.add(CMAlignment);
 		long endTimeCM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeCM - startTimeCM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeCM - startTimeCM)  / 1000f) + " seconds.\n");
 		}
 
 		if (sp >= 0.5) {
@@ -257,7 +257,7 @@ public class SemanticMatcher {
 		URIAlignment CSMAlignment = ContextSubsumptionMatcherSigmoid.returnCSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("sp"), slope, rangeMin, rangeMax);		
 		subAlignments.add(CSMAlignment);
 		long endTimeCSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeCSM - startTimeCSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeCSM - startTimeCSM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (dc >= 0.5) {
@@ -266,7 +266,7 @@ public class SemanticMatcher {
 		URIAlignment DSMAlignment = DefinitionSubsumptionMatcherSigmoid.returnDSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("dc"), slope, rangeMin, rangeMax);		
 		subAlignments.add(DSMAlignment);
 		long endTimeDSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeDSM - startTimeDSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeDSM - startTimeDSM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (lc >= 0.5) {
@@ -275,7 +275,7 @@ public class SemanticMatcher {
 		URIAlignment LSMAlignment = LexicalSubsumptionMatcherSigmoid.returnLSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("lc"), slope, rangeMin, rangeMax);		
 		subAlignments.add(LSMAlignment);
 		long endTimeLSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeLSM - startTimeLSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeLSM - startTimeLSM)  / 1000f) + " seconds.\n");
 		}
 		
 		return subAlignments;
