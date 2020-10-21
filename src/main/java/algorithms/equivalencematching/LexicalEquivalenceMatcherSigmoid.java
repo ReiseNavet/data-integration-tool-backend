@@ -42,21 +42,6 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	double rangeMin;
 	double rangeMax;
 
-	public static void main(String[] args) throws OWLOntologyCreationException, AlignmentException {
-		File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-		//File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
-		//File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
-		File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-302.rdf");
-		final int slope = 3;
-		final double rangeMin = 0.5;
-		final double rangeMax = 0.7;
-		System.out.print("Computing LEM alignment");
-		long startTimeLEM = System.currentTimeMillis();
-		URIAlignment LEMAlignment = LexicalEquivalenceMatcherSigmoid.returnLEMAlignment(ontoFile1, ontoFile2, 0.0, slope, rangeMin, rangeMax);
-		long endTimeLEM = System.currentTimeMillis();
-		System.out.print("..." + String.format("%.1f", (endTimeLEM - startTimeLEM)  / 1000f) + " seconds.\n");
-	}
-	
 	static OWLOntology sourceOntology;
 	static OWLOntology targetOntology;
 	
