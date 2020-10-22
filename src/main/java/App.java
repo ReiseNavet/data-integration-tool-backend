@@ -90,11 +90,8 @@ public class App {
         }
 
       } catch (Exception e){
-        if(json == null) {
-          ctx.status(500);
-          json = ExceptionHandler.getErrorMsg(e);
-          System.out.println(json);
-        }
+        System.out.println("Couldn't delete files..?");
+        System.out.println(e.getStackTrace());
       }
 
       ctx.result(json);
