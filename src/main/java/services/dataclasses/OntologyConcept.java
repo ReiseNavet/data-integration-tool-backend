@@ -1,9 +1,11 @@
 package services.dataclasses;
 
+import java.util.List;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-public class OntologyRaw {
+public class OntologyConcept {
     // All fields except "name" are optional
     public String name; // rdfs:label
     public String[] properties;
@@ -13,7 +15,7 @@ public class OntologyRaw {
     public String domain; // F.eks. a truck is a type of car (Merk: is a type of)
     public String inverseOf;
 
-    public OWLOntology toOwlOntology(){
+    public static OWLOntology toOwlOntology(List<OntologyConcept> ontologyConcepts){
         throw new NotImplementedException();
     }
 }
