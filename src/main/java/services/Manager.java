@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import services.IO.OWLOntologyToFile;
@@ -26,12 +28,13 @@ public class Manager {
 
   public URIAlignment handle(String sourceFilePath, String targetFilePath, boolean useEquivalence,
       boolean useSubsumption, String baseSaveLocation) throws Exception {
+    OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
-    OWLOntology sourceOntology = inputParser.parseInput(sourceFilePath);
-    OWLOntology targetOntology = inputParser.parseInput(targetFilePath);
+    OWLOntology sourceOntology = inputParser.parseInput(sourceFilePath, manager);
+    OWLOntology targetOntology = inputParser.parseInput(targetFilePath, manager);
 
-    File sourceFile = OWLOntologyToFile.Convert(sourceOntology, baseSaveLocation + "/source");
-    File targetFile = OWLOntologyToFile.Convert(targetOntology, baseSaveLocation + "/target");
+    File sourceFile = OWLOntologyToFile.Convert(sourceOntology, baseSaveLocation + "/source", manager);
+    File targetFile = OWLOntologyToFile.Convert(targetOntology, baseSaveLocation + "/target", manager);
 
     Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceFile, targetFile, useEquivalence, useSubsumption);
     Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceFile, targetFile, pickedAlgorithms);

@@ -65,7 +65,6 @@ public class App {
       String json = null;
 
       try {
-
         URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption, baseSaveLocation);
         json = "[";
         for (Cell cell: result.getArrayElements()) {
@@ -80,6 +79,7 @@ public class App {
         ctx.status(500);
         json = ExceptionHandler.getErrorMsg(e);
         System.out.println(json);
+        e.printStackTrace();
       }
 
       try {
@@ -91,7 +91,7 @@ public class App {
 
       } catch (Exception e){
         System.out.println("Couldn't delete files..?");
-        System.out.println(e.getStackTrace());
+        e.printStackTrace();
       }
 
       ctx.result(json);
