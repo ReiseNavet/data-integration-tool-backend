@@ -75,6 +75,14 @@ public class App {
         
         json = json.substring(0, json.length() - 1) + "]";
         
+
+      } catch (Exception e){
+        ctx.status(500);
+        json = ExceptionHandler.getErrorMsg(e);
+        System.out.println(json);
+      }
+
+      try {
         // Clean up temporary files.
         File tempDirectory = new File(baseSaveLocation);
         if(tempDirectory.isDirectory()) {
