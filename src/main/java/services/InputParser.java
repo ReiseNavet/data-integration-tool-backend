@@ -29,6 +29,8 @@ public class InputParser {
       parser = new IXSIParser();
     } else if (filetype.equals("xls") || filetype.equals("xlsx")){
       parser = new SpreadsheetParser();
+    } else {
+      throw new IllegalArgumentException("Unsupported fileformat");
     }
     List<OntologyConcept> concepts = parser.parse(filepath);
     return OntologyConcept.toOwlOntology(concepts);
