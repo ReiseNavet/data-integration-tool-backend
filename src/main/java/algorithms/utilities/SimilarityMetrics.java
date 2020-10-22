@@ -1,5 +1,7 @@
 package algorithms.utilities;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -9,6 +11,12 @@ import java.util.Set;
  */
 public class SimilarityMetrics {
 
+    public static void main(String[] args) {
+		Set<String> set1 = new HashSet<String>(Arrays.asList(new String[]{"hi", "hei"}));
+		Set<String> set2 = new HashSet<String>(Arrays.asList(new String[]{"hei", "hey"}));
+		System.out.println(jaccardSetSim(set1, set2));
+    }
+
 	/**
 	 * Computes the Jaccard similarity between two sets of strings
 	 * @param set1 the first set of strings
@@ -17,22 +25,13 @@ public class SimilarityMetrics {
 	   Jul 17, 2019
 	 */
 	public static double jaccardSetSim (Set<String> set1, Set<String> set2) {
-
-
-		int intersection = 0;
-
-		for (String s1 : set1) {
-			for (String s2 : set2) {
-				if (s1.equals(s2)) {
-					intersection += 1;
-				}
-			}
-		}
-
-		int union = (set1.size() + set2.size()) - intersection;
-
+		int size1 = set1.size();
+		int size2 = set2.size();
+		Set<String> unionSet = new HashSet<String>(set1);
+		unionSet.addAll(set2);
+		int union = unionSet.size();
+		int intersection = size1 + size2 - union;
 		double jaccardSetSim = (double) intersection / (double) union;
-
 		return jaccardSetSim;
 	}
 

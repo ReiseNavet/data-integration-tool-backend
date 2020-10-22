@@ -1,7 +1,9 @@
 package algorithms.utilities;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +36,7 @@ public class WordNet {
 	
 	//Note that the WNDomains classification relies on WordNet-2.0
 	static RiWordNet database = new RiWordNet("./files/WordNet_2.0/dict");
+	static Map<String, Set<String>> synonymMemo = new HashMap<String, Set<String>>();
 	
 	public static void main(String[] args) throws FileNotFoundException, JWNLException {
 		
@@ -180,8 +183,10 @@ public class WordNet {
 	 * @param inputWord the input word for which WordNet synonyms are retrieved.
 	 * @return a set of WordNet synonyms
 	 */
-	public static Set<String> getAllSynonymSet(String inputWord) {
-
+	public static Set<String> getAllSynonymSetCached(String inputWord) {
+		if (synonymMemo.containsKey(inputWord)){
+			return synonymMemo.get(inputWord);
+		}
 		Set<String> synSet = new HashSet<String>();
 
 		String[] nounSynonyms = database.getAllSynonyms(inputWord, "n");
@@ -195,7 +200,7 @@ public class WordNet {
 		for (int i = 0; i < verbSynonyms.length; i++) {
 			synSet.add(verbSynonyms[i]);
 		}
-
+		synonymMemo.put(inputWord, synSet);
 		return synSet;
 	}
 
@@ -352,10 +357,8 @@ public class WordNet {
 	 * @return
 	 */
 	public static double computeJiangConrath(String firstInputString, String secondInputString)  {
-
 		WS4JConfiguration.getInstance().setMFS(true);
 		double s = new JiangConrath(db).calcRelatednessOfWords(firstInputString, secondInputString);
-
 		//need a work-around since some of the scores are above 1.0 (not allowed to have a confidence level above 1.0)
 		if (s > 1.0) {
 			s = 1.0;
