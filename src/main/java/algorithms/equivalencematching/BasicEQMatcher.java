@@ -27,22 +27,6 @@ import services.interfaces.Algorithm;
  */
 public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess, Algorithm {
 
-
-	static OWLOntology onto1;
-	static OWLOntology onto2;
-
-
-	//The ISUB confidence used in the combined Jaccard/ISub similarity measure
-	final double confidence = 0.6;
-
-	public BasicEQMatcher(){}
-
-	public BasicEQMatcher(OWLOntology ontoFile1, OWLOntology ontoFile2) {
-		onto1 = ontoFile1;
-		onto2 = ontoFile2;
-
-	}
-
 	public URIAlignment run(File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
 		return returnBasicEQMatcherAlignment(ontoFile1, ontoFile2);
 	}
@@ -68,11 +52,8 @@ public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess,
 
 					//compute similarity between concepts using ISUB
 					sim = computeISUBSim(source, target);
+					addAlignCell("BasicStringMatcher" + idCounter + "_", sourceObject,targetObject, "=", sim );  
 
-						
-						addAlignCell("BasicStringMatcher" + idCounter + "_", sourceObject,targetObject, "=", sim );  
-
-					
 				}
 			}
 
@@ -100,25 +81,21 @@ public class BasicEQMatcher extends ObjectAlignment implements AlignmentProcess,
 	 */
 	public static URIAlignment returnBasicEQMatcherAlignment (File ontoFile1, File ontoFile2) throws OWLOntologyCreationException, AlignmentException {
 
-		URIAlignment BMSMAlignment = new URIAlignment();
 
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		OWLOntology onto1 = manager.loadOntologyFromOntologyDocument(ontoFile1);
 		OWLOntology onto2 = manager.loadOntologyFromOntologyDocument(ontoFile2);
 
-		AlignmentProcess a = new BasicEQMatcher(onto1, onto2);
+		AlignmentProcess a = new BasicEQMatcher();
 		a.init(ontoFile1.toURI(), ontoFile2.toURI());
 		Properties params = new Properties();
 		params.setProperty("", "");
 		a.align((Alignment)null, params);	
-		BasicAlignment BasicStringMatcherAlignment = new BasicAlignment();
+		
+		BasicAlignment basicStringMatcherAlignment = (BasicAlignment) (a.clone());
+		basicStringMatcherAlignment.normalise();
 
-		BasicStringMatcherAlignment = (BasicAlignment) (a.clone());
-
-		BasicStringMatcherAlignment.normalise();
-
-		BMSMAlignment = BasicStringMatcherAlignment.toURIAlignment();
-
+		URIAlignment BMSMAlignment = basicStringMatcherAlignment.toURIAlignment();
 		BMSMAlignment.init( onto1.getOntologyID().getOntologyIRI().toURI(), onto2.getOntologyID().getOntologyIRI().toURI(), A5AlgebraRelation.class, BasicConfidence.class );
 
 		return BMSMAlignment;
