@@ -62,12 +62,6 @@ public class App {
       FileUtil.streamToFile(ctx.uploadedFile("source").getContent(), sourceFileLocation);
       FileUtil.streamToFile(ctx.uploadedFile("target").getContent(), targetFileLocation);
 
-      // For debugging, delete before production.
-      System.out.println(sourceFileLocation);
-      System.out.println(targetFileLocation);
-      System.out.println(useEquivalence);
-      System.out.println(useSubsumption);
-
       String json = null;
 
       try {
@@ -75,24 +69,32 @@ public class App {
         URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
         json = "[";
         for (Cell cell: result.getArrayElements()) {
-          json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},"
-            , CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
+          json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
+              CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
         }
         
         json = json.substring(0, json.length() - 1) + "]";
+        
 
       } catch (Exception e){
+        ctx.status(500);
         json = ExceptionHandler.getErrorMsg(e);
         System.out.println(json);
       }
 
-      ctx.result(json);
+      try {
+        // Clean up temporary files.
+        File tempDirectory = new File(baseSaveLocation);
+        if(tempDirectory.isDirectory()) {
+          FileUtils.deleteDirectory(tempDirectory);
+        }
 
-      // Clean up temporary files.
-      File tempDirectory = new File(baseSaveLocation);
-      if(tempDirectory.isDirectory()) {
-        FileUtils.deleteDirectory(tempDirectory);
+      } catch (Exception e){
+        System.out.println("Couldn't delete files..?");
+        System.out.println(e.getStackTrace());
       }
+
+      ctx.result(json);
 
     });
 

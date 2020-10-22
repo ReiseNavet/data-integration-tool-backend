@@ -21,19 +21,19 @@ public enum ErrorCodes {
   private final String msg;
 
   private ErrorCodes(String code, String msg) {
-      this.code = code;
-      this.msg = msg;
+    this.code = code;
+    this.msg = msg;
   }
 
   public String getErrorCode() {
-      return code;
+    return code;
   }
 
   public String getErrorMsg() {
     if(Integer.valueOf(code)<300 & Integer.valueOf(code)>=200){
-      return "Error code " + code + ", " + msg + ": The alignment algorithms could not run";
+      return "Error code " + code + ", " + msg + ": Your input files could not be aligned.";
     }else if(Integer.valueOf(code)<400 & Integer.valueOf(code)>=300){
-      return "Error code " + code + ", " + msg + ": The selected files retrieved an error";
+      return "Error code " + code + ", " + msg + ": Unknown file-related error. Check your input files.";
     }
       return "Error code " + code + ", " + msg;
   }

@@ -27,7 +27,7 @@ public class ExceptionHandler extends Exception {
     }else if (e instanceof FileNotFoundException){
       return ErrorCodes.FILE_NOT_FOUND.getErrorMsg();
     }
-    return "Other error not fetched by ExceptionHandler";
+    return "Unknown server error";
   }
 
 }
