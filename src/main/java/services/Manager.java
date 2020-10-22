@@ -7,6 +7,7 @@ import java.util.Map;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
+import services.IO.OWLOntologyToFile;
 import services.enums.AlgorithmType;
 import services.interfaces.Algorithm;
 
@@ -24,13 +25,13 @@ public class Manager {
   }
 
   public URIAlignment handle(String sourceFilePath, String targetFilePath, boolean useEquivalence,
-      boolean useSubsumption) throws Exception {
-
-    File sourceFile = new File(sourceFilePath);
-    File targetFile = new File(targetFilePath);
+      boolean useSubsumption, String baseSaveLocation) throws Exception {
 
     OWLOntology sourceOntology = inputParser.parseInput(sourceFilePath);
     OWLOntology targetOntology = inputParser.parseInput(targetFilePath);
+
+    File sourceFile = OWLOntologyToFile.Convert(sourceOntology, baseSaveLocation + "/source");
+    File targetFile = OWLOntologyToFile.Convert(targetOntology, baseSaveLocation + "/target");
 
     Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceFile, targetFile, useEquivalence, useSubsumption);
     Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceFile, targetFile, pickedAlgorithms);

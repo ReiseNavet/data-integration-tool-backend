@@ -66,7 +66,7 @@ public class App {
 
       try {
 
-        URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
+        URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption, baseSaveLocation);
         json = "[";
         for (Cell cell: result.getArrayElements()) {
           json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
