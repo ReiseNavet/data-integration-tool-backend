@@ -9,6 +9,7 @@ public enum ErrorCodes {
   IOErrors: 300-399
   */
 
+  INVALID_FORMAT_EXCEPTION("100", "Invalid Format Exception"),
   ALIGNMENT_ERROR("200", "Alignment Exception"),
   OWL_ONTOLOGY_CREATION_ERROR("201", "OWL Ontology Creation Exception"),
   URI_SYNTAX_ERROR("202", "URI Syntax Exception"),
@@ -34,6 +35,8 @@ public enum ErrorCodes {
       return "Error code " + code + ", " + msg + ": Your input files could not be aligned.";
     }else if(Integer.valueOf(code)<400 & Integer.valueOf(code)>=300){
       return "Error code " + code + ", " + msg + ": Unknown file-related error. Check your input files.";
+    }else if(Integer.valueOf(code)==100){
+      return "Error code " + code + ", " + msg + ": Input xls or xlsx file was not formatted to GTFS-Flex standard.";
     }
       return "Error code " + code + ", " + msg;
   }
