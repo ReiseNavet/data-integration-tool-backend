@@ -1,6 +1,8 @@
 package services.dataclasses;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hp.hpl.jena.ontology.DatatypeProperty;
 
@@ -44,28 +46,57 @@ public class OntologyConcept {
 
     public static void main(String[] args) throws Exception {
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
-        OWLOntology o = OntologyConcept.toOwlOntology(null, m);
+        OWLOntology o = OntologyConcept.test(m);
         OWLOntologyToFile.Convert(o, "files/temp/onto", m);
     }
 
-    public static OWLOntology toOwlOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager m)
+    public static OWLOntology toOWLOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager m)
             throws Exception {
         IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
         OWLOntology o = m.createOntology(example_iri);
         OWLDataFactory df = OWLManager.getOWLDataFactory();
-        OWLClass baby = df.getOWLClass(IRI.create(example_iri + "#Baby"));
-        OWLClass child = df.getOWLClass(IRI.create(example_iri + "#Child"));
-        OWLClass person = df.getOWLClass(IRI.create(example_iri + "#Person"));
-        OWLClass thing = df.getOWLClass(IRI.create(example_iri + "#Thing"));
 
-        OWLAnnotation labelAnno = df.getOWLAnnotation(df.getRDFSLabel(), df.getOWLLiteral("Baby"));
-        OWLAxiom label_ax = df.getOWLAnnotationAssertionAxiom(baby.getIRI(), labelAnno);
+        Map<String, OWLClass> nameToOWLClass = new HashMap<String, OWLClass>();
+        for(OntologyConcept concept : ontologyConcepts){
+            OWLClass c = df.getOWLClass(IRI.create(example_iri + "#" + concept.name));
+            AddLabel(concept.name, c, df, m, o);
+            AddDescription(concept.description, c, df, m, o);
+            nameToOWLClass.put(concept.name, c);
+        }
+        for(OntologyConcept concept : ontologyConcepts){
+            OWLClass c = nameToOWLClass.get(concept.name);
+            OWLClass c2 = nameToOWLClass.get(concept.subClassof);
+            AddSubClassOf(c, c2, df, m, o);
+        }
+        return o;
+    }
+    public static void AddLabel(String name, OWLClass c, OWLDataFactory df, OWLOntologyManager m, OWLOntology o){
+        OWLAnnotation labelAnno = df.getOWLAnnotation(df.getRDFSLabel(), df.getOWLLiteral(name));
+        OWLAxiom label_ax = df.getOWLAnnotationAssertionAxiom(c.getIRI(), labelAnno);
+        m.applyChange(new AddAxiom(o, label_ax));
+    }
 
+    public static void AddDescription(String description, OWLClass c, OWLDataFactory df, OWLOntologyManager m, OWLOntology o){
+        if (description == ""){
+            return;
+        }
         OWLAnnotation commentAnno = df.getOWLAnnotation(df.getRDFSComment(),
-                df.getOWLLiteral("A very young child", ""));
-        OWLAxiom comment_ax = df.getOWLAnnotationAssertionAxiom(baby.getIRI(), commentAnno);
+        df.getOWLLiteral(description, ""));
+        OWLAxiom comment_ax = df.getOWLAnnotationAssertionAxiom(c.getIRI(), commentAnno);
+        m.applyChange(new AddAxiom(o, comment_ax));
+    }
 
-        OWLSubClassOfAxiom sub_ax = df.getOWLSubClassOfAxiom(baby, child);
+    public static void AddSubClassOf(OWLClass child, OWLClass parent, OWLDataFactory df, OWLOntologyManager m, OWLOntology o){
+        OWLSubClassOfAxiom sub_ax = df.getOWLSubClassOfAxiom(child, parent);
+        m.applyChange(new AddAxiom(o, sub_ax));
+    }
+
+    public static OWLOntology test(OWLOntologyManager m) throws Exception{
+        IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
+        OWLOntology o = m.createOntology(example_iri);
+        OWLDataFactory df = OWLManager.getOWLDataFactory();
+        OWLClass baby = df.getOWLClass(IRI.create(example_iri + "#Baby"));
+        OWLClass person = df.getOWLClass(IRI.create(example_iri + "#Person"));
         
         //PrefixManager pm= new DefaultPrefixManager("http://www.co-ode.org/ontologies/ont.owl#");
         OWLObjectPropertyExpression man= df.getOWLObjectProperty(baby.getIRI());
@@ -73,12 +104,7 @@ public class OntologyConcept {
         OWLObjectPropertyDomainAxiom domain=df.getOWLObjectPropertyDomainAxiom(man, person);
         //OWLObjectPropertyRangeAxiom range= df.getOWLObjectPropertyRangeAxiom(man, (OWLClassExpression) dt);
 
-        m.applyChange(new AddAxiom(o, label_ax));
-        m.applyChange(new AddAxiom(o, comment_ax));
-        m.applyChange(new AddAxiom(o, sub_ax));
         m.applyChange(new AddAxiom(o, domain));
-        //m.applyChange(new AddAxiom(o, range));
-        //m.applyChange(new AddAxiom(o, range_ax));
         return o;
     }
 }

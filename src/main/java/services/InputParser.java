@@ -33,6 +33,6 @@ public class InputParser {
       throw new IllegalArgumentException("Unsupported fileformat");
     }
     List<OntologyConcept> concepts = parser.parse(filepath);
-    return OntologyConcept.toOwlOntology(concepts, manager);
+    return OntologyConcept.toOWLOntology(concepts, manager);
   }
 }
