@@ -27,6 +27,18 @@ public class IXSIParser implements SchemaParser {
         this.parserInstance = new XsdParser(filePath);
     }
 
+    public static void main(String[] args) throws Exception{
+        IXSIParser test = new IXSIParser("files/temp/IXSI.xsd");
+        List<OntologyConcept> concepts = test.parse("files/temp/IXSI.xsd");
+        for (OntologyConcept concept : concepts){
+            System.out.println("Label: " + concept.name);
+            System.out.println("Comment: " + concept.description);
+            System.out.println("SubClassOf: " + concept.subClassof);
+            System.out.println("Domain: " + concept.domain);
+            System.out.println("Range: " + concept.range);
+        }
+    }
+
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
         //Stream<XsdElement> elementsStream = parserInstance.getResultXsdElements();
