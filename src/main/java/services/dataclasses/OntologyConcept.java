@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hp.hpl.jena.ontology.DatatypeProperty;
-
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
@@ -33,16 +31,17 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.PrefixManager;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
+import kotlin.NotImplementedError;
 import services.IO.OWLOntologyToFile;
 
 public class OntologyConcept {
     // All fields except "name" are optional. Look at schema-org.owl for examples.
     public String name; // rdfs:label
     public String description; // rdfs:comment
-    public String subClassof; // F.eks. a AboutPage is a part of a WebPage, a brother is a part of a family
-                              // (Merk: is a part of)
+    public String subClassof; // F.eks. a AboutPage is a part of a WebPage, a brother is a part of a family (Merk: is a part of)
     public String domain; // F.eks. a truck is a type of car (Merk: is a type of)
     public String range; // F.eks. a car is a thing, a nose is a thing (Merk: is a)
+    public Boolean dontMatchThis; // Typically you don't want to use the domains/range in the matching
 
     public static void main(String[] args) throws Exception {
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
@@ -62,6 +61,9 @@ public class OntologyConcept {
             AddLabel(concept.name, c, df, m, o);
             AddDescription(concept.description, c, df, m, o);
             nameToOWLClass.put(concept.name, c);
+            if (!concept.domain.equals("") || !concept.range.equals("") || concept.dontMatchThis){
+                throw new NotImplementedError("domain, range and dontMatchThis are currently not supported");
+            }
         }
         for(OntologyConcept concept : ontologyConcepts){
             OWLClass c = nameToOWLClass.get(concept.name);
@@ -91,6 +93,10 @@ public class OntologyConcept {
         m.applyChange(new AddAxiom(o, sub_ax));
     }
 
+
+    /**
+     * Test function for implementing domain, range and dontMatchThis
+     */
     public static OWLOntology test(OWLOntologyManager m) throws Exception{
         IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
         OWLOntology o = m.createOntology(example_iri);
