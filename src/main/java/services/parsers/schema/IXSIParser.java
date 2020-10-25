@@ -7,6 +7,10 @@ import org.apache.commons.lang.NotImplementedException;
 import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
 
+import org.xmlet.xsdparser.core.XsdParser;
+import org.xmlet.xsdparser.xsdelements.*;
+
+
 public class IXSIParser implements SchemaParser {
 
     @Override
