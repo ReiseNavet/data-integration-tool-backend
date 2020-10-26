@@ -33,19 +33,22 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import kotlin.NotImplementedError;
 import services.IO.OWLOntologyToFile;
+import services.parsers.schema.SpreadsheetParser;
 
 public class OntologyConcept {
     // All fields except "name" are optional. Look at schema-org.owl for examples.
-    public String name; // rdfs:label
-    public String description; // rdfs:comment
-    public String subClassof; // F.eks. a AboutPage is a part of a WebPage, a brother is a part of a family (Merk: is a part of)
-    public String domain; // F.eks. a truck is a type of car (Merk: is a type of)
-    public String range; // F.eks. a car is a thing, a nose is a thing (Merk: is a)
-    public Boolean dontMatchThis; // Typically you don't want to use the domains/range in the matching
+    public String name = ""; // rdfs:label
+    public String description = ""; // rdfs:comment
+    public String subClassof = ""; // F.eks. a AboutPage is a part of a WebPage, a brother is a part of a family (Merk: is a part of)
+    public String domain = ""; // F.eks. a truck is a type of car (Merk: is a type of)
+    public String range = ""; // F.eks. a car is a thing, a nose is a thing (Merk: is a)
+    public Boolean matchThis = true; // Typically you don't want to use the domains/range in the matching
 
     public static void main(String[] args) throws Exception {
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
-        OWLOntology o = OntologyConcept.test(m);
+        SpreadsheetParser parser = new SpreadsheetParser();
+        OWLOntology o = OntologyConcept.toOWLOntology(parser.parse("files/temp/GTFS-Flex.xlsx"), m);
+        //OWLOntology o = OntologyConcept.test(m);
         OWLOntologyToFile.Convert(o, "files/temp/onto", m);
     }
 
@@ -56,16 +59,24 @@ public class OntologyConcept {
         OWLDataFactory df = OWLManager.getOWLDataFactory();
 
         Map<String, OWLClass> nameToOWLClass = new HashMap<String, OWLClass>();
+        //Fix label and description
         for(OntologyConcept concept : ontologyConcepts){
+            if (nameToOWLClass.containsKey(concept.name)){ //It only uses one of the comments when duplicate entries occours. Good enough?
+                continue;
+            }
             OWLClass c = df.getOWLClass(IRI.create(example_iri + "#" + concept.name));
             AddLabel(concept.name, c, df, m, o);
             AddDescription(concept.description, c, df, m, o);
             nameToOWLClass.put(concept.name, c);
-            if (!concept.domain.equals("") || !concept.range.equals("") || concept.dontMatchThis){
-                throw new NotImplementedError("domain, range and dontMatchThis are currently not supported");
+            if (!concept.domain.equals("") || !concept.range.equals("") || !concept.matchThis){
+                throw new NotImplementedError("domain, range and !matchThis are currently not supported");
             }
         }
+        //Fix subclasses
         for(OntologyConcept concept : ontologyConcepts){
+            if (concept.subClassof.equals("")){
+                continue;
+            }
             OWLClass c = nameToOWLClass.get(concept.name);
             OWLClass c2 = nameToOWLClass.get(concept.subClassof);
             AddSubClassOf(c, c2, df, m, o);
@@ -89,6 +100,10 @@ public class OntologyConcept {
     }
 
     public static void AddSubClassOf(OWLClass child, OWLClass parent, OWLDataFactory df, OWLOntologyManager m, OWLOntology o){
+        if (parent == null){
+            System.out.println("Warning: SubClassOf could not find parent class");
+            return;
+        }
         OWLSubClassOfAxiom sub_ax = df.getOWLSubClassOfAxiom(child, parent);
         m.applyChange(new AddAxiom(o, sub_ax));
     }

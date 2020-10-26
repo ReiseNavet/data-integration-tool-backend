@@ -27,9 +27,10 @@ public class SpreadsheetParser implements SchemaParser {
         Iterator<Row> iterator = datatypeSheet.iterator();
     
         //Setting index of element that will have subclasses
-        String lastElement = null;
     
-        while (iterator.hasNext()) {
+        Boolean emptyCell = false;
+        String lastElement = null;
+        while (iterator.hasNext() && !emptyCell) {
           Row currentRow = iterator.next();
           //Skipping first row which contains headers
           if (currentRow.getRowNum() == 0){
@@ -38,21 +39,28 @@ public class SpreadsheetParser implements SchemaParser {
           OntologyConcept ontologyConcept = new OntologyConcept(); //Change object name after merge to dev
           Iterator<Cell> cellIterator = currentRow.iterator();
           
-          while (cellIterator.hasNext()) {
+          while (cellIterator.hasNext() && !emptyCell) {
             Cell currentCell = cellIterator.next();
+            if (currentCell.getStringCellValue().equals("")){
+              continue;
+            }
             if (currentCell.getColumnIndex() == 0){
               lastElement = currentCell.getStringCellValue();
               ontologyConcept.name = lastElement;
             }
-            if (currentCell.getColumnIndex() == 1 & lastElement != null){
+            if (currentCell.getColumnIndex() == 1){
               ontologyConcept.name = currentCell.getStringCellValue();
               ontologyConcept.subClassof = lastElement;
             }
             if (currentCell.getColumnIndex() == 2 ){
+              if (ontologyConcept.name.equals("")){ // if neither coloumIndex 0 or 1 had a name, exit
+                emptyCell = true;
+                break;
+              } 
               ontologyConcept.description = currentCell.getStringCellValue();
+              ontologyList.add(ontologyConcept);
             }
           }
-          ontologyList.add(ontologyConcept);
         }
         workbook.close();
         
