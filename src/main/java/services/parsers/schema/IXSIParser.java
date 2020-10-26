@@ -28,6 +28,7 @@ public class IXSIParser implements SchemaParser {
     }
 
     public static void main(String[] args) throws Exception{
+        System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         IXSIParser test = new IXSIParser("files/temp/IXSI.xsd");
         List<OntologyConcept> concepts = test.parse("files/temp/IXSI.xsd");
         for (OntologyConcept concept : concepts){
