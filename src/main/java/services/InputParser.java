@@ -2,14 +2,9 @@ package services;
 
 import java.io.File;
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.core.ZipFile;
 
 import org.apache.commons.io.FilenameUtils;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import services.IO.OWLOntologyToFile;
 import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
 import services.parsers.ZipParser;

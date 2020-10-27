@@ -17,17 +17,17 @@ public class ExceptionHandler extends Exception {
   public static String getErrorMsg(Exception e) {
     if(e instanceof AlignmentException){
       return ErrorCodes.ALIGNMENT_ERROR.getErrorMsg();
-    }else if (e instanceof OWLOntologyCreationException){
+    } else if (e instanceof OWLOntologyCreationException){
       return ErrorCodes.OWL_ONTOLOGY_CREATION_ERROR.getErrorMsg();
-    }else if (e instanceof URISyntaxException){
+    } else if (e instanceof URISyntaxException){
       return ErrorCodes.URI_SYNTAX_ERROR.getErrorMsg();
-    }else if (e instanceof OntowrapException){
+    } else if (e instanceof OntowrapException){
       return ErrorCodes.ONTOWRAP_ERROR.getErrorMsg();
-    }else if (e instanceof JWNLException){
+    } else if (e instanceof JWNLException){
       return ErrorCodes.JWNL_ERROR.getErrorMsg();
-    }else if (e instanceof FileNotFoundException){
+    } else if (e instanceof FileNotFoundException){
       return ErrorCodes.FILE_NOT_FOUND.getErrorMsg();
-    }else if (e instanceof InvalidFormatException){
+    } else if (e instanceof InvalidFormatException){
       return ErrorCodes.INVALID_FORMAT_EXCEPTION.getErrorMsg();
     }
     return "Unknown server error";
