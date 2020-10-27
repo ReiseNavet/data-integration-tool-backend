@@ -1,4 +1,4 @@
-package services.dataclasses;
+package services.utils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,7 +26,6 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import kotlin.NotImplementedError;
 import services.HashGenerator;
-import services.IO.OWLOntologyToFile;
 
 public class OntologyConcept {
   // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -44,7 +43,7 @@ public class OntologyConcept {
     OWLOntologyManager m = OWLManager.createOWLOntologyManager();
     OWLOntology o = toOWLOntology(ontologyConcepts, m);
     //OWLOntology o = OntologyConcept.test(m);
-    File file = OWLOntologyToFile.Convert(o, filepathToStore, m);
+    File file = OWLOntologyToFile.convert(o, filepathToStore, m);
     FixOntology(filepathToStore);
     return file;
   }

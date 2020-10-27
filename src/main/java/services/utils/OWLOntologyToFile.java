@@ -1,4 +1,4 @@
-package services.IO;
+package services.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,7 +8,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class OWLOntologyToFile {
-  public static File Convert(OWLOntology owlOntology, String baseSaveLocation, OWLOntologyManager manager) throws Exception{
+  public static File convert(OWLOntology owlOntology, String baseSaveLocation, OWLOntologyManager manager) throws Exception{
     OutputStream os = new FileOutputStream(baseSaveLocation);
     manager.saveOntology(owlOntology, os);
     os.close();

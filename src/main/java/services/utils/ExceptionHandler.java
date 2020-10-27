@@ -1,4 +1,4 @@
-package services;
+package services.utils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -11,8 +11,6 @@ import services.enums.ErrorCodes;
 public class ExceptionHandler extends Exception {
 
   private static final long serialVersionUID = 1L;
-
-  public ExceptionHandler() {};
 
   public static String getErrorMsg(Exception e) {
     if(e instanceof AlignmentException){

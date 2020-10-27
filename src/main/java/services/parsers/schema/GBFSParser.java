@@ -5,9 +5,9 @@ import java.util.List;
 
 import algorithms.utilities.StringUtilities;
 import rita.json.JSONObject;
-import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
-import services.parsers.ZipParser;
+import services.utils.OntologyConcept;
+import services.utils.Unzipper;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class GBFSParser implements SchemaParser {
 
   public static void main(String[] args) throws Exception {
-    List<OntologyConcept> concepts = new GBFSParser().parse(ZipParser.Unzip("files/parse_files/GBFS.zip", "temp/parse_files/GBFS"));
+    List<OntologyConcept> concepts = new GBFSParser().parse(Unzipper.unzip("files/parse_files/GBFS.zip", "temp/parse_files/GBFS"));
     String filepath = "temp/parse_files/ParseGBFS.owl";
     OntologyConcept.toOWLFile(concepts, filepath);
   }

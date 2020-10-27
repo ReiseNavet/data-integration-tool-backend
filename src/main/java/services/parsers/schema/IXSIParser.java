@@ -2,8 +2,8 @@ package services.parsers.schema;
 
 import java.util.List;
 
-import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
+import services.utils.OntologyConcept;
 
 import org.xmlet.xsdparser.core.XsdParser;
 import org.xmlet.xsdparser.xsdelements.XsdComplexType;
