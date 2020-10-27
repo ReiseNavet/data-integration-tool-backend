@@ -44,7 +44,9 @@ public class IXSIParser implements SchemaParser {
         parserInstance = new XsdParser(filePath);
         //Stream<XsdElement> elementsStream = parserInstance.getResultXsdElements();
         Stream<XsdSchema> schemasStream = parserInstance.getResultXsdSchemas();
-        schemasStream.forEach(this::parseSchema);
+        for (XsdSchema schema : (Iterable<XsdSchema>) schemasStream::iterator) {
+            parseSchema(schema);
+         }
 
         // debug
         System.out.println("IXSIParser count: " + concepts.stream().count());
@@ -53,7 +55,7 @@ public class IXSIParser implements SchemaParser {
         
     }
 
-    public void parseSchema(XsdSchema schema) {
+    public void parseSchema(XsdSchema schema) throws Exception {
         List<XsdSimpleType> simpleTypes = schema.getChildrenSimpleTypes().collect(Collectors.toList());
         if (simpleTypes.size() > 0) this.parseSimpleTypes(simpleTypes);
 
@@ -87,7 +89,7 @@ public class IXSIParser implements SchemaParser {
         }
     }
 
-    public void parseComplexTypes(List<XsdComplexType> complexTypes) {
+    public void parseComplexTypes(List<XsdComplexType> complexTypes) throws Exception  {
         for (XsdComplexType ct : complexTypes) {
             OntologyConcept concept = new OntologyConcept();
             concept.name = ct.getName();
@@ -95,31 +97,16 @@ public class IXSIParser implements SchemaParser {
             this.concepts.add(concept);
 
             // Adds elements from sequence
+            List<XsdElement> xsdElementsSequence  = ct.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
+            this.parseElements(xsdElementsSequence, concept.name);
 
-            try {
-                List<XsdElement> xsdElements  = ct.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
-                this.parseElements(xsdElements, concept.name);
-            } catch (Exception e) {
-
-            }
-
-            // Adds elements from groups ()
-
-            try {
-                List<XsdElement> xsdElements = ct.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
-                this.parseElements(xsdElements, concept.name);
-            } catch (Exception e) {
-
-            }
+            // Adds elements from groups () 
+            List<XsdElement> xsdElementsGroups = ct.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
+            this.parseElements(xsdElementsGroups, concept.name);
 
             // Adds elements from choices
-
-            try {
-                List<XsdElement> xsdElements = ct.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
-                this.parseElements(xsdElements, concept.name);
-            } catch (Exception e) {
-
-            }
+            List<XsdElement> xsdElementsChoices = ct.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
+            this.parseElements(xsdElementsChoices, concept.name);
         }
     }
 }
