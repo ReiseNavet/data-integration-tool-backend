@@ -10,7 +10,6 @@ import algorithms.alignmentcombination.ProfileWeightSubsumption;
 import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import services.enums.SemanticRelation;
-import services.settings.AlgorithmSettings;
 
 public class AlignmentCombiner {
   public URIAlignment combine(Map<SemanticRelation, List<URIAlignment>> results) throws Exception {

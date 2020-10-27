@@ -30,7 +30,6 @@ import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
-import rita.wordnet.jwnl.JWNLException;
 
 public class SemanticMatcher {
 	
