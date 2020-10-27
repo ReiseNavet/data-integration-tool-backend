@@ -33,7 +33,6 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import services.HashGenerator;
 import services.IO.OWLOntologyToFile;
-import services.parsers.schema.IXSIParser;
 
 public class OntologyConcept {
   // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -208,28 +207,5 @@ public class OntologyConcept {
       textSplit[n] = textSplit[n].replace("rdf:Description", "owl:Class");
     }
     Files.writeString(Paths.get(filepathToStore), String.join("owl:unionOf", textSplit));
-  }
-
-
-  /**
-   * Test function for implementing
-   */
-  private static OWLOntology test(OWLOntologyManager m) throws Exception{
-    IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
-    OWLOntology o = m.createOntology(example_iri);
-    OWLDataFactory df = OWLManager.getOWLDataFactory();
-    OWLClass geoPositionType = df.getOWLClass(IRI.create(example_iri + "#GeoPositionType"));
-    OWLClass coordType = df.getOWLClass(IRI.create(example_iri + "#CoordType"));
-    OWLClass addressType = df.getOWLClass(IRI.create(example_iri + "#AddressType"));
-
-    //OWLClassExpression firstRuleSet = df.getOWLObjectUnionOf(person, child);
-    //OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(baby.getIRI());
-    //m.addAxiom(o, df.getOWLDataPropertyDomainAxiom(c_as_property, firstRuleSet));
-
-    //OWLAnnotation labelAnno = df.getOWLAnnotationProperty(df.getRDFSLabel(), df.getOWLLiteral("Person"));
-    //OWLAnnotation labelAnno = df.getOWLAnnotation(df.getOWLAnnotationProperty(IRI.create(example_iri + "#rdfs:label")), df.getOWLLiteral("Person"));
-    //OWLAnnotationAssertionAxiom label_ax = df.getOWLAnnotationAssertionAxiom(personIRI, labelAnno);
-    //m.addAxiom(o, label_ax);
-    return o;
   }
 }
