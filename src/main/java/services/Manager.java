@@ -28,10 +28,8 @@ public class Manager {
 
   public URIAlignment handle(String sourceFilePath, String targetFilePath, boolean useEquivalence,
       boolean useSubsumption, String baseSaveLocation) throws Exception {
-    OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-
-    File sourceOntology = inputParser.parseInput(sourceFilePath, baseSaveLocation + "/source", manager);
-    File targetOntology = inputParser.parseInput(targetFilePath, baseSaveLocation + "/target", manager);
+    File sourceOntology = inputParser.parseInput(sourceFilePath, baseSaveLocation + "/source");
+    File targetOntology = inputParser.parseInput(targetFilePath, baseSaveLocation + "/target");
 
     Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceOntology, targetOntology, useEquivalence, useSubsumption);
     Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceOntology, targetOntology, pickedAlgorithms);

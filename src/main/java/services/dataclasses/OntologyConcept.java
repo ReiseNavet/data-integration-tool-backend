@@ -76,42 +76,46 @@ public class OntologyConcept {
 
     private static OWLOntology toOWLOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager m)
             throws Exception {
-        IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
-        OWLOntology o = m.createOntology(example_iri);
+        IRI base_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
+        OWLOntology o = m.createOntology(base_iri);
         OWLDataFactory df = OWLManager.getOWLDataFactory();
 
         Map<String, OWLClass> nameToOWLClass = new HashMap<String, OWLClass>();
         Map<String, Set<String>> domains = new HashMap<String, Set<String>>();
-        // Fix label and description
+
+        //Create OWLClasses
         for (OntologyConcept concept : ontologyConcepts) {
 
-            OWLClass c = df.getOWLClass(IRI.create(example_iri + "#" + concept.name));
+            OWLClass c = df.getOWLClass(IRI.create(base_iri + "#" + concept.name));
 
             AddLabel(concept.name, c, df, m, o);
+            //Add description
             if (!concept.description.equals("")){
                 if (!nameToOWLClass.containsKey(concept.name)) { // It only uses one of the comments if there are duplicate entries
                     AddDescription(concept.description, c, df, m, o);
                 }
             }
+            //Add domains to map
             if (!concept.domain.equals("")){
                 if (!domains.containsKey(concept.name)){
                     domains.put(concept.name, new HashSet<String>());
                 }
                 domains.get(concept.name).add(concept.domain);
             }
+            //Add range
             if (!concept.range.equals("")) {
                 throw new NotImplementedError("range are currently not supported");
             }
 
             nameToOWLClass.put(concept.name, c);
         }
-        // Fix domains
+        // Add domains from map
         for (String key : domains.keySet()){
             OWLClass c = nameToOWLClass.get(key);
             Set<OWLClass> c2 = domains.get(key).stream().map(a -> nameToOWLClass.get(a)).collect(Collectors.toSet());
             AddDomain(c, c2, df, m, o);
         }
-        // Fix subclasses (duplicate subclass entries are not supported as of now)
+        // Add subClassOf (duplicate subclass entries are not supported as of now)
         for (OntologyConcept concept : ontologyConcepts) {
             if (concept.subClassof.equals("")) {
                 continue;

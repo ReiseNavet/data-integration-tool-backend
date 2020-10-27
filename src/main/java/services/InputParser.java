@@ -17,7 +17,7 @@ import services.parsers.schema.SpreadsheetParser;
 
 public class InputParser {
 
-  public File parseInput(String filepathLoad, String filepathSaveIfParsed, OWLOntologyManager manager) throws Exception {
+  public File parseInput(String filepathLoad, String filepathSaveIfParsed) throws Exception {
     String filetype = FilenameUtils.getExtension(filepathLoad);
     if (filetype.equals("owl") || filetype.equals("rdf")){
       return new File(filepathLoad);
@@ -33,6 +33,6 @@ public class InputParser {
       throw new IllegalArgumentException("Unsupported fileformat");
     }
     List<OntologyConcept> concepts = parser.parse(filepathLoad);
-    return OntologyConcept.toOWLFile(concepts, manager, filepathSaveIfParsed);
+    return OntologyConcept.toOWLFile(concepts, filepathSaveIfParsed);
   }
 }
