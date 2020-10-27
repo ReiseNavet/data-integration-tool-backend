@@ -41,10 +41,10 @@ public class OntologyConcept {
   public String description = ""; // rdfs:comment
   public String domain = ""; // Same as subClassOf, but for a header not a class, which means it wont be used
                              // for the matching.
+  public String range = ""; // F.eks. address is a string, phone_num is a integer (Merk: is a)
 
-  // Ask if you need to use these.
+  // Ask if you need to use this.
   public String subClassof = ""; // F.eks. a brother is a part of a family (Merk: is a part of)
-  public String range = ""; // F.eks. a brother is a person (Merk: is a)
 
   public static File toOWLFile(List<OntologyConcept> ontologyConcepts, String filepathToStore)
       throws Exception {
