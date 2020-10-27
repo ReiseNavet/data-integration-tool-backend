@@ -4,12 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import services.IO.OWLOntologyToFile;
 import services.enums.AlgorithmType;
 import services.interfaces.Algorithm;
 
