@@ -70,8 +70,8 @@ public class IXSIParser implements SchemaParser {
             OntologyConcept concept = new OntologyConcept();
             concept.name = elem.getName();
             concept.description = elem.getAnnotation().getDocumentations().get(0).getContent();
-            concept.domain = elem.getType();
-            concept.subClassof = parent;
+            concept.domain = parent;
+            //concept.range = elem.getType();
             this.concepts.add(concept);
         }
     }
@@ -82,7 +82,7 @@ public class IXSIParser implements SchemaParser {
             OntologyConcept concept = new OntologyConcept();
             concept.name = st.getName();
             concept.description = st.getAnnotation().getDocumentations().get(0).getContent();
-            concept.range = st.getRestriction().getBase(); // Is restriction range?
+            //concept.range = st.getRestriction().getBase(); // Is restriction range?
             this.concepts.add(concept);
         }
     }
