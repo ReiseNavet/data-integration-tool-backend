@@ -26,7 +26,7 @@ public class InputParser {
     if (filetype.equals("zip")){
       parser = new GBFSParser(); //TODO: Add NeTEx if we decide to implement it
     } else if (filetype.equals("xsd")){
-      parser = new IXSIParser(filepath);
+      parser = new IXSIParser();
     } else if (filetype.equals("xls") || filetype.equals("xlsx")){
       parser = new SpreadsheetParser();
     } else {

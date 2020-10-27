@@ -23,13 +23,12 @@ public class IXSIParser implements SchemaParser {
     private List<OntologyConcept> concepts = new ArrayList<>();
     private XsdParser parserInstance;
 
-    public IXSIParser(String filePath){
-        this.parserInstance = new XsdParser(filePath);
+    public IXSIParser(){
     }
 
     public static void main(String[] args) throws Exception{
         System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
-        IXSIParser test = new IXSIParser("files/temp/IXSI.xsd");
+        IXSIParser test = new IXSIParser();
         List<OntologyConcept> concepts = test.parse("files/temp/IXSI.xsd");
         for (OntologyConcept concept : concepts){
             System.out.println("Label: " + concept.name);
@@ -42,6 +41,7 @@ public class IXSIParser implements SchemaParser {
 
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
+        parserInstance = new XsdParser(filePath);
         //Stream<XsdElement> elementsStream = parserInstance.getResultXsdElements();
         Stream<XsdSchema> schemasStream = parserInstance.getResultXsdSchemas();
         schemasStream.forEach(this::parseSchema);
