@@ -18,7 +18,7 @@ import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.DefinitionSubsumptionMatcherSigmoid;
 import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
-import services.enums.AlgorithmType;
+import services.enums.SemanticRelation;
 import services.interfaces.Algorithm;
 import services.settings.AlgorithmSettings;
 
@@ -35,11 +35,11 @@ public class AlgorithmPicker {
    * (used in BasicMatcher). Should, in the end, return fitting algorithms for the
    * input.
    */
-  public Map<AlgorithmType, List<Algorithm>> pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption)
+  public Map<SemanticRelation, List<Algorithm>> pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption)
       throws Exception {
 
     String vectorFile = AlgorithmSettings.VECTORFILE;
-    Map<AlgorithmType, List<Algorithm>> toReturn = new HashMap<AlgorithmType, List<Algorithm>>();
+    Map<SemanticRelation, List<Algorithm>> toReturn = new HashMap<SemanticRelation, List<Algorithm>>();
 
     //Getting the profile-scores for each of the algorithms on how well they will perform on our source and target and corpus
     Map<String, Double> profiles  = OntologyProfiler.computeOntologyProfileScores(source, target, vectorFile, equivalence, subsumption);
@@ -63,7 +63,7 @@ public class AlgorithmPicker {
       if (profiles.get("lc") >= 0.5){
         eqAlgorithms.add(new LexicalEquivalenceMatcherSigmoid());
       }
-      toReturn.put(AlgorithmType.Equivalence, eqAlgorithms);
+      toReturn.put(SemanticRelation.Equivalence, eqAlgorithms);
     }
     if (subsumption){
       List<Algorithm> subAlgorithms = new ArrayList<Algorithm>();
@@ -80,7 +80,7 @@ public class AlgorithmPicker {
       if (profiles.get("lc") >= 0.5){
         subAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
       }
-      toReturn.put(AlgorithmType.Subsumption, subAlgorithms);
+      toReturn.put(SemanticRelation.Subsumption, subAlgorithms);
     }
     return toReturn;
   }
