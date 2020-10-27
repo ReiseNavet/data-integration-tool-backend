@@ -27,7 +27,6 @@ public class IXSIParser implements SchemaParser {
     }
 
     public static void main(String[] args) throws Exception{
-        System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         IXSIParser test = new IXSIParser();
         List<OntologyConcept> concepts = test.parse("files/temp/IXSI.xsd");
         for (OntologyConcept concept : concepts){
@@ -41,15 +40,13 @@ public class IXSIParser implements SchemaParser {
 
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
+        System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         parserInstance = new XsdParser(filePath);
         //Stream<XsdElement> elementsStream = parserInstance.getResultXsdElements();
         Stream<XsdSchema> schemasStream = parserInstance.getResultXsdSchemas();
         for (XsdSchema schema : (Iterable<XsdSchema>) schemasStream::iterator) {
             parseSchema(schema);
-         }
-
-        // debug
-        System.out.println("IXSIParser count: " + concepts.stream().count());
+        }
 
         return this.concepts;
         
@@ -71,7 +68,9 @@ public class IXSIParser implements SchemaParser {
         for (XsdElement elem : xsdElements) {
             OntologyConcept concept = new OntologyConcept();
             concept.name = elem.getName();
-            concept.description = elem.getAnnotation().getDocumentations().get(0).getContent();
+            if (elem.getAnnotation() != null){
+                concept.description = elem.getAnnotation().getDocumentations().get(0).getContent();
+            }
             concept.domain = parent;
             //concept.range = elem.getType();
             this.concepts.add(concept);
@@ -96,17 +95,25 @@ public class IXSIParser implements SchemaParser {
             concept.description = ct.getAnnotation().getDocumentations().get(0).getContent();
             this.concepts.add(concept);
 
-            // Adds elements from sequence
-            List<XsdElement> xsdElementsSequence  = ct.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
-            this.parseElements(xsdElementsSequence, concept.name);
+            if (ct.getElements() != null){
+                // Adds elements from sequence
+                if (ct.getChildAsSequence() != null){
+                    List<XsdElement> xsdElementsSequence  = ct.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
+                    this.parseElements(xsdElementsSequence, concept.name);    
+                }
+                
+                // Adds elements from groups () 
+                if (ct.getChildAsGroup() != null){
+                    List<XsdElement> xsdElementsGroups = ct.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
+                    this.parseElements(xsdElementsGroups, concept.name);
+                }
 
-            // Adds elements from groups () 
-            List<XsdElement> xsdElementsGroups = ct.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
-            this.parseElements(xsdElementsGroups, concept.name);
-
-            // Adds elements from choices
-            List<XsdElement> xsdElementsChoices = ct.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
-            this.parseElements(xsdElementsChoices, concept.name);
+                // Adds elements from choices
+                if (ct.getChildAsChoice() != null){
+                    List<XsdElement> xsdElementsChoices = ct.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
+                    this.parseElements(xsdElementsChoices, concept.name);
+                }
+            }
         }
     }
 }

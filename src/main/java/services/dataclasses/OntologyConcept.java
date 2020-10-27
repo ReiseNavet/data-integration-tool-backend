@@ -2,9 +2,7 @@ package services.dataclasses;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,40 +11,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLDataUnionOf;
-import org.semanticweb.owlapi.model.OWLDataVisitor;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
-import org.semanticweb.owlapi.model.PrefixManager;
-import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import kotlin.NotImplementedError;
+import services.HashGenerator;
 import services.IO.OWLOntologyToFile;
-import services.parsers.schema.SpreadsheetParser;
 import services.parsers.schema.GBFSParser;
+import services.parsers.schema.IXSIParser;
+import services.parsers.schema.SpreadsheetParser;
 
 public class OntologyConcept {
     // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -60,10 +43,21 @@ public class OntologyConcept {
     public String range = ""; // F.eks. a brother is a person (Merk: is a)
 
     public static void main(String[] args) throws Exception {
-        List<OntologyConcept> concepts = new GBFSParser().parse("files/temp/GBFS");
-        //List<OntologyConcept> concepts = new SpreadsheetParser().parse("files/temp/GTFS-Flex.xlsx");
-        String filepath = "files/temp/onto";
+        List<OntologyConcept> concepts;
+        String filepath;
+
+        concepts = new GBFSParser().parse("files/temp/GBFS/GBFS");
+        filepath = "files/temp/ParseGBFS";
         OntologyConcept.toOWLFile(concepts, filepath);
+
+        concepts = new SpreadsheetParser().parse("files/temp/GTFS-Flex.xlsx");
+        filepath = "files/temp/ParseGTFS";
+        OntologyConcept.toOWLFile(concepts, filepath);
+
+        concepts = new IXSIParser().parse("files/temp/IXSI.xsd");
+        filepath = "files/temp/ParseIXSI";
+        OntologyConcept.toOWLFile(concepts, filepath);
+     
     }
 
     public static File toOWLFile(List<OntologyConcept> ontologyConcepts, String filepathToStore)
@@ -78,7 +72,7 @@ public class OntologyConcept {
 
     private static OWLOntology toOWLOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager m)
             throws Exception {
-        IRI base_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
+        IRI base_iri = IRI.create("http://www.semanticweb.org/ontologies/ont" + HashGenerator.generateHash() +".owl");
         OWLOntology o = m.createOntology(base_iri);
         OWLDataFactory df = OWLManager.getOWLDataFactory();
 
