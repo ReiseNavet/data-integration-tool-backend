@@ -41,6 +41,18 @@ public class StringUtilities {
 			System.out.println(parts[i]);
 		}
 	}
+	/**
+	 * Removes domain from input if it contains the domain
+	 * E.x. domain = "agency", input = "agency_id" => returns "id"
+	 * @param input
+	 */
+	public static String RemoveDomain(String domain, String input){
+		//Turn e.x. [agency_id, agency_name, agency_lang] to [id, name, lang]
+		if (input.toLowerCase().startsWith(domain.toLowerCase()) && input.length() > domain.length()){
+			return input.substring(domain.length() + 1);
+		}
+		return input;
+	}
 
 	/**
 	 * Returns the lemma of a word using the Stanford SimpleNLP API

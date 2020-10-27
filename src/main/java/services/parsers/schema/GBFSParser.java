@@ -3,12 +3,14 @@ package services.parsers.schema;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.io.FilenameUtils;
 
 import algorithms.utilities.StringUtilities;
+import net.lingala.zip4j.core.ZipFile;
 import rita.json.JSONObject;
 import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
+import services.parsers.ZipParser;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -17,9 +19,9 @@ import java.nio.file.Paths;
 public class GBFSParser implements SchemaParser {
 
     public static void main(String[] args) throws Exception {
-        new GBFSParser().parse("files/temp/GBFS");   
+        String filepathLoad = "files/temp/GBFS.zip";
+        new GBFSParser().parse(ZipParser.Unzip(filepathLoad));   
     }
-
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
         List<OntologyConcept> ontoConcepts = new ArrayList<OntologyConcept>();

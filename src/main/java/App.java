@@ -8,25 +8,12 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
 import services.ExceptionHandler;
+import services.HashGenerator;
 import services.Manager;
 import services.parsers.CellParser;
 import org.semanticweb.owl.align.Cell;
 
 public class App {
-
-  private static String generateHash() {
-    int LENGTH = 10;
-    int leftLimit = 97; // letter 'a'
-    int rightLimit = 122; // letter 'z'
-    Random random = new Random();
- 
-    String hash = random.ints(leftLimit, rightLimit + 1)
-      .limit(LENGTH)
-      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-      .toString();
- 
-    return hash;
-  }
 
   public static void main(String[] args) throws Exception {
     int PORT = 7000;
@@ -49,7 +36,7 @@ public class App {
     app.post("/", ctx -> {
       // Saving the files as strings for now. Might need some exception handling.
 
-      String baseSaveLocation = "temp/upload/" + generateHash();
+      String baseSaveLocation = "temp/upload/" + HashGenerator.generateHash();
       String sourceFileLocation = baseSaveLocation + "/source" + ctx.uploadedFile("source").getExtension();
       String targetFileLocation = baseSaveLocation + "/target" + ctx.uploadedFile("target").getExtension();
 
@@ -71,8 +58,11 @@ public class App {
           json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
               CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
         }
-        
-        json = json.substring(0, json.length() - 1) + "]";
+        if (json.length() > 1){
+          //Incase there are no cells, dont remove the "["
+          json = json.substring(0, json.length() - 1);
+        }
+        json += "]";
         
 
       } catch (Exception e){
