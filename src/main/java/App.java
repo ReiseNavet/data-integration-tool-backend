@@ -59,6 +59,7 @@ public class App {
               CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
         }
         if (json.length() > 1){
+          //Incase there are no cells, dont remove the "["
           json = json.substring(0, json.length() - 1);
         }
         json += "]";
