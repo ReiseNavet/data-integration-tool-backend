@@ -3,6 +3,7 @@ package services.dataclasses;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,20 +14,26 @@ import java.util.stream.Collectors;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.PrefixManager;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
-import kotlin.NotImplementedError;
 import services.HashGenerator;
 import services.IO.OWLOntologyToFile;
+import services.parsers.schema.IXSIParser;
 
 public class OntologyConcept {
   // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -57,6 +64,8 @@ public class OntologyConcept {
 
     Map<String, OWLClass> nameToOWLClass = new HashMap<String, OWLClass>();
     Map<String, Set<String>> domains = new HashMap<String, Set<String>>();
+    Map<String, Set<String>> ranges = new HashMap<String, Set<String>>();
+    List<String> objectProperties = new ArrayList<String>();
 
     //Create OWLClasses
     for (OntologyConcept concept : ontologyConcepts) {
@@ -70,6 +79,13 @@ public class OntologyConcept {
           AddDescription(concept.description, c, df, m, o);
         }
       }
+      //Add range
+      if (!concept.range.equals("")) {
+        if (!ranges.containsKey(concept.name)){
+          ranges.put(concept.name, new HashSet<String>());
+        }
+        ranges.get(concept.name).add(concept.range);
+      }
       //Add domains to map
       if (!concept.domain.equals("")){
         if (!domains.containsKey(concept.name)){
@@ -77,20 +93,36 @@ public class OntologyConcept {
         }
         domains.get(concept.name).add(concept.domain);
       }
-      //Add range
-      if (!concept.range.equals("")) {
-        throw new NotImplementedError("range are currently not supported");
-      }
 
       nameToOWLClass.put(concept.name, c);
     }
-    // Add domains from map
+    //Add ranges from map
+    for (String key : ranges.keySet()){
+      OWLClass c = nameToOWLClass.get(key);
+      //If all ranges references to classes, then its a objectProperty
+      if (ranges.get(key).stream().allMatch(a -> nameToOWLClass.containsKey(a))){
+        objectProperties.add(key);
+      }
+      if (objectProperties.contains(key)){
+        Set<OWLClass> c2 = ranges.get(key).stream().map(a -> nameToOWLClass.get(a)).collect(Collectors.toSet());
+        AddRangeObject(c, c2, df, m, o);
+      } else {
+        //Can't use unionOf with data type ranges. So there better be no duplicate entries
+        String range = ranges.get(key).iterator().next();
+        AddRangeData(c, range, df, m, o);
+      }
+    }
+    //Add domains from map
     for (String key : domains.keySet()){
       OWLClass c = nameToOWLClass.get(key);
       Set<OWLClass> c2 = domains.get(key).stream().map(a -> nameToOWLClass.get(a)).collect(Collectors.toSet());
-      AddDomain(c, c2, df, m, o);
+      if (objectProperties.contains(key)){
+        AddDomainObject(c, c2, df, m, o);
+      } else {
+        AddDomainData(c, c2, df, m, o);
+      }
     }
-    // Add subClassOf (duplicate subclass entries are not supported as of now)
+    // Unused for now: Add subClassOf (duplicate/unionOf subclass entries are not supported)
     for (OntologyConcept concept : ontologyConcepts) {
       if (concept.subClassof.equals("")) {
         continue;
@@ -115,7 +147,7 @@ public class OntologyConcept {
     m.addAxiom(o, comment_ax);
   }
 
-  private static void AddDomain(OWLClass c, Set<OWLClass> c2, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
+  private static void AddDomainData(OWLClass c, Set<OWLClass> c2, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
     OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(c.getIRI());
     OWLDataPropertyDomainAxiom domain_ax = null;
     if (c2.size() == 1){
@@ -124,6 +156,35 @@ public class OntologyConcept {
       domain_ax = df.getOWLDataPropertyDomainAxiom(c_as_property, df.getOWLObjectUnionOf(c2));
     }
     m.addAxiom(o, domain_ax);
+  }
+  private static void AddDomainObject(OWLClass c, Set<OWLClass> c2, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
+    OWLObjectPropertyExpression c_as_property = df.getOWLObjectProperty(c.getIRI());
+    OWLObjectPropertyDomainAxiom domain_ax = null;
+    if (c2.size() == 1){
+      domain_ax = df.getOWLObjectPropertyDomainAxiom(c_as_property, c2.iterator().next());
+    } else {
+      domain_ax = df.getOWLObjectPropertyDomainAxiom(c_as_property, df.getOWLObjectUnionOf(c2));
+    }
+    m.addAxiom(o, domain_ax);
+  }
+
+  private static void AddRangeData(OWLClass c, String range, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
+    OWLDataProperty c_as_property  = df.getOWLDataProperty(c.getIRI());
+    PrefixManager pm = new DefaultPrefixManager(
+                "http://www.w3.org/2001/XMLSchema#");
+    OWLDataPropertyRangeAxiom range_ax = df.getOWLDataPropertyRangeAxiom(c_as_property, df.getOWLDatatype(range, pm));
+    m.addAxiom(o, range_ax);
+  }
+
+  private static void AddRangeObject(OWLClass c, Set<OWLClass> c2, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
+    OWLObjectProperty c_as_property  = df.getOWLObjectProperty(c.getIRI());
+    OWLObjectPropertyRangeAxiom range_ax = null;
+    if (c2.size() == 1){
+      range_ax = df.getOWLObjectPropertyRangeAxiom(c_as_property, c2.iterator().next());
+    } else {
+      range_ax = df.getOWLObjectPropertyRangeAxiom(c_as_property, df.getOWLObjectUnionOf(c2));
+    }
+    m.addAxiom(o, range_ax);
   }
 
   private static void AddSubClassOf(OWLClass child, OWLClass parent, OWLDataFactory df, OWLOntologyManager m, OWLOntology o){
@@ -137,7 +198,8 @@ public class OntologyConcept {
 
 
   /**
-   * OWLClasses got turned into Descriptions for some reason, so I need to replace it in the end
+   * Replace all rdf:Description with owl:Class outside of unionOf braces
+   * (Since OWLClasses gets turned into Descriptions for some reason)
    */
   private static void FixOntology(String filepathToStore) throws Exception {
     String text = Files.readString(Paths.get(filepathToStore));
@@ -156,19 +218,18 @@ public class OntologyConcept {
     IRI example_iri = IRI.create("http://www.semanticweb.org/ontologies/ont.owl");
     OWLOntology o = m.createOntology(example_iri);
     OWLDataFactory df = OWLManager.getOWLDataFactory();
-    OWLClass baby = df.getOWLClass(IRI.create(example_iri + "#Baby"));
-    IRI personIRI = IRI.create(example_iri + "#Person");
-    OWLClass person = df.getOWLClass(personIRI);
-    OWLClass child = df.getOWLClass(IRI.create(example_iri + "#Child"));
+    OWLClass geoPositionType = df.getOWLClass(IRI.create(example_iri + "#GeoPositionType"));
+    OWLClass coordType = df.getOWLClass(IRI.create(example_iri + "#CoordType"));
+    OWLClass addressType = df.getOWLClass(IRI.create(example_iri + "#AddressType"));
 
-    OWLClassExpression firstRuleSet = df.getOWLObjectUnionOf(person, child);
-    OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(baby.getIRI());
-    m.addAxiom(o, df.getOWLDataPropertyDomainAxiom(c_as_property, firstRuleSet));
+    //OWLClassExpression firstRuleSet = df.getOWLObjectUnionOf(person, child);
+    //OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(baby.getIRI());
+    //m.addAxiom(o, df.getOWLDataPropertyDomainAxiom(c_as_property, firstRuleSet));
 
     //OWLAnnotation labelAnno = df.getOWLAnnotationProperty(df.getRDFSLabel(), df.getOWLLiteral("Person"));
-    OWLAnnotation labelAnno = df.getOWLAnnotation(df.getOWLAnnotationProperty(IRI.create(example_iri + "#rdfs:label")), df.getOWLLiteral("Person"));
-    OWLAnnotationAssertionAxiom label_ax = df.getOWLAnnotationAssertionAxiom(personIRI, labelAnno);
-    m.addAxiom(o, label_ax);
+    //OWLAnnotation labelAnno = df.getOWLAnnotation(df.getOWLAnnotationProperty(IRI.create(example_iri + "#rdfs:label")), df.getOWLLiteral("Person"));
+    //OWLAnnotationAssertionAxiom label_ax = df.getOWLAnnotationAssertionAxiom(personIRI, labelAnno);
+    //m.addAxiom(o, label_ax);
     return o;
   }
 }
