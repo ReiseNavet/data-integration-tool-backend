@@ -30,10 +30,10 @@ import org.semanticweb.owlapi.model.OWLDataUnionOf;
 import org.semanticweb.owlapi.model.OWLDataVisitor;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -46,6 +46,7 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import kotlin.NotImplementedError;
 import services.IO.OWLOntologyToFile;
 import services.parsers.schema.SpreadsheetParser;
+import services.parsers.schema.GBFSParser;
 
 public class OntologyConcept {
     // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -59,7 +60,8 @@ public class OntologyConcept {
     public String range = ""; // F.eks. a brother is a person (Merk: is a)
 
     public static void main(String[] args) throws Exception {
-        List<OntologyConcept> concepts = new SpreadsheetParser().parse("files/temp/GTFS-Flex.xlsx");
+        List<OntologyConcept> concepts = new GBFSParser().parse("files/temp/GBFS");
+        //List<OntologyConcept> concepts = new SpreadsheetParser().parse("files/temp/GTFS-Flex.xlsx");
         String filepath = "files/temp/onto";
         OntologyConcept.toOWLFile(concepts, filepath);
     }
@@ -141,12 +143,12 @@ public class OntologyConcept {
     }
 
     private static void AddDomain(OWLClass c, Set<OWLClass> c2, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {
-        OWLObjectPropertyExpression c_as_property = df.getOWLObjectProperty(c.getIRI());
-        OWLObjectPropertyDomainAxiom domain_ax = null;
+        OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(c.getIRI());
+        OWLDataPropertyDomainAxiom domain_ax = null;
         if (c2.size() == 1){
-            domain_ax = df.getOWLObjectPropertyDomainAxiom(c_as_property, c2.iterator().next());
+            domain_ax = df.getOWLDataPropertyDomainAxiom(c_as_property, c2.iterator().next());
         } else {
-            domain_ax = df.getOWLObjectPropertyDomainAxiom(c_as_property, df.getOWLObjectUnionOf(c2));
+            domain_ax = df.getOWLDataPropertyDomainAxiom(c_as_property, df.getOWLObjectUnionOf(c2));
         }
         m.addAxiom(o, domain_ax);
     }
@@ -166,8 +168,11 @@ public class OntologyConcept {
      */
     private static void FixOntology(String filepathToStore) throws Exception {
         String text = Files.readString(Paths.get(filepathToStore));
-        text = text.replace("rdf:Description", "owl:Class");
-        Files.writeString(Paths.get(filepathToStore), text);
+        String[] textSplit = text.split("owl:unionOf");
+        for (int n = 0; n < textSplit.length; n += 2){
+            textSplit[n] = textSplit[n].replace("rdf:Description", "owl:Class");
+        }
+        Files.writeString(Paths.get(filepathToStore), String.join("owl:unionOf", textSplit));
     }
 
 
@@ -184,8 +189,8 @@ public class OntologyConcept {
         OWLClass child = df.getOWLClass(IRI.create(example_iri + "#Child"));
 
         OWLClassExpression firstRuleSet = df.getOWLObjectUnionOf(person, child);
-        OWLObjectPropertyExpression c_as_property = df.getOWLObjectProperty(baby.getIRI());
-        m.addAxiom(o, df.getOWLObjectPropertyDomainAxiom(c_as_property, firstRuleSet));
+        OWLDataPropertyExpression c_as_property = df.getOWLDataProperty(baby.getIRI());
+        m.addAxiom(o, df.getOWLDataPropertyDomainAxiom(c_as_property, firstRuleSet));
 
         //OWLAnnotation labelAnno = df.getOWLAnnotationProperty(df.getRDFSLabel(), df.getOWLLiteral("Person"));
         OWLAnnotation labelAnno = df.getOWLAnnotation(df.getOWLAnnotationProperty(IRI.create(example_iri + "#rdfs:label")), df.getOWLLiteral("Person"));
