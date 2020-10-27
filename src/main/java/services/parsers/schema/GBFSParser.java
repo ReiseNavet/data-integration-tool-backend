@@ -19,9 +19,11 @@ import java.nio.file.Paths;
 public class GBFSParser implements SchemaParser {
 
     public static void main(String[] args) throws Exception {
-        String filepathLoad = "files/temp/GBFS.zip";
-        new GBFSParser().parse(ZipParser.Unzip(filepathLoad));   
+        List<OntologyConcept> concepts = new GBFSParser().parse(ZipParser.Unzip("files/parse_files/GBFS.zip", "temp/parse_files/GBFS"));
+        String filepath = "temp/parse_files/ParseGBFS.owl";
+        OntologyConcept.toOWLFile(concepts, filepath);
     }
+
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
         List<OntologyConcept> ontoConcepts = new ArrayList<OntologyConcept>();

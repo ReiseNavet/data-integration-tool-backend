@@ -10,19 +10,26 @@ public class ZipParser {
     /**
      * Unzips and returns the location of the unzipped folder.
      */
-    public static String Unzip(String path) throws Exception{
-        ZipFile zipFile = new ZipFile(path);
-        path = FilenameUtils.removeExtension(path);
-        zipFile.extractAll(path);
-        File file = new File(path);
+    public static String Unzip(String inputPath, String outputPath) throws Exception{
+        ZipFile zipFile = new ZipFile(inputPath);
+        zipFile.extractAll(outputPath);
+        File file = new File(outputPath);
         String[] subFilesNames = file.list();
         if (subFilesNames.length == 1){
-            String subFilePath = path + "\\" + subFilesNames[0];
+            String subFilePath = outputPath + "\\" + subFilesNames[0];
             if (new File(subFilePath).isDirectory()){
-                path = subFilePath;
+                outputPath = subFilePath;
             }
         }
-        return path;
+        return outputPath;
+    }
+
+    /**
+     * Unzips and returns the location of the unzipped folder.
+     */
+    public static String Unzip(String path) throws Exception{
+        String outputPath = FilenameUtils.removeExtension(path);
+        return Unzip(path, outputPath);
     }
 
 }

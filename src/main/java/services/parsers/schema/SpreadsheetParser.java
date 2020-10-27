@@ -18,6 +18,12 @@ import java.util.List;
 
 public class SpreadsheetParser implements SchemaParser {
 
+  public static void main(String[] args) throws Exception {
+    List<OntologyConcept> concepts = new SpreadsheetParser().parse("files/parse_files/GTFS-Flex.xlsx");
+    String filepath = "temp/parse_files/ParseSpreadsheet.owl";
+    OntologyConcept.toOWLFile(concepts, filepath);
+  }
+
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
         List<OntologyConcept> ontologyList = new ArrayList<OntologyConcept>();

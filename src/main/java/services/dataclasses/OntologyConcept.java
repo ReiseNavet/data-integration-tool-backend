@@ -27,9 +27,6 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import kotlin.NotImplementedError;
 import services.HashGenerator;
 import services.IO.OWLOntologyToFile;
-import services.parsers.schema.GBFSParser;
-import services.parsers.schema.IXSIParser;
-import services.parsers.schema.SpreadsheetParser;
 
 public class OntologyConcept {
     // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -41,24 +38,6 @@ public class OntologyConcept {
     // Ask if you need to use these.
     public String subClassof = ""; // F.eks. a brother is a part of a family (Merk: is a part of)
     public String range = ""; // F.eks. a brother is a person (Merk: is a)
-
-    public static void main(String[] args) throws Exception {
-        List<OntologyConcept> concepts;
-        String filepath;
-
-        concepts = new GBFSParser().parse("files/temp/GBFS/GBFS");
-        filepath = "files/temp/ParseGBFS";
-        OntologyConcept.toOWLFile(concepts, filepath);
-
-        concepts = new SpreadsheetParser().parse("files/temp/GTFS-Flex.xlsx");
-        filepath = "files/temp/ParseGTFS";
-        OntologyConcept.toOWLFile(concepts, filepath);
-
-        concepts = new IXSIParser().parse("files/temp/IXSI.xsd");
-        filepath = "files/temp/ParseIXSI";
-        OntologyConcept.toOWLFile(concepts, filepath);
-     
-    }
 
     public static File toOWLFile(List<OntologyConcept> ontologyConcepts, String filepathToStore)
             throws Exception {

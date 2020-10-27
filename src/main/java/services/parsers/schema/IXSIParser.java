@@ -2,8 +2,6 @@ package services.parsers.schema;
 
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
 
@@ -13,9 +11,7 @@ import org.xmlet.xsdparser.xsdelements.XsdElement;
 import org.xmlet.xsdparser.xsdelements.XsdSchema;
 import org.xmlet.xsdparser.xsdelements.XsdSimpleType;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,15 +23,9 @@ public class IXSIParser implements SchemaParser {
     }
 
     public static void main(String[] args) throws Exception{
-        IXSIParser test = new IXSIParser();
-        List<OntologyConcept> concepts = test.parse("files/temp/IXSI.xsd");
-        for (OntologyConcept concept : concepts){
-            System.out.println("Label: " + concept.name);
-            System.out.println("Comment: " + concept.description);
-            System.out.println("SubClassOf: " + concept.subClassof);
-            System.out.println("Domain: " + concept.domain);
-            System.out.println("Range: " + concept.range);
-        }
+        List<OntologyConcept> concepts = new IXSIParser().parse("files/parse_files/IXSI.xsd");
+        String filepath = "temp/parse_files/ParseIXSI.owl";
+        OntologyConcept.toOWLFile(concepts, filepath);
     }
 
     @Override
