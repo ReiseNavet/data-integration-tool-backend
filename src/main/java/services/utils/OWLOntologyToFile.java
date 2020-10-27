@@ -8,10 +8,10 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class OWLOntologyToFile {
-  public static File convert(OWLOntology owlOntology, String baseSaveLocation, OWLOntologyManager manager) throws Exception{
-    OutputStream os = new FileOutputStream(baseSaveLocation);
-    manager.saveOntology(owlOntology, os);
-    os.close();
-    return new File(baseSaveLocation);
+  public static File convert(OWLOntology owlOntology, String saveLocation, OWLOntologyManager manager) throws Exception{
+    OutputStream outputStream = new FileOutputStream(saveLocation);
+    manager.saveOntology(owlOntology, outputStream);
+    outputStream.close();
+    return new File(saveLocation);
   }
 }

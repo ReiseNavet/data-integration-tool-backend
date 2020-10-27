@@ -67,7 +67,7 @@ public class App {
 
       } catch (Exception e){
         ctx.status(500);
-        json = ExceptionHandler.getErrorMsg(e);
+        json = ExceptionHandler.getErrorMessage(e);
         System.out.println(json);
         e.printStackTrace();
       }

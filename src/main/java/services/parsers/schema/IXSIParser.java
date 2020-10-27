@@ -69,38 +69,38 @@ public class IXSIParser implements SchemaParser {
 
   // A simple element can only contain text
   public void parseSimpleTypes(List<XsdSimpleType> simpleTypes) {
-    for (XsdSimpleType st: simpleTypes) {
+    for (XsdSimpleType simpleType: simpleTypes) {
       OntologyConcept concept = new OntologyConcept();
-      concept.name = st.getName();
-      concept.description = st.getAnnotation().getDocumentations().get(0).getContent();
+      concept.name = simpleType.getName();
+      concept.description = simpleType.getAnnotation().getDocumentations().get(0).getContent();
       //concept.range = st.getRestriction().getBase(); // Is restriction range?
       this.concepts.add(concept);
     }
   }
 
   public void parseComplexTypes(List<XsdComplexType> complexTypes) throws Exception  {
-    for (XsdComplexType ct : complexTypes) {
+    for (XsdComplexType complexType : complexTypes) {
       OntologyConcept concept = new OntologyConcept();
-      concept.name = ct.getName();
-      concept.description = ct.getAnnotation().getDocumentations().get(0).getContent();
+      concept.name = complexType.getName();
+      concept.description = complexType.getAnnotation().getDocumentations().get(0).getContent();
       this.concepts.add(concept);
 
-      if (ct.getElements() != null){
+      if (complexType.getElements() != null){
         // Adds elements from sequence
-        if (ct.getChildAsSequence() != null){
-          List<XsdElement> xsdElementsSequence  = ct.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
+        if (complexType.getChildAsSequence() != null){
+          List<XsdElement> xsdElementsSequence  = complexType.getChildAsSequence().getChildrenElements().collect(Collectors.toList());
           this.parseElements(xsdElementsSequence, concept.name);    
         }
         
-        // Adds elements from groups () 
-        if (ct.getChildAsGroup() != null){
-          List<XsdElement> xsdElementsGroups = ct.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
+        // Adds elements from groups 
+        if (complexType.getChildAsGroup() != null){
+          List<XsdElement> xsdElementsGroups = complexType.getChildAsGroup().getChildElement().getChildrenElements().collect(Collectors.toList());
           this.parseElements(xsdElementsGroups, concept.name);
         }
 
         // Adds elements from choices
-        if (ct.getChildAsChoice() != null){
-          List<XsdElement> xsdElementsChoices = ct.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
+        if (complexType.getChildAsChoice() != null){
+          List<XsdElement> xsdElementsChoices = complexType.getChildAsChoice().getChildrenElements().collect(Collectors.toList());
           this.parseElements(xsdElementsChoices, concept.name);
         }
       }
