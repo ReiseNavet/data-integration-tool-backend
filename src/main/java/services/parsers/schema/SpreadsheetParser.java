@@ -50,7 +50,7 @@ public class SpreadsheetParser implements SchemaParser {
             }
             if (currentCell.getColumnIndex() == 1){
               ontologyConcept.name = currentCell.getStringCellValue();
-              ontologyConcept.subClassof = lastElement;
+              ontologyConcept.domain = lastElement;
             }
             if (currentCell.getColumnIndex() == 2 ){
               if (ontologyConcept.name.equals("")){ // if neither coloumIndex 0 or 1 had a name, exit

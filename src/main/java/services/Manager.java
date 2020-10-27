@@ -30,14 +30,11 @@ public class Manager {
       boolean useSubsumption, String baseSaveLocation) throws Exception {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
-    OWLOntology sourceOntology = inputParser.parseInput(sourceFilePath, manager);
-    OWLOntology targetOntology = inputParser.parseInput(targetFilePath, manager);
+    File sourceOntology = inputParser.parseInput(sourceFilePath, baseSaveLocation + "/source", manager);
+    File targetOntology = inputParser.parseInput(targetFilePath, baseSaveLocation + "/target", manager);
 
-    File sourceFile = OWLOntologyToFile.Convert(sourceOntology, baseSaveLocation + "/source", manager);
-    File targetFile = OWLOntologyToFile.Convert(targetOntology, baseSaveLocation + "/target", manager);
-
-    Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceFile, targetFile, useEquivalence, useSubsumption);
-    Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceFile, targetFile, pickedAlgorithms);
+    Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceOntology, targetOntology, useEquivalence, useSubsumption);
+    Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceOntology, targetOntology, pickedAlgorithms);
     URIAlignment finalAlignment = alignmentCombiner.combine(alignments);
 
     return finalAlignment;
