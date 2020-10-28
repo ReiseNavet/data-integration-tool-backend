@@ -19,9 +19,6 @@ public class IXSIParser implements SchemaParser {
   private List<OntologyConcept> concepts = new ArrayList<>();
   private XsdParser parserInstance;
 
-  public IXSIParser(){
-  }
-
   public static void main(String[] args) throws Exception{
     List<OntologyConcept> concepts = new IXSIParser().parse("files/parse_files/IXSI.xsd");
     String filepath = "temp/parse_files/ParseIXSI.owl";
@@ -49,8 +46,8 @@ public class IXSIParser implements SchemaParser {
     List<XsdComplexType> complexTypes = schema.getChildrenComplexTypes().collect(Collectors.toList());
     if (complexTypes.size() > 0) this.parseComplexTypes(complexTypes);
 
-    // List<XsdElement> xsdElements = schema.getChildrenElements().collect(Collectors.toList());
-    // if (xsdElements.size() > 0) this.parseElements(xsdElements, "");
+    List<XsdElement> xsdElements = schema.getChildrenElements().collect(Collectors.toList());
+    if (xsdElements.size() > 0) this.parseElements(xsdElements, "");
 
   }
 
