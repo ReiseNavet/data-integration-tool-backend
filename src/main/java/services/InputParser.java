@@ -1,7 +1,6 @@
 package services;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -25,8 +24,7 @@ public class InputParser {
     SchemaParser parser = null;
     if (filetype.equals("zip")){
       filepathLoad = Unzipper.unzip(filepathLoad);
-      parser = determineZipParser(filepathLoad);
-      parser = new GBFSParser(); //TODO: Add NeTEx if we decide to implement it
+      parser = determineZipParser(filepathLoad); //Either GBFS or NeTEx
     } else if (filetype.equals("xsd")){
       parser = new IXSIParser();
     } else if (filetype.equals("xls") || filetype.equals("xlsx")){

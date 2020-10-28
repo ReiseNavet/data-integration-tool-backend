@@ -59,7 +59,7 @@ public class IXSIParser implements SchemaParser {
         concept.description = elem.getAnnotation().getDocumentations().get(0).getContent();
       }
       concept.domain = parent;
-      if (elem.getXsdSimpleType() != null){
+      if (elem.getXsdSimpleType() != null && elem.getXsdSimpleType().getRestriction() != null){
         concept.range = removePrefix(elem.getXsdSimpleType().getRestriction().getBase());
       }
       if (elem.getType() != null){
@@ -70,7 +70,9 @@ public class IXSIParser implements SchemaParser {
   }
 
   private String removePrefix(String input){
-    if (input.startsWith("xs:")){
+    if (input.startsWith("xsd:")){
+      return input.substring(4);
+    } else if (input.startsWith("xs:")){
       return input.substring(3);
     }
     return input;
@@ -81,7 +83,9 @@ public class IXSIParser implements SchemaParser {
     for (XsdSimpleType simpleType: simpleTypes) {
       OntologyConcept concept = new OntologyConcept();
       concept.name = simpleType.getName();
-      concept.description = simpleType.getAnnotation().getDocumentations().get(0).getContent();
+      if (simpleType.getAnnotation() != null && simpleType.getAnnotation().getDocumentations() != null){
+        concept.description = simpleType.getAnnotation().getDocumentations().get(0).getContent();
+      }
       //concept.range = st.getRestriction().getBase(); // Is restriction range?
       this.concepts.add(concept);
     }
