@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
-import services.enums.AlgorithmType;
+import services.enums.SemanticRelation;
 import services.interfaces.Algorithm;
 
 public class Manager {
@@ -26,8 +26,8 @@ public class Manager {
     File sourceOntology = inputParser.parseInput(sourceFilePath, baseSaveLocation + "/source.owl");
     File targetOntology = inputParser.parseInput(targetFilePath, baseSaveLocation + "/target.owl");
 
-    Map<AlgorithmType, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceOntology, targetOntology, useEquivalence, useSubsumption);
-    Map<AlgorithmType, List<URIAlignment>> alignments = algorithmRunner.run(sourceOntology, targetOntology, pickedAlgorithms);
+    Map<SemanticRelation, List<Algorithm>> pickedAlgorithms = algorithmPicker.pickAlgorithms(sourceOntology, targetOntology, useEquivalence, useSubsumption);
+    Map<SemanticRelation, List<URIAlignment>> alignments = algorithmRunner.run(sourceOntology, targetOntology, pickedAlgorithms);
     URIAlignment finalAlignment = alignmentCombiner.combine(alignments);
 
     return finalAlignment;

@@ -1,5 +1,5 @@
 package services.enums;
 
-public enum AlgorithmType {
+public enum SemanticRelation {
   Equivalence, Subsumption
 }

@@ -1,4 +1,4 @@
-package services.dataclasses;
+package services.utils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -32,7 +32,6 @@ import org.semanticweb.owlapi.model.PrefixManager;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import services.HashGenerator;
-import services.IO.OWLOntologyToFile;
 
 public class OntologyConcept {
   // All fields except "name" are optional. Look at schema-org.owl for examples.
@@ -50,16 +49,15 @@ public class OntologyConcept {
     OWLOntologyManager m = OWLManager.createOWLOntologyManager();
     OWLOntology o = toOWLOntology(ontologyConcepts, m);
     //OWLOntology o = OntologyConcept.test(m);
-    File file = OWLOntologyToFile.Convert(o, filepathToStore, m);
+    File file = OWLOntologyToFile.convert(o, filepathToStore, m);
     FixOntology(filepathToStore);
     return file;
   }
 
-  private static OWLOntology toOWLOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager m)
-      throws Exception {
+  private static OWLOntology toOWLOntology(List<OntologyConcept> ontologyConcepts, OWLOntologyManager ontologyManager) throws Exception {
     IRI base_iri = IRI.create("http://www.semanticweb.org/ontologies/ont" + HashGenerator.generateHash() +".owl");
-    OWLOntology o = m.createOntology(base_iri);
-    OWLDataFactory df = OWLManager.getOWLDataFactory();
+    OWLOntology ontology = ontologyManager.createOntology(base_iri);
+    OWLDataFactory dataFactory = OWLManager.getOWLDataFactory();
 
     Map<String, OWLClass> nameToOWLClass = new HashMap<String, OWLClass>();
     Map<String, Set<String>> domains = new HashMap<String, Set<String>>();
@@ -69,13 +67,13 @@ public class OntologyConcept {
     //Create OWLClasses
     for (OntologyConcept concept : ontologyConcepts) {
 
-      OWLClass owlclass = df.getOWLClass(IRI.create(base_iri + "#" + concept.name));
+      OWLClass owlclass = dataFactory.getOWLClass(IRI.create(base_iri + "#" + concept.name));
 
-      AddLabel(concept.name, owlclass, df, m, o);
+      AddLabel(concept.name, owlclass, dataFactory, ontologyManager, ontology);
       //Add description
       if (!concept.description.equals("")){
         if (!nameToOWLClass.containsKey(concept.name)) { // It only uses one of the comments if there are duplicate entries
-          AddDescription(concept.description, owlclass, df, m, o);
+          AddDescription(concept.description, owlclass, dataFactory, ontologyManager, ontology);
         }
       }
       //Add range
@@ -104,11 +102,11 @@ public class OntologyConcept {
       }
       if (objectProperties.contains(key)){
         Set<OWLClass> rangeclasses = ranges.get(key).stream().map(a -> nameToOWLClass.get(a)).collect(Collectors.toSet());
-        AddRangeObject(owlclass, rangeclasses, df, m, o);
+        AddRangeObject(owlclass, rangeclasses, dataFactory, ontologyManager, ontology);
       } else {
         //Can't use unionOf with data type ranges. So there better be no duplicate entries
         String rangedata = ranges.get(key).iterator().next();
-        AddRangeData(owlclass, rangedata, df, m, o);
+        AddRangeData(owlclass, rangedata, dataFactory, ontologyManager, ontology);
       }
     }
     //Add domains from map
@@ -116,9 +114,9 @@ public class OntologyConcept {
       OWLClass owlclass = nameToOWLClass.get(key);
       Set<OWLClass> domainclasses = domains.get(key).stream().map(a -> nameToOWLClass.get(a)).collect(Collectors.toSet());
       if (objectProperties.contains(key)){
-        AddDomainObject(owlclass, domainclasses, df, m, o);
+        AddDomainObject(owlclass, domainclasses, dataFactory, ontologyManager, ontology);
       } else {
-        AddDomainData(owlclass, domainclasses, df, m, o);
+        AddDomainData(owlclass, domainclasses, dataFactory, ontologyManager, ontology);
       }
     }
     // Unused for now: Add subClassOf (duplicate/unionOf subclass entries are not supported)
@@ -128,9 +126,9 @@ public class OntologyConcept {
       }
       OWLClass owlclass = nameToOWLClass.get(concept.name);
       OWLClass superclass = nameToOWLClass.get(concept.subClassof);
-      AddSubClassOf(owlclass, superclass, df, m, o);
+      AddSubClassOf(owlclass, superclass, dataFactory, ontologyManager, ontology);
     }
-    return o;
+    return ontology;
   }
 
   private static void AddLabel(String name, OWLClass owlclass, OWLDataFactory df, OWLOntologyManager m, OWLOntology o) {

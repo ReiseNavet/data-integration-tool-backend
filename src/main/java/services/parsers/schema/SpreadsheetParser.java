@@ -7,8 +7,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import algorithms.utilities.StringUtilities;
-import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
+import services.utils.OntologyConcept;
 
 import java.io.File;
 import java.io.FileInputStream;

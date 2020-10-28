@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
+import services.utils.OntologyConcept;
 
 public class NeTExParser implements SchemaParser {
 

@@ -19,25 +19,25 @@ public enum ErrorCodes {
   IO_EXCEPTION("301", "IOException");
 
   private final String code;
-  private final String msg;
+  private final String message;
 
-  private ErrorCodes(String code, String msg) {
+  private ErrorCodes(String code, String message) {
     this.code = code;
-    this.msg = msg;
+    this.message = message;
   }
 
   public String getErrorCode() {
     return code;
   }
 
-  public String getErrorMsg() {
+  public String getErrorMessage() {
     if(Integer.valueOf(code)<300 & Integer.valueOf(code)>=200){
-      return "Error code " + code + ", " + msg + ": Your input files could not be aligned.";
+      return "Error code " + code + ", " + message + ": Your input files could not be aligned.";
     }else if(Integer.valueOf(code)<400 & Integer.valueOf(code)>=300){
-      return "Error code " + code + ", " + msg + ": Unknown file-related error. Check your input files.";
+      return "Error code " + code + ", " + message + ": Unknown file-related error. Check your input files.";
     }else if(Integer.valueOf(code)==100){
-      return "Error code " + code + ", " + msg + ": Input xls or xlsx file was not formatted to GTFS-Flex standard.";
+      return "Error code " + code + ", " + message + ": Input xls or xlsx file was not formatted to GTFS-Flex standard.";
     }
-      return "Error code " + code + ", " + msg;
+      return "Error code " + code + ", " + message;
   }
 }

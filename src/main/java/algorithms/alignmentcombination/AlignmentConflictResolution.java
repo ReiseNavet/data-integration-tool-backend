@@ -17,6 +17,8 @@ import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentVisitor;
 import org.semanticweb.owl.align.Cell;
 
+import algorithms.mismatchdetection.ConceptScopeMismatch;
+import algorithms.mismatchdetection.DomainMismatch;
 import algorithms.utilities.AlignmentOperations;
 import algorithms.utilities.StringUtilities;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
@@ -175,6 +177,16 @@ public class AlignmentConflictResolution {
 
 		return profileScore;
 
+	}
+
+
+	/**
+	 * Filters out relations representing mismatches on the basis of a set of mismatch detection strategies.
+	 */
+	public static URIAlignment removeMismatches (URIAlignment combinedEQAlignment) throws Exception {
+		URIAlignment conceptScopeMismatchDetection = ConceptScopeMismatch.detectConceptScopeMismatch(combinedEQAlignment);
+		URIAlignment domainMismatchDetection = DomainMismatch.filterAlignment(conceptScopeMismatchDetection);
+		return domainMismatchDetection;
 	}
 
 }

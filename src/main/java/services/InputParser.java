@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
-import services.dataclasses.OntologyConcept;
 import services.interfaces.SchemaParser;
-import services.parsers.ZipParser;
 import services.parsers.schema.GBFSParser;
 import services.parsers.schema.IXSIParser;
 import services.parsers.schema.SpreadsheetParser;
+import services.utils.OntologyConcept;
+import services.utils.Unzipper;
 
 
 public class InputParser {
@@ -22,7 +22,7 @@ public class InputParser {
     } 
     SchemaParser parser = null;
     if (filetype.equals("zip")){
-      filepathLoad = ZipParser.Unzip(filepathLoad);
+      filepathLoad = Unzipper.unzip(filepathLoad);
       parser = new GBFSParser(); //TODO: Add NeTEx if we decide to implement it
     } else if (filetype.equals("xsd")){
       parser = new IXSIParser();

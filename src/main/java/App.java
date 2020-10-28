@@ -1,16 +1,16 @@
 import java.io.File;
 import java.util.Locale;
-import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
-import services.ExceptionHandler;
 import services.HashGenerator;
 import services.Manager;
 import services.parsers.CellParser;
+import services.utils.ExceptionHandler;
+
 import org.semanticweb.owl.align.Cell;
 
 public class App {
@@ -67,7 +67,7 @@ public class App {
 
       } catch (Exception e){
         ctx.status(500);
-        json = ExceptionHandler.getErrorMsg(e);
+        json = ExceptionHandler.getErrorMessage(e);
         System.out.println(json);
         e.printStackTrace();
       }

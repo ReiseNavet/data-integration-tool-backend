@@ -22,8 +22,6 @@ import algorithms.equivalencematching.GraphEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.LexicalEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.PropertyEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.WordEmbeddingMatcherSigmoid;
-import algorithms.mismatchdetection.ConceptScopeMismatch;
-import algorithms.mismatchdetection.DomainMismatch;
 import algorithms.ontologyprofiling.OntologyProfiler;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
@@ -32,7 +30,6 @@ import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
-import rita.wordnet.jwnl.JWNLException;
 
 public class SemanticMatcher {
 	
@@ -42,7 +39,6 @@ public class SemanticMatcher {
 	static File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
 	static File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-302.rdf");
 	static String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-	static String mismatchStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/MISMATCHES";
 	static String finalAlignmentStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/FINAL_ALIGNMENT/";
 
 	//these parameters are used for the sigmoid weight configuration
@@ -50,7 +46,7 @@ public class SemanticMatcher {
 	final static double rangeMin = 0.5;
 	final static double rangeMax = 0.7;
 	
-	public static void main(String[] args) throws OWLOntologyCreationException, IOException, AlignmentException, URISyntaxException, JWNLException {
+	public static void main(String[] args) throws Exception {
 				
 	long startTimeMatchingProcess = System.currentTimeMillis();
 	
@@ -73,7 +69,7 @@ public class SemanticMatcher {
 	
 	/* combine using ProfileWeight EQ */
 	URIAlignment combinedEQAlignment = combineEQAlignments(eqAlignments);
-	URIAlignment combinedEQAlignmentWithoutMismatches = removeMismatches(combinedEQAlignment, mismatchStorePath);
+	URIAlignment combinedEQAlignmentWithoutMismatches = AlignmentConflictResolution.removeMismatches(combinedEQAlignment);
 	
 	//store the EQ alignment
 	File outputAlignment = new File(finalAlignmentStorePath + "EQAlignment.rdf");
@@ -313,65 +309,6 @@ private static URIAlignment mergeEQAndSubAlignments (URIAlignment eqAlignment, U
 
 	return mergedEQAndSubAlignment;
 
-}
-
-/**
- * Filters out relations representing mismatches on the basis of a set of mismatch detection strategies.
- * @param combinedEQAlignment the input alignment from which mismatches are filtered out.
- * @param mismatchStorePath a folder where the filtered alignments from the included mismatch detection strategies are stored.
- * @return an URIAlignment without mismatch relations.
- * @throws AlignmentException
- * @throws OWLOntologyCreationException
- * @throws JWNLException
- * @throws URISyntaxException
- * @throws IOException
-   Jul 15, 2019
- */
-public static URIAlignment removeMismatches (URIAlignment combinedEQAlignment, String mismatchStorePath) throws AlignmentException, OWLOntologyCreationException, JWNLException, URISyntaxException, IOException {
-
-	//store the merged alignment
-	File initialAlignment = new File(mismatchStorePath + "/initialAlignment.rdf");
-	File conceptScopeMismatchAlignment = new File(mismatchStorePath + "/conceptScopeMismatch.rdf");
-	File domainMismatchAlignment = new File(mismatchStorePath + "/domainMismatch.rdf");
-	PrintWriter writer = null;
-	AlignmentVisitor renderer = null;
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(initialAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	combinedEQAlignment.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-	URIAlignment conceptScopeMismatchDetection = ConceptScopeMismatch.detectConceptScopeMismatch(combinedEQAlignment);
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(conceptScopeMismatchAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	conceptScopeMismatchDetection.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-	URIAlignment domainMismatchDetection = DomainMismatch.filterAlignment(conceptScopeMismatchDetection);
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(domainMismatchAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	domainMismatchDetection.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-
-	return domainMismatchDetection;
 }
 
 }
