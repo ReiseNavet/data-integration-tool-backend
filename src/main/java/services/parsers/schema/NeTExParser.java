@@ -25,6 +25,6 @@ public class NeTExParser implements SchemaParser {
 
     @Override
     public List<OntologyConcept> parse(String filePath) throws Exception {
-        return new IXSIParser().parse("files/parse_files/NeTEx_xsd/NeTEx_publication.xsd");
+        return new IXSIParser().parse(filePath + "/NeTEx_publication.xsd");
     }
 }
