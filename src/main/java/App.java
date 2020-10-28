@@ -65,9 +65,13 @@ public class App {
         json += "]";
         
 
-      } catch (Exception e){
+      } catch (Throwable e) {
         ctx.status(500);
-        json = ExceptionHandler.getErrorMessage(e);
+        if(e instanceof Exception) {
+          json = ExceptionHandler.getErrorMessage((Exception) e);
+        } else {
+          json = "CRITICAL SERVER ERROR. POSSIBLE MEMORY ISSUE.";
+        }
         System.out.println(json);
         e.printStackTrace();
       }
