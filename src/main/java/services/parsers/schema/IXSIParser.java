@@ -62,9 +62,21 @@ public class IXSIParser implements SchemaParser {
         concept.description = elem.getAnnotation().getDocumentations().get(0).getContent();
       }
       concept.domain = parent;
-      //concept.range = elem.getType();
+      if (elem.getXsdSimpleType() != null){
+        concept.range = removePrefix(elem.getXsdSimpleType().getRestriction().getBase());
+      }
+      if (elem.getType() != null){
+        concept.range = removePrefix(elem.getType()); //After xs:
+      }
       this.concepts.add(concept);
     }
+  }
+
+  private String removePrefix(String input){
+    if (input.startsWith("xs:")){
+      return input.substring(3);
+    }
+    return input;
   }
 
   // A simple element can only contain text
