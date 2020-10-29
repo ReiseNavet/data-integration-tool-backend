@@ -45,7 +45,9 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	static OWLOntology sourceOntology;
 	static OWLOntology targetOntology;
 	
-	public LexicalEquivalenceMatcherSigmoid(){}
+	public LexicalEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	public LexicalEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		sourceOntology = onto1;
@@ -60,7 +62,6 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 		
 		return returnLEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}
