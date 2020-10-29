@@ -5,5 +5,4 @@ public class AlgorithmSettings {
 	public static final int SLOPE = 3; 
 	public static final double RANGEMIN = 0.5; 
 	public static final double RANGEMAX = 0.7;
-	public static final double PROFILESCORE = 0.9;
 }

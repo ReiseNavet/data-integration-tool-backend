@@ -42,7 +42,9 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	double rangeMin;
 	double rangeMax;
 
-	public LexicalSubsumptionMatcherSigmoid(){}
+	public LexicalSubsumptionMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 
 	public LexicalSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -57,7 +59,6 @@ public class LexicalSubsumptionMatcherSigmoid extends ObjectAlignment implements
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnLSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}

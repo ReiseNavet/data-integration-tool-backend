@@ -47,38 +47,47 @@ public class AlgorithmPicker {
     //Adding the algorithms to be returned if their profile-score is >=0.5
     if (equivalence){
       List<Algorithm> eqAlgorithms = new ArrayList<Algorithm>();
-      eqAlgorithms.add(new BasicEQMatcher());
-      if (profiles.get("cc") >= 0.5){
-        eqAlgorithms.add(new WordEmbeddingMatcherSigmoid());
+      //eqAlgorithms.add(new BasicEQMatcher()); //Did not use this as it was not used in semantic matcher
+      double cc = profiles.get("cc");
+      double dc = profiles.get("dc");
+      double pf = profiles.get("pf");
+      double sp = profiles.get("sp");
+      double lc = profiles.get("lc");
+      if (cc >= 0.5){
+        eqAlgorithms.add(new WordEmbeddingMatcherSigmoid(cc));
       }
-      if (profiles.get("dc") >= 0.5){
-        eqAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid());
+      if (dc >= 0.5){
+        eqAlgorithms.add(new DefinitionEquivalenceMatcherSigmoid(dc));
       }
-      if (profiles.get("pf") >= 0.5){
-        eqAlgorithms.add(new PropertyEquivalenceMatcherSigmoid());
+      if (pf >= 0.5){
+        eqAlgorithms.add(new PropertyEquivalenceMatcherSigmoid(pf));
       }
-      if (profiles.get("sp") >= 0.5){
-        eqAlgorithms.add(new GraphEquivalenceMatcherSigmoid());
+      if (sp >= 0.5){
+        eqAlgorithms.add(new GraphEquivalenceMatcherSigmoid(sp));
       }
-      if (profiles.get("lc") >= 0.5){
-        eqAlgorithms.add(new LexicalEquivalenceMatcherSigmoid());
+      if (lc >= 0.5){
+        eqAlgorithms.add(new LexicalEquivalenceMatcherSigmoid(lc));
       }
       toReturn.put(SemanticRelation.Equivalence, eqAlgorithms);
     }
     if (subsumption){
       List<Algorithm> subAlgorithms = new ArrayList<Algorithm>();
-      subAlgorithms.add(new BasicSubsumptionMatcher());
-      if (profiles.get("cf") >= 0.5){
-        subAlgorithms.add(new CompoundMatcherSigmoid());
+      double cf = profiles.get("cf");
+      double dc = profiles.get("dc");
+      double sp = profiles.get("sp");
+      double lc = profiles.get("lc");
+      //subAlgorithms.add(new BasicSubsumptionMatcher()); //Did not use this as it was not used in semantic matcher
+      if (cf >= 0.5){
+        subAlgorithms.add(new CompoundMatcherSigmoid(cf));
       }
-      if (profiles.get("dc") >= 0.5){
-        subAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid());
+      if (dc >= 0.5){
+        subAlgorithms.add(new DefinitionSubsumptionMatcherSigmoid(dc));
       }
-      if (profiles.get("sp") >= 0.5){
-        subAlgorithms.add(new ContextSubsumptionMatcherSigmoid());
+      if (sp >= 0.5){
+        subAlgorithms.add(new ContextSubsumptionMatcherSigmoid(sp));
       }
-      if (profiles.get("lc") >= 0.5){
-        subAlgorithms.add(new LexicalSubsumptionMatcherSigmoid());
+      if (lc >= 0.5){
+        subAlgorithms.add(new LexicalSubsumptionMatcherSigmoid(lc));
       }
       toReturn.put(SemanticRelation.Subsumption, subAlgorithms);
     }

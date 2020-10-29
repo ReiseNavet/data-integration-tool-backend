@@ -42,7 +42,9 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	static Map<String, Set<String>> classesAndSuperclassesMapOnto1 = new HashMap<String, Set<String>>();
 	static Map<String, Set<String>> classesAndSuperclassesMapOnto2 = new HashMap<String, Set<String>>();
 
-	public ContextSubsumptionMatcherSigmoid(){}
+	public ContextSubsumptionMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	public ContextSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -57,7 +59,6 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnCSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}

@@ -40,8 +40,6 @@ public class CompoundMatcherSigmoid extends ObjectAlignment implements Alignment
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
 
-	public CompoundMatcherSigmoid(){}
-
 	public CompoundMatcherSigmoid(double profileScore) {
 		this.profileScore = profileScore;
 	}
@@ -59,7 +57,6 @@ public class CompoundMatcherSigmoid extends ObjectAlignment implements Alignment
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnCMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}

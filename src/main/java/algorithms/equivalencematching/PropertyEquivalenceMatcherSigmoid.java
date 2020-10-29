@@ -75,7 +75,9 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	static Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
 	static Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
 
-	public PropertyEquivalenceMatcherSigmoid(){}
+	public PropertyEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 
 	public PropertyEquivalenceMatcherSigmoid(OWLOntology ontoFile1, OWLOntology ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		onto1 = ontoFile1;
@@ -90,7 +92,6 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnPEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}
