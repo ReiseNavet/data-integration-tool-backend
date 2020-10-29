@@ -1,11 +1,16 @@
 package services.utils;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.xmlet.xsdparser.xsdelements.exceptions.ParsingException;
+
 import java.net.URISyntaxException;
 import fr.inrialpes.exmo.ontowrap.OntowrapException;
 import rita.wordnet.jwnl.JWNLException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import services.enums.ErrorCodes;
 
 public class ExceptionHandler extends Exception {
@@ -27,8 +32,12 @@ public class ExceptionHandler extends Exception {
       return ErrorCodes.FILE_NOT_FOUND.getErrorMessage();
     } else if (e instanceof InvalidFormatException){
       return ErrorCodes.INVALID_FORMAT_EXCEPTION.getErrorMessage();
+    } else if (e instanceof IOException){
+      return ErrorCodes.IO_EXCEPTION.getErrorMessage();
+    } else if (e instanceof ParsingException){
+      return ErrorCodes.PARSING_EXCEPTION.getErrorMessage();
     }
-    return "Unknown server error";
+    return "Unknown server error: " + e.getStackTrace()[0].toString();
   }
 
 }

@@ -16,7 +16,8 @@ public enum ErrorCodes {
   ONTOWRAP_ERROR("203", "Ontowrap Exception"),
   JWNL_ERROR("204", "Wordnet Exception"),
   FILE_NOT_FOUND("300", "File Not Found Exception"),
-  IO_EXCEPTION("301", "IOException");
+  IO_EXCEPTION("301", "IOException"),
+  PARSING_EXCEPTION("302", "ParsingException");
 
   private final String code;
   private final String message;
@@ -34,7 +35,7 @@ public enum ErrorCodes {
     if(Integer.valueOf(code)<300 & Integer.valueOf(code)>=200){
       return "Error code " + code + ", " + message + ": Your input files could not be aligned.";
     }else if(Integer.valueOf(code)<400 & Integer.valueOf(code)>=300){
-      return "Error code " + code + ", " + message + ": Unknown file-related error. Check your input files.";
+      return "Error code " + code + ", " + message + ": File-related error. Visit our wiki for more information about the supported files";
     }else if(Integer.valueOf(code)==100){
       return "Error code " + code + ", " + message + ": Input xls or xlsx file was not formatted to GTFS-Flex standard.";
     }
