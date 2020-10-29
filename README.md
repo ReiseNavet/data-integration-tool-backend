@@ -1,7 +1,7 @@
 # Tutorial Java Backend  
 ## Supported files
 
-See [this page](https://github.com/Kundestyrt-ReiseNavet/integration-tool-backend/wiki/Supported-files)
+See [wiki/Supported_files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-backend/wiki/Supported-files)
 
 ## Installing
 
