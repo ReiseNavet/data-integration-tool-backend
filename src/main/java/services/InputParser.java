@@ -1,6 +1,7 @@
 package services;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -45,7 +46,7 @@ public class InputParser {
       return null;
     }
     
-    List<String> folderItems = List.of(folder.list());
+    List<String> folderItems = Arrays.asList(folder.list());
     if(
       folderItems.contains("netex_part_1") &&
       folderItems.contains("netex_part_2") &&
