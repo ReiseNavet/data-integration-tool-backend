@@ -55,7 +55,14 @@ public class OntologyOperations {
 	 */
 	static OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
 
+	/**
+	 * Generating too many of these causes a memory leak. Therefore we must reuse the generated ones.
+	 */
+	static Map<OWLOntology, OWLReasoner> reasoners = new HashMap<OWLOntology, OWLReasoner>();
+
+	
 	static StringDistances ontoString = new StringDistances();
+
 
 	/**
 	 * Default constructor
@@ -175,6 +182,12 @@ public class OntologyOperations {
 
 	}
 
+	public static OWLReasoner getReasoner(OWLOntology onto){
+		if (!reasoners.containsKey(onto)){
+      reasoners.put(onto, reasonerFactory.createReasoner(onto));
+		}
+		return reasoners.get(onto);
+	}
 
 	/**
 	 * Helper method that retrieves a set of subclasses for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all subclasses for an OWLClass)
@@ -183,8 +196,7 @@ public class OntologyOperations {
 	 * @return Set<String> of subclasses for an OWLClass
 	 */
 	public static Set<String> getEntitySubclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 		NodeSet<OWLClass> subclasses = reasoner.getSubClasses(inputClass, true);
 
@@ -207,8 +219,7 @@ public class OntologyOperations {
 	 * @return Set<String> of subclasses for an OWLClass
 	 */
 	public static Set<String> getEntitySubclassesFragments (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 		NodeSet<OWLClass> subclasses = reasoner.getSubClasses(inputClass, true);
 
@@ -221,7 +232,6 @@ public class OntologyOperations {
 		}
 
 		return subclsSet;
-
 	}
 
 	/**
@@ -295,8 +305,7 @@ public class OntologyOperations {
 	 * @return Set<String> of superclasses for an OWLClass
 	 */
 	public static Set<String> getEntitySuperclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 		NodeSet<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true);
 
@@ -319,8 +328,7 @@ public class OntologyOperations {
 	 * @return Set<String> of superclasses for an OWLClass
 	 */
 	public static Set<String> getEntitySuperclassesFragments (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 		Set<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true).getFlattened();
 
@@ -343,9 +351,7 @@ public class OntologyOperations {
 	 * @return Set<String> of DIRECT superclasses for an OWLClass
 	 */
 	private static Set<String> getDirectEntitySuperclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
+		OWLReasoner reasoner = getReasoner(onto);
 
 		NodeSet<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true);
 
@@ -371,7 +377,7 @@ public class OntologyOperations {
 	 */
 	public static Map<String, String> getClassesAndSuperClasses(OWLOntology o) throws OWLOntologyCreationException {
 
-		OWLReasoner reasoner = reasonerFactory.createReasoner(o);
+		OWLReasoner reasoner = getReasoner(o);
 		Set<OWLClass> cls = o.getClassesInSignature();
 		Map<String, String> classesAndSuperClasses = new HashMap<String, String>();
 		ArrayList<OWLClass> classList = new ArrayList<OWLClass>();
@@ -408,7 +414,7 @@ public class OntologyOperations {
 	 */
 	public static Map<String, Set<String>> getClassesAndAllSuperClasses(OWLOntology onto) throws OWLOntologyCreationException {
 
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 
 		Map<String, Set<String>> classesAndSuperClasses = new HashMap<String, Set<String>>();
@@ -444,7 +450,7 @@ public class OntologyOperations {
 	 */
 	public static Map<String, Set<String>> getClassesAndAllSubClasses(OWLOntology onto) throws OWLOntologyCreationException {
 
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLReasoner reasoner = getReasoner(onto);
 
 
 		Map<String, Set<String>> classesAndSubClasses = new HashMap<String, Set<String>>();
