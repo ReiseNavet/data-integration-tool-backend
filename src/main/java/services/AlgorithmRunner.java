@@ -11,7 +11,7 @@ import services.interfaces.Algorithm;
 import services.enums.SemanticRelation;
 
 public class AlgorithmRunner {
-  Map<SemanticRelation, List<URIAlignment>> run(File onto1, File onto2, Map<SemanticRelation, List<Algorithm>> algorithms)
+  public Map<SemanticRelation, List<URIAlignment>> run(File onto1, File onto2, Map<SemanticRelation, List<Algorithm>> algorithms)
       throws Exception {
     Map<SemanticRelation, List<URIAlignment>> toReturn = new HashMap<SemanticRelation, List<URIAlignment>>();
 
