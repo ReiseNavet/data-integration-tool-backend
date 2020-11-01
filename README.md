@@ -67,17 +67,17 @@ Deployment:
      * Hostname: `student@46.250.220.200`
      * Port: `22`
      * Connection type: `SSH`
-     * Password prompt: Ask Sebastian or Audun
+     * Password prompt: Ask Audun
    * Mac/Linux - Terminal: 
      * `ssh student@46.250.220.200`
-     * Password prompt: Ask Sebastian or Audun
+     * Password prompt: Ask Audun
 8. SSH: Stop the running java process with `killall java`
 9. Connect to SFTP:
    * Protocol: `SFTP`
    * Hostname/IP: `46.250.220.200`
    * Port: `22`
    * Username: `student`
-   * Password: Ask Sebastian or Audun
+   * Password: Ask Audun
 10. SFTP: Copy the compiled `App.jar` into this the server-folder `/home/student`
 11. SSH: Restart the java server with `nohup java -jar App.jar &`
 
