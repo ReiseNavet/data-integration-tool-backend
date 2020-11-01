@@ -1,8 +1,6 @@
 package services.utils;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,11 +197,11 @@ public class OntologyConcept {
    * (Since OWLClasses gets turned into Descriptions for some reason)
    */
   private static void FixOntology(String filepathToStore) throws Exception {
-    String text = Files.readString(Paths.get(filepathToStore));
+    String text = FileUtil.readFile(filepathToStore);
     String[] textSplit = text.split("owl:unionOf");
     for (int n = 0; n < textSplit.length; n += 2){
       textSplit[n] = textSplit[n].replace("rdf:Description", "owl:Class");
     }
-    Files.writeString(Paths.get(filepathToStore), String.join("owl:unionOf", textSplit));
+    FileUtil.writeFile(filepathToStore, String.join("owl:unionOf", textSplit));
   }
 }

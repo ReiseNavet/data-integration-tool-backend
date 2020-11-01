@@ -6,12 +6,11 @@ import java.util.List;
 import algorithms.utilities.StringUtilities;
 import rita.json.JSONObject;
 import services.interfaces.SchemaParser;
+import services.utils.FileUtil;
 import services.utils.OntologyConcept;
 import services.utils.Unzipper;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class GBFSParser implements SchemaParser {
 
@@ -28,7 +27,7 @@ public class GBFSParser implements SchemaParser {
     File GBFSFolder = new File(filePath);
     String[] jsonPaths = GBFSFolder.list();
     for (String jsonPath : jsonPaths){
-      String jsonRaw = Files.readString(Paths.get(filePath + "\\" + jsonPath));
+      String jsonRaw = FileUtil.readFile(filePath + "\\" + jsonPath);
       JSONObject json = new JSONObject(jsonRaw);
       JSONObject definitions = json.getJSONObject("definitions");
       for(Object domain_key : definitions.keySet()){
