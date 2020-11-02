@@ -25,6 +25,10 @@ public class SimilarityMetrics {
 	   Jul 17, 2019
 	 */
 	public static double jaccardSetSim (Set<String> set1, Set<String> set2) {
+		if (set1 == null || set2 == null){
+			return 0.0;
+		}
+
 		int size1 = set1.size();
 		int size2 = set2.size();
 		Set<String> unionSet = new HashSet<String>(set1);
@@ -47,6 +51,9 @@ public class SimilarityMetrics {
 	   Jul 18, 2019
 	 */
 	public static double jaccardSetSimISubEqualConcepts (double confidence, String concept1, String concept2, Set<String> set1, Set<String> set2) {
+		if (set1 == null || set2 == null){
+			return 0.0;
+		}
 
 		ISub isubMatcher = new ISub();
 
