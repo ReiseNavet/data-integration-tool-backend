@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import algorithms.utilities.MathUtils;
 import algorithms.utilities.OntologyOperations;
@@ -249,9 +250,12 @@ public class OntologyProfiler {
 		int counterOnto1 = 0;
 		int counterOnto2 = 0;
 
+		OWLReasoner reasonerOnto1 = OntologyOperations.reasonerFactory.createReasoner(onto1); //Is done here instead of in ontologyoperations since generating multiple reasoners would cause out of memory
+		OWLReasoner reasonerOnto2 = OntologyOperations.reasonerFactory.createReasoner(onto2); //Is done here instead of in ontologyoperations since generating multiple reasoners would cause out of memory
+
 		for (OWLClass c : onto1.getClassesInSignature()) {
-			subclasses = OntologyOperations.getEntitySubclasses(onto1, c).size();
-			superclasses = OntologyOperations.getEntitySuperclasses(onto1, c).size();
+			subclasses = OntologyOperations.getEntitySubclasses(onto1, c, reasonerOnto1).size();
+			superclasses = OntologyOperations.getEntitySuperclasses(onto1, c, reasonerOnto1).size();
 
 			if (subclasses > 0 || superclasses > 0) {
 				counterOnto1++;
@@ -260,8 +264,8 @@ public class OntologyProfiler {
 		}
 
 		for (OWLClass c : onto2.getClassesInSignature()) {
-			subclasses = OntologyOperations.getEntitySubclasses(onto2, c).size();
-			superclasses = OntologyOperations.getEntitySuperclasses(onto2, c).size();
+			subclasses = OntologyOperations.getEntitySubclasses(onto2, c, reasonerOnto2).size();
+			superclasses = OntologyOperations.getEntitySuperclasses(onto2, c, reasonerOnto2).size();
 
 			if (subclasses > 0 || superclasses > 0) {
 				counterOnto2++;
