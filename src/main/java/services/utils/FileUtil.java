@@ -1,39 +1,40 @@
 package services.utils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.stream.Collectors;
 
 public class FileUtil {
-  public static String readFile(String filename) throws Exception {
-    String content = null;
-    File file = new File(filename);
-    FileReader reader = null;
-    try {
-      reader = new FileReader(file);
-      char[] chars = new char[(int) file.length()];
-      reader.read(chars);
-      content = new String(chars);
-    } catch (Exception e) {
+  public static String readFile(String filename) throws IOException {
+    BufferedReader reader = null;
+    String text = null;
+    try{
+      reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")); 
+      text = reader.lines().collect(Collectors.joining("\r\n"));
+    } catch (IOException e){
       throw e;
     } finally {
-      if(reader != null){
+      if (reader != null){
         reader.close();
       }
     }
-    return content;
+    return text;
   }
 
-  public static void writeFile(String filename, String text) throws Exception{
-    FileWriter writer = null;
+  public static void writeFile(String filename, String text) throws IOException{
+    BufferedWriter writer = null;
     try {
-      writer = new FileWriter(filename);
+      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
       writer.write(text);
     } catch (IOException e) {
       throw e;
     } finally {
-      if(writer != null){
+      if (writer != null){
         writer.close();
       }
     }
