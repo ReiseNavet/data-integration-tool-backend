@@ -22,16 +22,7 @@ import org.semanticweb.owl.align.Alignment;
 import org.semanticweb.owl.align.AlignmentException;
 import org.semanticweb.owl.align.AlignmentVisitor;
 import org.semanticweb.owl.align.Cell;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
 import fr.inrialpes.exmo.align.impl.BasicConfidence;
@@ -398,45 +389,5 @@ public class AlignmentOperations {
 	    Map<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
 	    sortedByValues.putAll(map);
 	    return sortedByValues;
-	}
-	
-	/**
-	 * Creates a map where the key is the name of an OWL class C and the value is a set of classes being the range in object properties where C is the domain.
-	 * @param onto OWL ontology
-	 * @return a Map<String, Set<String>> class to range associations.
-	   Jul 17, 2019
-	 */
-	private static Map<String, Set<String>> getRangeMap(OWLOntology onto) {
-		Map<String, Set<String>> rangeMap = new HashMap<String, Set<String>>();
-
-
-		for (OWLClass c : onto.getClassesInSignature()) {
-			Set<OWLObjectProperty> ops = new HashSet<OWLObjectProperty>();
-			
-			//get the object properties where c is domain
-			for (OWLObjectPropertyDomainAxiom op : onto.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
-				
-				if (op.getDomain().equals(c)) {
-					for (OWLObjectProperty oop : op.getObjectPropertiesInSignature()) {
-						ops.add(oop);
-					}
-				}
-			}
-
-			Set<String> range = new HashSet<String>();
-			
-			//get the range classes from the object properties 
-			for (OWLObjectProperty oop : ops) {
-				Set<OWLClassExpression> rangeCls = oop.getRanges(onto);
-				for (OWLClassExpression oce : rangeCls) {
-					if (!oce.isAnonymous()) {
-						range.add(oce.asOWLClass().getIRI().getFragment());
-					}
-				}
-			}
-			rangeMap.put(c.getIRI().getFragment().toLowerCase(), range);
-		}
-
-		return rangeMap;
 	}
 }
