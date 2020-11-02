@@ -61,9 +61,6 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 	
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
-	
-	static MutableGraph<String> onto1Graph = null;
-	static MutableGraph<String> onto2Graph = null;
 
 	ISub iSubMatcher = new ISub();
 	

@@ -33,7 +33,6 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
 
-import fr.inrialpes.exmo.ontosim.string.StringDistances;
 import rita.wordnet.jwnl.JWNLException;
 
 
@@ -59,10 +58,6 @@ public class OntologyOperations {
 	 * Generating too many of these causes a memory leak. Therefore we must reuse the generated ones.
 	 */
 	static Map<OWLOntology, OWLReasoner> reasoners = new HashMap<OWLOntology, OWLReasoner>();
-
-	
-	static StringDistances ontoString = new StringDistances();
-
 
 	/**
 	 * Default constructor

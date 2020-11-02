@@ -72,9 +72,6 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	//The ISUB confidence used in the combined Jaccard/ISub similarity measure
 	final double confidence = 0.7;
 
-	static Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
-	static Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
-
 	public PropertyEquivalenceMatcherSigmoid(double profileScore){
 		this.profileScore = profileScore;
 	}
@@ -142,7 +139,8 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	 * A combination of Jaccard set similarity and the ISUB string similarity measure is used to compute the similarity score.
 	 */
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
-
+		Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
 		//construct a map holding a class as key and all props and synonyms of them as value
 		try {
 			classAndPropMapOnto1 = createClassAndPropMap(onto1);

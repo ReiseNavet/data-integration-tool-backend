@@ -42,9 +42,6 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	double rangeMin;
 	double rangeMax;
 
-	static Map<String, List<String>> defMapSource = new HashMap<String, List<String>>();
-	static Map<String, List<String>> defMapTarget = new HashMap<String, List<String>>();
-
 	public DefinitionSubsumptionMatcherSigmoid(double profileScore){
 		this.profileScore = profileScore;
 	}
@@ -93,6 +90,8 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	}
 
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
+		Map<String, List<String>> defMapSource = new HashMap<String, List<String>>();
+		Map<String, List<String>> defMapTarget = new HashMap<String, List<String>>();
 
 		//lexico-syntactic patterns
 		List<String> patterns = new ArrayList<String>();

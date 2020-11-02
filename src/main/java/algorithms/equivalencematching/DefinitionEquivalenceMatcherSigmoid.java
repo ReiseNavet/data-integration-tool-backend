@@ -45,9 +45,6 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 	
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
-	
-	static Map<String, double[]> sourceVectorMap = new HashMap<String, double[]>();
-	static Map<String, double[]> targetVectorMap = new HashMap<String, double[]>();
 
 	public DefinitionEquivalenceMatcherSigmoid(double profileScore){
 		this.profileScore = profileScore;

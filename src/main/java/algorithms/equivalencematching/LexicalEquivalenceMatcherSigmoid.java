@@ -42,16 +42,16 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	double rangeMin;
 	double rangeMax;
 
-	static OWLOntology sourceOntology;
-	static OWLOntology targetOntology;
+	OWLOntology sourceOntology;
+	OWLOntology targetOntology;
 	
 	public LexicalEquivalenceMatcherSigmoid(double profileScore){
 		this.profileScore = profileScore;
 	}
 	
 	public LexicalEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
-		sourceOntology = onto1;
-		targetOntology = onto2;
+		this.sourceOntology = onto1;
+		this.targetOntology = onto2;
 		this.profileScore = profileScore;
 		this.slope = slope;
 		this.rangeMin = rangeMin;
