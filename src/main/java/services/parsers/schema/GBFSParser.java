@@ -27,7 +27,7 @@ public class GBFSParser implements SchemaParser {
     File GBFSFolder = new File(filePath);
     String[] jsonPaths = GBFSFolder.list();
     for (String jsonPath : jsonPaths){
-      String jsonRaw = FileUtil.readFile(filePath + "\\" + jsonPath);
+      String jsonRaw = FileUtil.readFile(filePath + "/" + jsonPath);
       JSONObject json = new JSONObject(jsonRaw);
       JSONObject definitions = json.getJSONObject("definitions");
       for(Object domain_key : definitions.keySet()){

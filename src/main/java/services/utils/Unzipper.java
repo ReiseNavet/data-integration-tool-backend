@@ -16,7 +16,7 @@ public class Unzipper {
     File file = new File(outputPath);
     String[] subFilesNames = file.list();
     if (subFilesNames.length == 1){
-      String subFilePath = outputPath + "\\" + subFilesNames[0];
+      String subFilePath = outputPath + "/" + subFilesNames[0];
       if (new File(subFilePath).isDirectory()){
         outputPath = subFilePath;
       }
