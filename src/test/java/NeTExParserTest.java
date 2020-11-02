@@ -11,7 +11,7 @@ public class NeTExParserTest {
 
     @Test
     public void testParse() throws Exception {
-        assertNotNull(new NeTExParser().parse(Unzipper.unzip("files/parse_files/NeTEx_xsd.zip", "temp/parse_files/xsd")));
+        assertNotNull(parser.parse(Unzipper.unzip("files/parse_files/NeTEx_xsd.zip", "temp/parse_files/xsd")));
     }
     
 }
