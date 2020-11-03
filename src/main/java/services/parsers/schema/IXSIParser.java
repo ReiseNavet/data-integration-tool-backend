@@ -86,7 +86,6 @@ public class IXSIParser implements SchemaParser {
       if (simpleType.getAnnotation() != null && simpleType.getAnnotation().getDocumentations() != null){
         concept.description = simpleType.getAnnotation().getDocumentations().get(0).getContent();
       }
-      //concept.range = st.getRestriction().getBase(); // Is restriction range?
       this.concepts.add(concept);
     }
   }
@@ -95,7 +94,9 @@ public class IXSIParser implements SchemaParser {
     for (XsdComplexType complexType : complexTypes) {
       OntologyConcept concept = new OntologyConcept();
       concept.name = complexType.getName();
-      concept.description = complexType.getAnnotation().getDocumentations().get(0).getContent();
+      if (complexType.getAnnotation() != null && complexType.getAnnotation().getDocumentations() != null){
+        concept.description = complexType.getAnnotation().getDocumentations().get(0).getContent();
+      }
       this.concepts.add(concept);
 
       if (complexType.getElements() != null){

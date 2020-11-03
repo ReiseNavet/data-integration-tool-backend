@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import algorithms.utilities.StringUtilities;
 import services.interfaces.SchemaParser;
 import services.utils.OntologyConcept;
 
@@ -57,7 +56,7 @@ public class SpreadsheetParser implements SchemaParser {
         }
         if (currentCell.getColumnIndex() == 1){
           String name = currentCell.getStringCellValue();
-          ontologyConcept.name = StringUtilities.RemoveDomain(lastElement, name);
+          ontologyConcept.name = name; //could use StringUtilities.RemoveDomain(lastElement, name) instead 
           ontologyConcept.domain = lastElement;
         }
         if (currentCell.getColumnIndex() == 2 ){
