@@ -22,8 +22,6 @@ import algorithms.equivalencematching.GraphEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.LexicalEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.PropertyEquivalenceMatcherSigmoid;
 import algorithms.equivalencematching.WordEmbeddingMatcherSigmoid;
-import algorithms.mismatchdetection.ConceptScopeMismatch;
-import algorithms.mismatchdetection.DomainMismatch;
 import algorithms.ontologyprofiling.OntologyProfiler;
 import algorithms.subsumptionmatching.CompoundMatcherSigmoid;
 import algorithms.subsumptionmatching.ContextSubsumptionMatcherSigmoid;
@@ -32,15 +30,15 @@ import algorithms.subsumptionmatching.LexicalSubsumptionMatcherSigmoid;
 import algorithms.utilities.AlignmentOperations;
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
-import rita.wordnet.jwnl.JWNLException;
 
 public class SemanticMatcher {
 	
 	
-	static File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
-	static File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
+	//static File ontoFile1 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/bibframe.rdf");
+	//static File ontoFile2 = new File("./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/ONTOLOGIES/schema-org.owl");
+	static File ontoFile1 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-301.rdf");
+	static File ontoFile2 = new File("./files/_PHD_EVALUATION/OAEI2011/ONTOLOGIES/301302/301302-302.rdf");
 	static String vectorFile = "./files/_PHD_EVALUATION/EMBEDDINGS/wikipedia_embeddings.txt";
-	static String mismatchStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/MISMATCHES";
 	static String finalAlignmentStorePath = "./files/_PHD_EVALUATION/BIBFRAME-SCHEMAORG/FINAL_ALIGNMENT/";
 
 	//these parameters are used for the sigmoid weight configuration
@@ -48,7 +46,7 @@ public class SemanticMatcher {
 	final static double rangeMin = 0.5;
 	final static double rangeMax = 0.7;
 	
-	public static void main(String[] args) throws OWLOntologyCreationException, IOException, AlignmentException, URISyntaxException, JWNLException {
+	public static void main(String[] args) throws Exception {
 				
 	long startTimeMatchingProcess = System.currentTimeMillis();
 	
@@ -71,7 +69,7 @@ public class SemanticMatcher {
 	
 	/* combine using ProfileWeight EQ */
 	URIAlignment combinedEQAlignment = combineEQAlignments(eqAlignments);
-	URIAlignment combinedEQAlignmentWithoutMismatches = removeMismatches(combinedEQAlignment, mismatchStorePath);
+	URIAlignment combinedEQAlignmentWithoutMismatches = AlignmentConflictResolution.removeMismatches(combinedEQAlignment);
 	
 	//store the EQ alignment
 	File outputAlignment = new File(finalAlignmentStorePath + "EQAlignment.rdf");
@@ -158,7 +156,7 @@ public class SemanticMatcher {
 		URIAlignment WEMAlignment = WordEmbeddingMatcherSigmoid.returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, ontologyProfilingScores.get("cc"), slope, rangeMin, rangeMax);	
 		eqAlignments.add(WEMAlignment);
 		long endTimeWEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeWEM - startTimeWEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeWEM - startTimeWEM)  / 1000f) + " seconds.\n");
 		}
 
 		if (dc >= 0.5) {
@@ -167,7 +165,7 @@ public class SemanticMatcher {
 		URIAlignment DEMAlignment = DefinitionEquivalenceMatcherSigmoid.returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, ontologyProfilingScores.get("cc"), slope, rangeMin, rangeMax);
 		eqAlignments.add(DEMAlignment);
 		long endTimeDEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeDEM - startTimeDEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeDEM - startTimeDEM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (sp >= 0.5) {
@@ -176,7 +174,7 @@ public class SemanticMatcher {
 		URIAlignment GEMAlignment = GraphEquivalenceMatcherSigmoid.returnGEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("sp"), slope, rangeMin, rangeMax);	
 		eqAlignments.add(GEMAlignment);
 		long endTimeGEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeGEM - startTimeGEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeGEM - startTimeGEM)  / 1000f) + " seconds.\n");
 		}
 
 		if (pf >= 0.5) {
@@ -185,7 +183,7 @@ public class SemanticMatcher {
 		URIAlignment PEMAlignment = PropertyEquivalenceMatcherSigmoid.returnPEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("pf"), slope, rangeMin, rangeMax);
 		eqAlignments.add(PEMAlignment);
 		long endTimePEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimePEM - startTimePEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimePEM - startTimePEM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (lc >= 0.5) {
@@ -194,7 +192,7 @@ public class SemanticMatcher {
 		URIAlignment LEMAlignment = LexicalEquivalenceMatcherSigmoid.returnLEMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("lc"), slope, rangeMin, rangeMax);
 		eqAlignments.add(LEMAlignment);
 		long endTimeLEM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeLEM - startTimeLEM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeLEM - startTimeLEM)  / 1000f) + " seconds.\n");
 		}
 
 
@@ -246,7 +244,7 @@ public class SemanticMatcher {
 		URIAlignment CMAlignment = CompoundMatcherSigmoid.returnCMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("cf"), slope, rangeMin, rangeMax);		
 		subAlignments.add(CMAlignment);
 		long endTimeCM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeCM - startTimeCM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeCM - startTimeCM)  / 1000f) + " seconds.\n");
 		}
 
 		if (sp >= 0.5) {
@@ -255,7 +253,7 @@ public class SemanticMatcher {
 		URIAlignment CSMAlignment = ContextSubsumptionMatcherSigmoid.returnCSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("sp"), slope, rangeMin, rangeMax);		
 		subAlignments.add(CSMAlignment);
 		long endTimeCSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeCSM - startTimeCSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeCSM - startTimeCSM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (dc >= 0.5) {
@@ -264,7 +262,7 @@ public class SemanticMatcher {
 		URIAlignment DSMAlignment = DefinitionSubsumptionMatcherSigmoid.returnDSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("dc"), slope, rangeMin, rangeMax);		
 		subAlignments.add(DSMAlignment);
 		long endTimeDSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeDSM - startTimeDSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeDSM - startTimeDSM)  / 1000f) + " seconds.\n");
 		}
 		
 		if (lc >= 0.5) {
@@ -273,7 +271,7 @@ public class SemanticMatcher {
 		URIAlignment LSMAlignment = LexicalSubsumptionMatcherSigmoid.returnLSMAlignment(ontoFile1, ontoFile2, ontologyProfilingScores.get("lc"), slope, rangeMin, rangeMax);		
 		subAlignments.add(LSMAlignment);
 		long endTimeLSM = System.currentTimeMillis();
-		System.out.print("..." + (endTimeLSM - startTimeLSM)  / 1000 + " seconds.\n");
+		System.out.print("..." + String.format("%.1f", (endTimeLSM - startTimeLSM)  / 1000f) + " seconds.\n");
 		}
 		
 		return subAlignments;
@@ -311,65 +309,6 @@ private static URIAlignment mergeEQAndSubAlignments (URIAlignment eqAlignment, U
 
 	return mergedEQAndSubAlignment;
 
-}
-
-/**
- * Filters out relations representing mismatches on the basis of a set of mismatch detection strategies.
- * @param combinedEQAlignment the input alignment from which mismatches are filtered out.
- * @param mismatchStorePath a folder where the filtered alignments from the included mismatch detection strategies are stored.
- * @return an URIAlignment without mismatch relations.
- * @throws AlignmentException
- * @throws OWLOntologyCreationException
- * @throws JWNLException
- * @throws URISyntaxException
- * @throws IOException
-   Jul 15, 2019
- */
-public static URIAlignment removeMismatches (URIAlignment combinedEQAlignment, String mismatchStorePath) throws AlignmentException, OWLOntologyCreationException, JWNLException, URISyntaxException, IOException {
-
-	//store the merged alignment
-	File initialAlignment = new File(mismatchStorePath + "/initialAlignment.rdf");
-	File conceptScopeMismatchAlignment = new File(mismatchStorePath + "/conceptScopeMismatch.rdf");
-	File domainMismatchAlignment = new File(mismatchStorePath + "/domainMismatch.rdf");
-	PrintWriter writer = null;
-	AlignmentVisitor renderer = null;
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(initialAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	combinedEQAlignment.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-	URIAlignment conceptScopeMismatchDetection = ConceptScopeMismatch.detectConceptScopeMismatch(combinedEQAlignment);
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(conceptScopeMismatchAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	conceptScopeMismatchDetection.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-	URIAlignment domainMismatchDetection = DomainMismatch.filterAlignment(conceptScopeMismatchDetection);
-	
-	writer = new PrintWriter(
-			new BufferedWriter(
-					new FileWriter(domainMismatchAlignment)), true); 
-	renderer = new RDFRendererVisitor(writer);
-
-	domainMismatchDetection.render(renderer);
-
-	writer.flush();
-	writer.close();
-
-
-	return domainMismatchDetection;
 }
 
 }

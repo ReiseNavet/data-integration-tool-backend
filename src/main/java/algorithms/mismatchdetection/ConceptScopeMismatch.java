@@ -38,7 +38,7 @@ public class ConceptScopeMismatch {
 		String qualifier = null;
 		String compoundHead = null;
 		for (Cell c : inputAlignment) {
-			if (StringUtilities.isCompoundWord(c.getObject1AsURI().getFragment())) {
+			if (c.getObject1AsURI().getFragment() != null && StringUtilities.isCompoundWord(c.getObject1AsURI().getFragment())) {
 				qualifier = StringUtilities.getCompoundFirstQualifier(c.getObject1AsURI().getFragment());
 				compoundHead = StringUtilities.getCompoundHead(c.getObject1AsURI().getFragment());
 				
@@ -47,7 +47,7 @@ public class ConceptScopeMismatch {
 					conceptScopeMismatchAlignment.addAlignCell(c.getObject1(), c.getObject2(), c.getRelation().getRelation(), c.getStrength());
 				}
 
-			} else if (StringUtilities.isCompoundWord(c.getObject2AsURI().getFragment())) {
+			} else if (c.getObject2AsURI().getFragment() != null && StringUtilities.isCompoundWord(c.getObject2AsURI().getFragment())) {
 				qualifier = StringUtilities.getCompoundFirstQualifier(c.getObject2AsURI().getFragment());
 				compoundHead = StringUtilities.getCompoundHead(c.getObject2AsURI().getFragment());
 				//e.g. [Sector] || Location-Reference[Location]

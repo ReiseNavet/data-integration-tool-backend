@@ -41,15 +41,17 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	int slope;
 	double rangeMin;
 	double rangeMax;
+
+	OWLOntology sourceOntology;
+	OWLOntology targetOntology;
 	
-	static OWLOntology sourceOntology;
-	static OWLOntology targetOntology;
-	
-	public LexicalEquivalenceMatcherSigmoid(){}
+	public LexicalEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	public LexicalEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
-		sourceOntology = onto1;
-		targetOntology = onto2;
+		this.sourceOntology = onto1;
+		this.targetOntology = onto2;
 		this.profileScore = profileScore;
 		this.slope = slope;
 		this.rangeMin = rangeMin;
@@ -60,7 +62,6 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 		
 		return returnLEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}
@@ -134,7 +135,6 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 	   Jul 14, 2019
 	 */
 	public double wordNetMatch(Object o1, Object o2) throws OntowrapException {
-
 		String source = ontology1().getEntityName(o1);
 		String target = ontology2().getEntityName(o2);
 
@@ -155,8 +155,8 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 		//if neither concept is a compound, retrieve their synonym sets and compare them using Jaccard
 		if (!StringUtilities.isCompoundWord(source) && !StringUtilities.isCompoundWord(target)) {
 
-			sourceSynonyms = WordNet.getAllSynonymSet(source.toLowerCase());
-			targetSynonyms = WordNet.getAllSynonymSet(target.toLowerCase());
+			sourceSynonyms = WordNet.getAllSynonymSetCached(source.toLowerCase());
+			targetSynonyms = WordNet.getAllSynonymSetCached(target.toLowerCase());
 
 			if (!sourceSynonyms.isEmpty() && !targetSynonyms.isEmpty()) {
 				
@@ -184,10 +184,6 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 //			sourceModifierTokens = new HashSet<String>(Arrays.asList(sourceModifierBasis.split("(?<=.)(?=\\p{Lu})")));		
 //			targetModifierTokens = new HashSet<String>(Arrays.asList(targetModifierBasis.split("(?<=.)(?=\\p{Lu})")));
 
-
-			//get the Jiang-Conrath similarity of the compound heads
-			jcSim = WordNet.computeJiangConrath(sourceCompoundHead, targetCompoundHead);
-
 			//compute the set similarity of synonyms associated with the modifiers
 			for (String s : sourceModifierTokens) {
 				List<String> sourceModifiersList = Arrays.asList(WordNet.getSynonyms(s.toLowerCase()));
@@ -205,6 +201,8 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 
 			//compute the Jaccard similarity for the compound modifier tokens
 			if (!sourceSynonyms.isEmpty() && !targetSynonyms.isEmpty()) {
+				//get the Jiang-Conrath similarity of the compound heads
+				jcSim = WordNet.computeJiangConrath(sourceCompoundHead, targetCompoundHead);
 				jaccardSim = SimilarityMetrics.jaccardSetSim(sourceSynonyms, targetSynonyms);
 				
 				
@@ -224,130 +222,87 @@ public class LexicalEquivalenceMatcherSigmoid extends ObjectAlignment implements
 
 				finalScore = 0;
 			}
-
-
 		}
 
-
-		//if only the source is a compound, split the modifier into tokens and compute the Jiang-Conrath between all modifier tokens + the compound head of the source against
-		//the target concept
 		else if (StringUtilities.isCompoundWord(source) && !StringUtilities.isCompoundWord(target)) {
-
-			sourceCompoundHead = StringUtilities.getCompoundHead(source);
-			
-			//get the synonyms of the source compound head only
-			sourceSynonyms = WordNet.getAllSynonymSet(sourceCompoundHead.toLowerCase());
-			targetSynonyms = WordNet.getAllSynonymSet(target.toLowerCase());
-			
-			sourceModifierBasis = source.replace(sourceCompoundHead, "");
-			
-			sourceModifierTokens = new HashSet<String>(Arrays.asList(StringUtilities.getCompoundParts(sourceModifierBasis)));	
-			
-			double localJcSim = 0;
-
-			//if the compound head of the source equals the target, we have most likely a subsumption relation, so we give that a score of zero
-			if (sourceCompoundHead.equalsIgnoreCase(target)) {
-
-				finalScore = 0;
-			}
-
-			//if any of the compound modifiers of the source equals the target, we have most likely a meronymic relation, so we give that a score of zero as well.
-			else if (sourceModifierTokens.contains(target)) {
-
-				finalScore = 0;
-			}
-
-			//if neither of the above scenarios occur, we compute the score as a combination of the Jiang-Conrath similarity between every compound modifier token of the source and the target, and
-			//the Jiang-Conrath similarity between the compound head of the source and the target.
-			else {
-
-				for (String mod : sourceModifierTokens) {
-
-					localJcSim += WordNet.computeJiangConrath(mod, target);				
-				}
-
-				jcSim = (localJcSim + WordNet.computeJiangConrath(sourceCompoundHead, target)) / (double) sourceModifierTokens.size();
-
-				if (jcSim > 1.0) {
-					jcSim = 1.0;
-				}
-				
-				//compute the Jaccard similarity between the source compound head synonyms and target concept synonyms
-				if (!sourceSynonyms.isEmpty() && !targetSynonyms.isEmpty()) {
-					jaccardSim = SimilarityMetrics.jaccardSetSim(sourceSynonyms, targetSynonyms);
-				} else {
-					jaccardSim = 0;
-				}
-				
-
-				finalScore = (jcSim + jaccardSim) / 2;
-
-			}
-
-
+			finalScore = XORcompound(source, target);
 		}
-
-		//if only the target is a compound
 		else if (StringUtilities.isCompoundWord(target) && !StringUtilities.isCompoundWord(source)) {
-			targetCompoundHead = StringUtilities.getCompoundHead(target);
-			
-			//get the synonyms of the target compound head only
-			targetSynonyms = WordNet.getAllSynonymSet(targetCompoundHead.toLowerCase());
-			sourceSynonyms = WordNet.getAllSynonymSet(source.toLowerCase());
-			
-			targetModifierBasis = target.replace(targetCompoundHead, "");
-			
-			targetModifierTokens = new HashSet<String>(Arrays.asList(StringUtilities.getCompoundParts(targetModifierBasis)));
-			
-			double localJcSim = 0;
-
-			//if the compound head of the target equals the source, we have most likely a subsumption relation, so we give that a score of zero
-			if (targetCompoundHead.equalsIgnoreCase(source)) {
-				finalScore = 0;
-			}
-
-			//if any of the compound modifiers of the target equals the source, we have most likely a meronymic relation, so we give that a score of zero as well.
-			else if (targetModifierTokens.contains(source)) {
-				finalScore = 0;
-			}
-
-			//if neither of the above scenarios occur, we compute the score as a combination of the Jiang-Conrath similarity between every compound modifier token of the target and the source, and
-			//the Jiang-Conrath similarity between the compound head of the target and the source.
-			else {
-
-				for (String mod : targetModifierTokens) {
-
-					localJcSim += WordNet.computeJiangConrath(mod, source);	
-				}
-
-				jcSim = (localJcSim + WordNet.computeJiangConrath(source, targetCompoundHead)) / (double) targetModifierTokens.size();
-
-				if (jcSim > 1.0) {
-					jcSim = 1.0;
-				}
-
-				//compute the Jaccard similarity between the source compound head synonyms and target concept synonyms
-				if (!sourceSynonyms.isEmpty() && !targetSynonyms.isEmpty()) {
-					jaccardSim = SimilarityMetrics.jaccardSetSim(sourceSynonyms, targetSynonyms);
-				} else {
-					jaccardSim = 0;
-				}
-				
-
-				finalScore = (jcSim + jaccardSim) / 2;
-
-
-			}
-		}
-
-		//if neither of the above scenarios occur, we compute the Jiang-Conrath similarity between source and target
-		else {
-
-			finalScore = WordNet.computeJiangConrath(source, target);
+			finalScore = XORcompound(target, source);
 		}
 
 
 		return finalScore;
 
+	}
+	//if only the source is a compound, split the modifier into tokens and compute the Jiang-Conrath between all modifier tokens + the compound head of the source against
+	//the target concept
+	double XORcompound(String compound, String nonCompound){
+		String source = compound;
+		String target = nonCompound;
+
+		String sourceCompoundHead = null;
+		String sourceModifierBasis = null;
+		Set<String> sourceModifierTokens = new HashSet<String>();
+		
+		double jcSim = 0;
+		double jaccardSim = 0;
+		double finalScore = 0; 
+
+		Set<String> sourceSynonyms = new HashSet<String>();
+		Set<String> targetSynonyms = new HashSet<String>();
+
+
+		sourceCompoundHead = StringUtilities.getCompoundHead(source);
+			
+		//get the synonyms of the source compound head only
+		sourceSynonyms = WordNet.getAllSynonymSetCached(sourceCompoundHead.toLowerCase());
+		targetSynonyms = WordNet.getAllSynonymSetCached(target.toLowerCase());
+		
+		sourceModifierBasis = source.replace(sourceCompoundHead, "");
+		
+		sourceModifierTokens = new HashSet<String>(Arrays.asList(StringUtilities.getCompoundParts(sourceModifierBasis)));	
+		
+		double localJcSim = 0;
+
+		//if the compound head of the source equals the target, we have most likely a subsumption relation, so we give that a score of zero
+		if (sourceCompoundHead.equalsIgnoreCase(target)) {
+
+			finalScore = 0;
+		}
+
+		//if any of the compound modifiers of the source equals the target, we have most likely a meronymic relation, so we give that a score of zero as well.
+		else if (sourceModifierTokens.contains(target)) {
+
+			finalScore = 0;
+		}
+
+		//if neither of the above scenarios occur, we compute the score as a combination of the Jiang-Conrath similarity between every compound modifier token of the source and the target, and
+		//the Jiang-Conrath similarity between the compound head of the source and the target.
+		else {
+
+			for (String mod : sourceModifierTokens) {
+
+				localJcSim += WordNet.computeJiangConrath(mod, target);				
+			}
+
+			jcSim = (localJcSim + WordNet.computeJiangConrath(sourceCompoundHead, target)) / (double) sourceModifierTokens.size();
+
+			if (jcSim > 1.0) {
+				jcSim = 1.0;
+			}
+			
+			//compute the Jaccard similarity between the source compound head synonyms and target concept synonyms
+			if (!sourceSynonyms.isEmpty() && !targetSynonyms.isEmpty()) {
+				jaccardSim = SimilarityMetrics.jaccardSetSim(sourceSynonyms, targetSynonyms);
+			} else {
+				jaccardSim = 0;
+			}
+			
+
+			finalScore = (jcSim + jaccardSim) / 2;
+
+		}
+		return finalScore;
 	}
 }

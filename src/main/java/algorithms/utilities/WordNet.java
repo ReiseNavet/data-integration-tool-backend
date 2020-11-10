@@ -180,8 +180,7 @@ public class WordNet {
 	 * @param inputWord the input word for which WordNet synonyms are retrieved.
 	 * @return a set of WordNet synonyms
 	 */
-	public static Set<String> getAllSynonymSet(String inputWord) {
-
+	public static Set<String> getAllSynonymSetCached(String inputWord) {
 		Set<String> synSet = new HashSet<String>();
 
 		String[] nounSynonyms = database.getAllSynonyms(inputWord, "n");
@@ -195,7 +194,6 @@ public class WordNet {
 		for (int i = 0; i < verbSynonyms.length; i++) {
 			synSet.add(verbSynonyms[i]);
 		}
-
 		return synSet;
 	}
 
@@ -352,10 +350,8 @@ public class WordNet {
 	 * @return
 	 */
 	public static double computeJiangConrath(String firstInputString, String secondInputString)  {
-
 		WS4JConfiguration.getInstance().setMFS(true);
 		double s = new JiangConrath(db).calcRelatednessOfWords(firstInputString, secondInputString);
-
 		//need a work-around since some of the scores are above 1.0 (not allowed to have a confidence level above 1.0)
 		if (s > 1.0) {
 			s = 1.0;

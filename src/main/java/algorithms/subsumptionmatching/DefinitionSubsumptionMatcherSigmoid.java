@@ -42,10 +42,9 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	double rangeMin;
 	double rangeMax;
 
-	static Map<String, List<String>> defMapSource = new HashMap<String, List<String>>();
-	static Map<String, List<String>> defMapTarget = new HashMap<String, List<String>>();
-
-	public DefinitionSubsumptionMatcherSigmoid(){}
+	public DefinitionSubsumptionMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	public DefinitionSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -61,7 +60,6 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnDSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}
@@ -92,6 +90,8 @@ public class DefinitionSubsumptionMatcherSigmoid extends ObjectAlignment impleme
 	}
 
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
+		Map<String, List<String>> defMapSource = new HashMap<String, List<String>>();
+		Map<String, List<String>> defMapTarget = new HashMap<String, List<String>>();
 
 		//lexico-syntactic patterns
 		List<String> patterns = new ArrayList<String>();

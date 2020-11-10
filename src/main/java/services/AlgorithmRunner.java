@@ -8,15 +8,17 @@ import java.util.Map;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import services.interfaces.Algorithm;
-import services.enums.AlgorithmType;
+import services.enums.SemanticRelation;
 
 public class AlgorithmRunner {
-  Map<AlgorithmType, List<URIAlignment>> run(File onto1, File onto2, Map<AlgorithmType, List<Algorithm>> algorithms)
+  public Map<SemanticRelation, List<URIAlignment>> run(File onto1, File onto2, Map<SemanticRelation, List<Algorithm>> algorithms)
       throws Exception {
-    Map<AlgorithmType, List<URIAlignment>> toReturn = new HashMap<AlgorithmType, List<URIAlignment>>();
-    for (AlgorithmType algorithmType : algorithms.keySet()){
-      List<URIAlignment> alignments = algorithmsToAlignments(onto1, onto2, algorithms.get(algorithmType));
-      toReturn.put(algorithmType, alignments);
+    Map<SemanticRelation, List<URIAlignment>> toReturn = new HashMap<SemanticRelation, List<URIAlignment>>();
+
+    // runs the picked algorithms for the user-selected semantic relations
+    for (SemanticRelation relation : algorithms.keySet()){
+      List<URIAlignment> alignments = algorithmsToAlignments(onto1, onto2, algorithms.get(relation));
+      toReturn.put(relation, alignments);
     }
     return toReturn;
   }

@@ -30,10 +30,6 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
-	
-	
-	static Map<String, Set<String>> hyponymMapOnto1 = new HashMap<String, Set<String>>();
-	static Map<String, Set<String>> hyponymMapOnto2 = new HashMap<String, Set<String>>();
 
 	public BasicSubsumptionMatcher(){}
 
@@ -73,7 +69,8 @@ public class BasicSubsumptionMatcher extends ObjectAlignment implements Alignmen
 	}
 	
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
-
+		Map<String, Set<String>> hyponymMapOnto1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> hyponymMapOnto2 = new HashMap<String, Set<String>>();
 		//get classes and corresponding hyponyms for onto 1
 		try {
 			hyponymMapOnto1 = createHyponymMap(sourceOntology);

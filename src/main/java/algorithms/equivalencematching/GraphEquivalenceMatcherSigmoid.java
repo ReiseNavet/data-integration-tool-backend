@@ -61,9 +61,6 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 	
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
-	
-	static MutableGraph<String> onto1Graph = null;
-	static MutableGraph<String> onto2Graph = null;
 
 	ISub iSubMatcher = new ISub();
 	
@@ -72,7 +69,9 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 	 */
 	private static final double THRESHOLD = 0.9;
 
-	public GraphEquivalenceMatcherSigmoid(){}
+	public GraphEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 
 	public GraphEquivalenceMatcherSigmoid(OWLOntology sourceOntology, OWLOntology targetOntology, double profileScore, int slope, double rangeMin, double rangeMax) {
 
@@ -88,7 +87,6 @@ public class GraphEquivalenceMatcherSigmoid extends ObjectAlignment implements A
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnGEMAlignment (ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}

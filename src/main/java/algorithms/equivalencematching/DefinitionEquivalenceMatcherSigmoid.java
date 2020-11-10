@@ -45,11 +45,10 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 	
 	OWLOntology sourceOntology;
 	OWLOntology targetOntology;
-	
-	static Map<String, double[]> sourceVectorMap = new HashMap<String, double[]>();
-	static Map<String, double[]> targetVectorMap = new HashMap<String, double[]>();
 
-	public DefinitionEquivalenceMatcherSigmoid(){}
+	public DefinitionEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	//constructor for sigmoid weighting scenario
 	public DefinitionEquivalenceMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, String vectorFile, double profileScore, int slope, double rangeMin, double rangeMax) {
@@ -67,7 +66,6 @@ public class DefinitionEquivalenceMatcherSigmoid extends ObjectAlignment impleme
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnDEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMax, rangeMin);
 	}

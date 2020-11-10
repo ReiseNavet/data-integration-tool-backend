@@ -72,10 +72,9 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	//The ISUB confidence used in the combined Jaccard/ISub similarity measure
 	final double confidence = 0.7;
 
-	static Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
-	static Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
-
-	public PropertyEquivalenceMatcherSigmoid(){}
+	public PropertyEquivalenceMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 
 	public PropertyEquivalenceMatcherSigmoid(OWLOntology ontoFile1, OWLOntology ontoFile2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		onto1 = ontoFile1;
@@ -90,7 +89,6 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnPEMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax);
 	}
@@ -141,7 +139,8 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 	 * A combination of Jaccard set similarity and the ISUB string similarity measure is used to compute the similarity score.
 	 */
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
-
+		Map<String, Set<String>> classAndPropMapOnto1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> classAndPropMapOnto2 = new HashMap<String, Set<String>>();
 		//construct a map holding a class as key and all props and synonyms of them as value
 		try {
 			classAndPropMapOnto1 = createClassAndPropMap(onto1);
@@ -247,7 +246,7 @@ public class PropertyEquivalenceMatcherSigmoid extends ObjectAlignment implement
 			propsSynonyms = new HashSet<String>();
 
 			for (String p : props) {
-				propsSynonyms = WordNet.getAllSynonymSet(p.toLowerCase().replaceAll("\\s+", "")); //use the lemma + need to remove whitespace before querying WordNet
+				propsSynonyms = WordNet.getAllSynonymSetCached(p.toLowerCase().replaceAll("\\s+", "")); //use the lemma + need to remove whitespace before querying WordNet
 			}
 
 			props.addAll(propsSynonyms);				

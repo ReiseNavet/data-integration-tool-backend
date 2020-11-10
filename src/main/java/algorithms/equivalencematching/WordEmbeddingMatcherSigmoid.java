@@ -44,10 +44,11 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 	OWLOntology targetOntology;
 	String vectorFile;
 	
-	static Map<String, double[]> vectorMapSourceOntology = new HashMap<String, double[]>();
-	static Map<String, double[]> vectorMapTargetOntology = new HashMap<String, double[]>();
 
-	public WordEmbeddingMatcherSigmoid(){}
+
+	public WordEmbeddingMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 
 	public WordEmbeddingMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, String vectorFile, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.profileScore = profileScore;
@@ -64,7 +65,6 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnWEMAlignment(ontoFile1, ontoFile2, vectorFile, profileScore, slope, rangeMin, rangeMax);
 	}
@@ -150,7 +150,8 @@ public class WordEmbeddingMatcherSigmoid extends ObjectAlignment implements Alig
 	 * The confidence assigned to each relation is computed by the cosine similarity from embedding vectors associated with each concept name.
 	 */
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
-
+		Map<String, double[]> vectorMapSourceOntology = new HashMap<String, double[]>();
+		Map<String, double[]> vectorMapTargetOntology = new HashMap<String, double[]>();
 		try {
 			vectorMapSourceOntology = createVectorMap(sourceOntology, vectorFile);
 		} catch (IOException e1) {

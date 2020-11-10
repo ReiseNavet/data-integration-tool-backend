@@ -11,8 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
@@ -25,7 +23,6 @@ import edu.stanford.nlp.simple.Sentence;
  */
 public class StringUtilities {
 
-	static OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	static OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
 	
 	public static void main(String[] args) {
@@ -40,6 +37,18 @@ public class StringUtilities {
 		for (int i = 0; i < parts.length; i++) {
 			System.out.println(parts[i]);
 		}
+	}
+	/**
+	 * Removes domain from input if it contains the domain
+	 * E.x. domain = "agency", input = "agency_id" => returns "id"
+	 * @param input
+	 */
+	public static String RemoveDomain(String domain, String input){
+		//Turn e.x. [agency_id, agency_name, agency_lang] to [id, name, lang]
+		if (input.toLowerCase().startsWith(domain.toLowerCase()) && input.length() > domain.length()){
+			return input.substring(domain.length() + 1);
+		}
+		return input;
 	}
 
 	/**

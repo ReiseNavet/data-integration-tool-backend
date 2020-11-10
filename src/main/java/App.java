@@ -1,32 +1,19 @@
 import java.io.File;
 import java.util.Locale;
-import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 
 import fr.inrialpes.exmo.align.impl.URIAlignment;
 import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
+import services.HashGenerator;
 import services.Manager;
 import services.parsers.CellParser;
+import services.utils.ExceptionHandler;
 
 import org.semanticweb.owl.align.Cell;
 
 public class App {
-
-  private static String generateHash() {
-    int LENGTH = 10;
-    int leftLimit = 97; // letter 'a'
-    int rightLimit = 122; // letter 'z'
-    Random random = new Random();
- 
-    String hash = random.ints(leftLimit, rightLimit + 1)
-      .limit(LENGTH)
-      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-      .toString();
- 
-    return hash;
-  }
 
   public static void main(String[] args) throws Exception {
     int PORT = 7000;
@@ -49,7 +36,7 @@ public class App {
     app.post("/", ctx -> {
       // Saving the files as strings for now. Might need some exception handling.
 
-      String baseSaveLocation = "temp/upload/" + generateHash();
+      String baseSaveLocation = "temp/upload/" + HashGenerator.generateHash();
       String sourceFileLocation = baseSaveLocation + "/source" + ctx.uploadedFile("source").getExtension();
       String targetFileLocation = baseSaveLocation + "/target" + ctx.uploadedFile("target").getExtension();
 
@@ -62,29 +49,46 @@ public class App {
       FileUtil.streamToFile(ctx.uploadedFile("source").getContent(), sourceFileLocation);
       FileUtil.streamToFile(ctx.uploadedFile("target").getContent(), targetFileLocation);
 
-      // For debugging, delete before production.
-      System.out.println(sourceFileLocation);
-      System.out.println(targetFileLocation);
-      System.out.println(useEquivalence);
-      System.out.println(useSubsumption);
+      String json = null;
 
-      URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption);
+      try {
+        URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption, baseSaveLocation);
+        json = "[";
+        for (Cell cell: result.getArrayElements()) {
+          json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
+              CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
+        }
+        if (json.length() > 1){
+          //Incase there are no cells, dont remove the "["
+          json = json.substring(0, json.length() - 1);
+        }
+        json += "]";
+        
 
-      String json = "[";
-      for (Cell cell: result.getArrayElements()) {
-        json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},"
-          , CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
+      } catch (Throwable e) {
+        ctx.status(500);
+        if(e instanceof Exception) {
+          json = ExceptionHandler.getErrorMessage((Exception) e);
+        } else {
+          json = "CRITICAL SERVER ERROR. POSSIBLE MEMORY ISSUE.";
+        }
+        System.out.println(json);
+        e.printStackTrace();
       }
-      
-      json = json.substring(0, json.length() - 1) + "]";
-      
+
+      try {
+        // Clean up temporary files.
+        File tempDirectory = new File(baseSaveLocation);
+        if(tempDirectory.isDirectory()) {
+          FileUtils.deleteDirectory(tempDirectory);
+        }
+
+      } catch (Exception e){
+        System.out.println("Couldn't delete files..?");
+        e.printStackTrace();
+      }
+
       ctx.result(json);
-
-      // Clean up temporary files.
-      File tempDirectory = new File(baseSaveLocation);
-      if(tempDirectory.isDirectory()) {
-        FileUtils.deleteDirectory(tempDirectory);
-      }
 
     });
 

@@ -35,14 +35,10 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	int slope;
 	double rangeMin;
 	double rangeMax;
-	
-	static Map<String, Set<String>> classesAndSubclassesMapOnto1 = new HashMap<String, Set<String>>();
-	static Map<String, Set<String>> classesAndSubclassesMapOnto2 = new HashMap<String, Set<String>>();
 
-	static Map<String, Set<String>> classesAndSuperclassesMapOnto1 = new HashMap<String, Set<String>>();
-	static Map<String, Set<String>> classesAndSuperclassesMapOnto2 = new HashMap<String, Set<String>>();
-
-	public ContextSubsumptionMatcherSigmoid(){}
+	public ContextSubsumptionMatcherSigmoid(double profileScore){
+		this.profileScore = profileScore;
+	}
 	
 	public ContextSubsumptionMatcherSigmoid(OWLOntology onto1, OWLOntology onto2, double profileScore, int slope, double rangeMin, double rangeMax) {
 		this.sourceOntology = onto1;
@@ -57,7 +53,6 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 		int slope = AlgorithmSettings.SLOPE; 
 		double rangeMin = AlgorithmSettings.RANGEMIN; 
 		double rangeMax = AlgorithmSettings.RANGEMAX;
-		double profileScore = AlgorithmSettings.PROFILESCORE;
 
 		return returnCSMAlignment(ontoFile1, ontoFile2, profileScore, slope, rangeMin, rangeMax); 
 	}
@@ -88,7 +83,12 @@ public class ContextSubsumptionMatcherSigmoid extends ObjectAlignment implements
 	}
 	
 	public void align(Alignment alignment, Properties param) throws AlignmentException {
-
+	
+		Map<String, Set<String>> classesAndSubclassesMapOnto1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> classesAndSubclassesMapOnto2 = new HashMap<String, Set<String>>();
+	
+		Map<String, Set<String>> classesAndSuperclassesMapOnto1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> classesAndSuperclassesMapOnto2 = new HashMap<String, Set<String>>();
 		//get concepts and associated subclasses for onto1
 		try {
 			classesAndSubclassesMapOnto1 = OntologyOperations.getClassesAndAllSubClasses(sourceOntology);

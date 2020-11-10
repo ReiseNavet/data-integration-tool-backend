@@ -33,7 +33,6 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
 
-import fr.inrialpes.exmo.ontosim.string.StringDistances;
 import rita.wordnet.jwnl.JWNLException;
 
 
@@ -42,20 +41,12 @@ import rita.wordnet.jwnl.JWNLException;
  * @version 1.0
  */
 public class OntologyOperations {
-
-
-	/**
-	 * An OWLOntologyManagermanages a set of ontologies. It is the main point
-	 * for creating, loading and accessing ontologies.
-	 */
-	static OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	
 	/**
 	 * The OWLReasonerFactory represents a reasoner creation point.
 	 */
-	static OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+	public static OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
 
-	static StringDistances ontoString = new StringDistances();
 
 	/**
 	 * Default constructor
@@ -143,49 +134,13 @@ public class OntologyOperations {
 		return cls;
 	}
 
-
-	/**
-	 * Retrieves the subclasses for each entity in an ontology and returns a Map where the entity name is key and the set of associated subclasses is value
-	 * @param onto the input OWLOntology
-	 * @return Map<String, Set<String> where the entity name is key and the set of associated subclasses is value
-	 */
-	public static Map<String, Set<String>> getSubclasses(OWLOntology onto) {
-
-		Map<String, Set<String>> allClassesAndSubclasses = new HashMap<String, Set<String>>();
-		Map<String, Set<String>> classesAndSubclasses = new HashMap<String, Set<String>>();
-
-
-		Set<OWLClass> allClasses = onto.getClassesInSignature();
-
-		for (OWLClass cls : allClasses) {
-
-			allClassesAndSubclasses.put(cls.getIRI().toString(), getEntitySubclasses(onto, cls));
-		}
-
-		//only keep the entries where there are subclasses in the set
-		for (Entry<String, Set<String>> e : allClassesAndSubclasses.entrySet()) {
-
-			if (!e.getKey().equals("Thing") && e.getValue().size() > 0) {
-				classesAndSubclasses.put(e.getKey(), e.getValue());
-			}
-		}
-
-
-		return classesAndSubclasses;
-
-	}
-
-
 	/**
 	 * Helper method that retrieves a set of subclasses for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all subclasses for an OWLClass)
 	 * @param onto the input OWLOntology
 	 * @param inputClass the OWLClass for which subclasses will be retrieved
 	 * @return Set<String> of subclasses for an OWLClass
 	 */
-	public static Set<String> getEntitySubclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
+	public static Set<String> getEntitySubclasses (OWLOntology onto, OWLClass inputClass, OWLReasoner reasoner) {
 		NodeSet<OWLClass> subclasses = reasoner.getSubClasses(inputClass, true);
 
 		Set<String> subclsSet = new HashSet<String>();
@@ -201,103 +156,12 @@ public class OntologyOperations {
 	}
 
 	/**
-	 * Helper method that retrieves a set of subclasses (fragments or proper name without URI) for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all subclasses for an OWLClass)
-	 * @param onto the input OWLOntology
-	 * @param inputClass the OWLClass for which subclasses will be retrieved
-	 * @return Set<String> of subclasses for an OWLClass
-	 */
-	public static Set<String> getEntitySubclassesFragments (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
-		NodeSet<OWLClass> subclasses = reasoner.getSubClasses(inputClass, true);
-
-		Set<String> subclsSet = new HashSet<String>();
-
-		for (OWLClass cls : subclasses.getFlattened()) {
-			if (!cls.isOWLNothing()) {
-				subclsSet.add(cls.getIRI().getFragment().toString());
-			}
-		}
-
-		return subclsSet;
-
-	}
-
-	/**
-	 * Retrieves the superclasses for each entity in an ontology and returns a Map where the entity name is key and the set of associated superclasses is value
-	 * @param onto the input OWLOntology
-	 * @return Map<String, Set<String> where the entity name is key and the set of associated superclasses is value
-	 */
-	public static Map<String, Set<String>> getSuperclasses(OWLOntology onto) {
-
-		Map<String, Set<String>> allClassesAndSuperclasses = new HashMap<String, Set<String>>();
-		Map<String, Set<String>> classesAndSuperclasses = new HashMap<String, Set<String>>();
-
-
-
-		Set<OWLClass> allClasses = onto.getClassesInSignature();
-
-		for (OWLClass cls : allClasses) {
-
-			allClassesAndSuperclasses.put(cls.getIRI().toString(), getEntitySuperclasses(onto, cls));
-		}
-
-		//only keep the entries where there are subclasses in the set
-		for (Entry<String, Set<String>> e : allClassesAndSuperclasses.entrySet()) {
-
-			if (!e.getKey().equals("Thing") && e.getValue().size() > 0) {
-				classesAndSuperclasses.put(e.getKey(), e.getValue());
-			}
-		}
-
-
-		return classesAndSuperclasses;
-
-	}
-
-	/**
-	 * Retrieves the DIRECT superclasses for each entity in an ontology and returns a Map where the entity name is key and the set of associated DIRECT superclasses is value
-	 * @param onto the input OWLOntology
-	 * @return Map<String, Set<String> where the entity name is key and the set of associated DIRECT superclasses is value
-	 */
-	public static Map<String, Set<String>> getDirectSuperclasses(OWLOntology onto) {
-
-		Map<String, Set<String>> allClassesAndSuperclasses = new HashMap<String, Set<String>>();
-		Map<String, Set<String>> classesAndSuperclasses = new HashMap<String, Set<String>>();
-
-
-		Set<OWLClass> allClasses = onto.getClassesInSignature();
-
-		for (OWLClass cls : allClasses) {
-
-			allClassesAndSuperclasses.put(cls.getIRI().toString(), getDirectEntitySuperclasses(onto, cls));
-		}
-
-		//only keep the entries where there are subclasses in the set
-		for (Entry<String, Set<String>> e : allClassesAndSuperclasses.entrySet()) {
-
-			if (!e.getKey().equals("Thing") && e.getValue().size() > 0) {
-				classesAndSuperclasses.put(e.getKey(), e.getValue());
-			}
-		}
-
-
-		return classesAndSuperclasses;
-
-	}
-
-
-	/**
 	 * Helper method that retrieves a set of ALL superclasses for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all superclasses for an OWLClass)
 	 * @param onto the input OWLOntology
 	 * @param inputClass the OWLClass for which superclasses will be retrieved
 	 * @return Set<String> of superclasses for an OWLClass
 	 */
-	public static Set<String> getEntitySuperclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
+	public static Set<String> getEntitySuperclasses (OWLOntology onto, OWLClass inputClass, OWLReasoner reasoner) {
 		NodeSet<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true);
 
 		Set<String> superclsSet = new HashSet<String>();
@@ -309,92 +173,6 @@ public class OntologyOperations {
 		}
 
 		return superclsSet;
-
-	}
-
-	/**
-	 * Helper method that retrieves a set of ALL superclasses (their fragments or proper name without URI) for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all superclasses for an OWLClass)
-	 * @param onto the input OWLOntology
-	 * @param inputClass the OWLClass for which superclasses will be retrieved
-	 * @return Set<String> of superclasses for an OWLClass
-	 */
-	public static Set<String> getEntitySuperclassesFragments (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
-		Set<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true).getFlattened();
-
-		Set<String> superclsSet = new HashSet<String>();
-
-		for (OWLClass cls : superclasses) {
-			if (!cls.isOWLNothing() && !cls.isOWLThing()) {
-				superclsSet.add(cls.getIRI().getFragment().toString());
-			}
-		}
-
-		return superclsSet;
-
-	}
-
-	/**
-	 * Helper method that retrieves the set of DIRECT superclasses for an OWLClass (provided as parameter along with the OWLOntology which is needed for allowing the reasoner to get all superclasses for an OWLClass)
-	 * @param onto the input OWLOntology
-	 * @param inputClass the OWLClass for which DIRECT superclasses will be retrieved
-	 * @return Set<String> of DIRECT superclasses for an OWLClass
-	 */
-	private static Set<String> getDirectEntitySuperclasses (OWLOntology onto, OWLClass inputClass) {
-		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
-
-
-		NodeSet<OWLClass> superclasses = reasoner.getSuperClasses(inputClass, true);
-
-		Set<String> superclsSet = new HashSet<String>();
-
-		for (OWLClass cls : superclasses.getFlattened()) {
-			if (!cls.isOWLNothing() && !cls.isOWLThing()) {
-				superclsSet.add(cls.getIRI().toString());
-			}
-		}
-
-		return superclsSet;
-
-	}
-
-	/**
-	 * Returns a Map holding a class as key and its superclass as value
-	 * @param o  the input OWL ontology from which classes and superclasses should be derived
-	 * @return classesAndSuperClasses a Map holding a class as key and its superclass as value
-	 * @throws OWLOntologyCreationException An exception which describes an error during the creation of
-	 * an ontology. If an ontology cannot be created then subclasses
-	 * of this class will describe the reasons.
-	 */
-	public static Map<String, String> getClassesAndSuperClasses(OWLOntology o) throws OWLOntologyCreationException {
-
-		OWLReasoner reasoner = reasonerFactory.createReasoner(o);
-		Set<OWLClass> cls = o.getClassesInSignature();
-		Map<String, String> classesAndSuperClasses = new HashMap<String, String>();
-		ArrayList<OWLClass> classList = new ArrayList<OWLClass>();
-
-		for (OWLClass i : cls) {
-			classList.add(i);
-		}
-
-		// Iterate through the arraylist and for each class get the subclasses
-		// belonging to it
-		// Transform from OWLClass to String to simplify further processing...
-		for (int i = 0; i < classList.size(); i++) {
-			OWLClass currentClass = classList.get(i);
-			NodeSet<OWLClass> n = reasoner.getSuperClasses(currentClass, true);
-			Set<OWLClass> s = n.getFlattened();
-			for (OWLClass j : s) {
-				classesAndSuperClasses.put(currentClass.getIRI().getFragment(), j.getIRI().getFragment());
-			}
-		}
-
-		manager.removeOntology(o);
-
-		return classesAndSuperClasses;
 
 	}
 
@@ -407,8 +185,8 @@ public class OntologyOperations {
 	 * of this class will describe the reasons.
 	 */
 	public static Map<String, Set<String>> getClassesAndAllSuperClasses(OWLOntology onto) throws OWLOntologyCreationException {
-
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+		OWLReasoner reasoner = reasonerFactory.createReasoner(onto); //Can be done here without any memory leak, since this method should be used once per request
 
 
 		Map<String, Set<String>> classesAndSuperClasses = new HashMap<String, Set<String>>();
@@ -443,8 +221,8 @@ public class OntologyOperations {
 	 * an ontology. If an ontology cannot be created then subclasses of this class will describe the reasons.
 	 */
 	public static Map<String, Set<String>> getClassesAndAllSubClasses(OWLOntology onto) throws OWLOntologyCreationException {
-
-		OWLReasoner reasoner = reasonerFactory.createReasoner(onto);
+		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+		OWLReasoner reasoner = reasonerFactory.createReasoner(onto); //Can be done here without any memory leak, since this method should be used once per request
 
 
 		Map<String, Set<String>> classesAndSubClasses = new HashMap<String, Set<String>>();
