@@ -1,7 +1,7 @@
 # Reisenavet Integration-tool backend  
 ## Supported files
 
-See [wiki/Supported_files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-backend/wiki/Supported-files)
+See [Supported_files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-frontend/wiki/Supported-files)
 
 ## Installing
 
