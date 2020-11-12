@@ -17,7 +17,7 @@ See [Supported files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-
 * Ordne environment variables:
   * Legg til ```C:\Program Files\Java\jdk-14.0.2``` til environment variable -> "JAVA_HOME"
   * Legg til ```C:\Program Files\apache-maven-3.6.3\bin``` til environment variable -> "Path"
-* Gå inn på repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
+* Åpne repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
 
 ### For mac:
 * Installer [Visual Studio Code](https://code.visualstudio.com/download)
@@ -34,7 +34,7 @@ See [Supported files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-
   * ```source ~/.bash_profile```
   * ```java --version```
   * ```mvn -v```
-   Gå inn på repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
+ * Åpne repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
    
 
 
