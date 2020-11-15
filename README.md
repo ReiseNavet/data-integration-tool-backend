@@ -11,33 +11,31 @@ See [Supported files](https://github.com/Kundestyrt-ReiseNavet/integration-tool-
 ## Installing
 
 ### For windows:
-* Installer [Visual Studio Code](https://code.visualstudio.com/download)
-* Installer [Java Jdk 14.0.2](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)  
-* Installer [Maven (Binary zip)](https://maven.apache.org/download.cgi) og sett "apache-maven-3.6.3" mappen i "C:\Program Files\" 
-* Ordne environment variables:
-  * Legg til ```C:\Program Files\Java\jdk-14.0.2``` til environment variable -> "JAVA_HOME"
-  * Legg til ```C:\Program Files\apache-maven-3.6.3\bin``` til environment variable -> "Path"
-* Åpne repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
+* Install [Visual Studio Code](https://code.visualstudio.com/download)
+* Install [Java Jdk 14.0.2](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)  
+* Install [Maven (Binary zip)](https://maven.apache.org/download.cgi) and put the "apache-maven-3.6.3" folder in "C:\Program Files\" 
+* Fix environment variables:
+  * Add ```C:\Program Files\Java\jdk-14.0.2``` to environment variable -> "JAVA_HOME"
+  * Add ```C:\Program Files\apache-maven-3.6.3\bin``` to environment variable -> "Path"
+* Open the repository folder in Visual Studio Code and choose "Start Debugging" (not Run Code)
 
 ### For mac:
-* Installer [Visual Studio Code](https://code.visualstudio.com/download)
-* Installer [Java Jdk 14.0.2](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)
-* Installer [Maven (Binary zip)](https://maven.apache.org/download.cgi)
-  * Lag en mappe som heter "Maven" i systembiblioteket. Unzip mappen apache-maven-3.6.3 og legg den til i 'Bibliotek/Maven'.
-* Skriv i terminal: 
+* Install [Visual Studio Code](https://code.visualstudio.com/download)
+* Install [Java Jdk 14.0.2](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)
+* Install [Maven (Binary zip)](https://maven.apache.org/download.cgi)
+  * Make a folder named "Maven" in the systemlibrary. Put the "apache-maven-3.6.3" folder in 'Library/Maven'.
+* Write in the terminal: 
   * ```~/.bash_profile```
-* Lim inn følgende i bash_profile
+* Copy the following to bash_profile
   * ```export JAVA_HOME='/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home'```
   * ```export PATH=/Library/Maven/apache-maven-3.6.3/bin:$PATH```
-* Velg exit, lagre og åpne en ny terminal
-* Sjekk om Java og Maven er riktige versjoner ved å skrive dette i terminalen:
+* Pick exit, save and open a new terminal
+* Check if Java and Maven are of the correct versions by writing this in the terminal:
   * ```source ~/.bash_profile```
   * ```java --version```
   * ```mvn -v```
- * Åpne repo mappen i Visual Studio Code og velg "Start Debugging" (ikke Run Code)
+ * Open the repository folder in Visual Studio Code and choose "Start Debugging" (not Run Code)
    
-
-
 ## Deployment
 
 Our system is entirely (both front-end and back-end) hosted on SINTEF's server at ProISP. 
