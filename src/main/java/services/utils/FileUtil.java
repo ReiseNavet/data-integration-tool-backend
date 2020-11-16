@@ -2,6 +2,7 @@ package services.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,6 +38,13 @@ public class FileUtil {
       if (writer != null){
         writer.close();
       }
+    }
+  }
+
+  public static void createDirectory(String filepath){
+    File parentFolder = new File(filepath).getParentFile();
+    if(parentFolder != null && !parentFolder.exists()){
+      parentFolder.mkdirs();
     }
   }
 }

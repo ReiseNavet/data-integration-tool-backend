@@ -8,10 +8,9 @@ import io.javalin.Javalin;
 import io.javalin.core.util.FileUtil;
 import services.HashGenerator;
 import services.Manager;
-import services.parsers.CellParser;
 import services.utils.ExceptionHandler;
 
-import org.semanticweb.owl.align.Cell;
+import algorithms.utilities.AlignmentOperations;
 
 public class App {
 
@@ -53,18 +52,7 @@ public class App {
 
       try {
         URIAlignment result = manager.handle(sourceFileLocation, targetFileLocation, useEquivalence, useSubsumption, baseSaveLocation);
-        json = "[";
-        for (Cell cell: result.getArrayElements()) {
-          json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
-              CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
-        }
-        if (json.length() > 1){
-          //Incase there are no cells, dont remove the "["
-          json = json.substring(0, json.length() - 1);
-        }
-        json += "]";
-        
-
+        json = AlignmentOperations.convertToJSON(result);
       } catch (Throwable e) {
         ctx.status(500);
         if(e instanceof Exception) {
