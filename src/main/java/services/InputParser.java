@@ -16,10 +16,12 @@ import services.utils.Unzipper;
 
 
 public class InputParser {
-
+  /**
+   * Parses the input file and then returns it as an OWLOntology File
+   */
   public File parseInput(String filepathLoad, String filepathSaveIfParsed) throws Exception {
     String filetype = FilenameUtils.getExtension(filepathLoad);
-    if (filetype.equals("owl") || filetype.equals("rdf")){
+    if (filetype.equals("owl") || filetype.equals("rdf")){ //No parsing needed
       return new File(filepathLoad);
     } 
     SchemaParser parser = null;

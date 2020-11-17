@@ -31,9 +31,7 @@ public class AlgorithmPicker {
   }
 
   /*
-   * For now this will take the input and always return the EquivalenceAlgorithm
-   * (used in BasicMatcher). Should, in the end, return fitting algorithms for the
-   * input.
+   * Picks and return list of fitting algorithms for the input.
    */
   public Map<SemanticRelation, List<Algorithm>> pickAlgorithms(File source, File target, boolean equivalence, boolean subsumption)
       throws Exception {
@@ -47,7 +45,7 @@ public class AlgorithmPicker {
     //Adding the algorithms to be returned if their profile-score is >=0.5
     if (equivalence){
       List<Algorithm> eqAlgorithms = new ArrayList<Algorithm>();
-      eqAlgorithms.add(new BasicEQMatcher()); //Did not use this as it was not used in semantic matcher
+      eqAlgorithms.add(new BasicEQMatcher());
       double cc = profiles.get("cc");
       double dc = profiles.get("dc");
       double pf = profiles.get("pf");
@@ -76,7 +74,7 @@ public class AlgorithmPicker {
       double dc = profiles.get("dc");
       double sp = profiles.get("sp");
       double lc = profiles.get("lc");
-      subAlgorithms.add(new BasicSubsumptionMatcher()); //Did not use this as it was not used in semantic matcher
+      subAlgorithms.add(new BasicSubsumptionMatcher());
       if (cf >= 0.5){
         subAlgorithms.add(new CompoundMatcherSigmoid(cf));
       }
