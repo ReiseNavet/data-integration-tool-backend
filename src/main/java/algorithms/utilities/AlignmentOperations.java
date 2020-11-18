@@ -30,6 +30,7 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import fr.inrialpes.exmo.align.impl.rel.A5AlgebraRelation;
 import fr.inrialpes.exmo.align.impl.renderer.RDFRendererVisitor;
 import fr.inrialpes.exmo.align.parser.AlignmentParser;
+import services.parsers.CellParser;
 
 /**
  * @author audunvennesland
@@ -64,6 +65,22 @@ public class AlignmentOperations {
 	
 	System.out.println("extractedAlignment contains " + extractedAlignment.nbCells());
 	
+	}
+	/**
+	 * Returns the URIAlignment converted to a JSON string
+	 */
+	public static String convertToJSON(URIAlignment alignment){
+		String json = "[";
+		for (Cell cell: alignment.getArrayElements()) {
+			json += String.format("{\"source\": \"%s\", \"target\": \"%s\", \"relation\": \"%s\", \"confidence\": %s},", 
+					CellParser.getSource(cell), CellParser.getTarget(cell), CellParser.getRelation(cell), CellParser.getConfidence(cell));
+		}
+		if (json.length() > 1){
+			//Incase there are no cells, dont remove the "["
+			json = json.substring(0, json.length() - 1);
+		}
+		json += "]";
+		return json;
 	}
 	
 	/**

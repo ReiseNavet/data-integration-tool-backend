@@ -12,6 +12,9 @@ import fr.inrialpes.exmo.align.impl.URIAlignment;
 import services.enums.SemanticRelation;
 
 public class AlignmentCombiner {
+  /**
+   * Combine multiple alignment results into one result.
+   */
   public URIAlignment combine(Map<SemanticRelation, List<URIAlignment>> results) throws Exception {
     Map<SemanticRelation, URIAlignment> alignmentCombinedMap = new HashMap<SemanticRelation, URIAlignment>();
     if (results.containsKey(SemanticRelation.Equivalence)) {

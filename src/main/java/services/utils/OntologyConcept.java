@@ -31,11 +31,16 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import services.HashGenerator;
 
+/**
+ * OntologyConcepts are the raw informations we extract with schema parser, which are then each converted to
+ * either owl:Class, owl:DatatypeProperty, or owl:ObjectProperty (depending on its fields).
+ * We can then create a OWLOntology from a List<OntologyConcepts>.
+ */
 public class OntologyConcept {
   // All fields except "name" are optional. Look at schema-org.owl for examples.
   public String name = ""; // rdfs:label
   public String description = ""; // rdfs:comment
-  public String domain = ""; // Same as subClassOf, but for a header not a class, which means it wont be used
+  public String domain = ""; // Similiar to subClassOf, but for a property not a class, which means it wont be used
                              // for the matching.
   public String range = ""; // F.eks. address is a string, phone_num is a integer (Merk: is a)
 
@@ -46,7 +51,7 @@ public class OntologyConcept {
       throws Exception {
     OWLOntologyManager m = OWLManager.createOWLOntologyManager();
     OWLOntology o = toOWLOntology(ontologyConcepts, m);
-    //OWLOntology o = OntologyConcept.test(m);
+    FileUtil.createDirectory(filepathToStore);
     File file = OWLOntologyToFile.convert(o, filepathToStore, m);
     FixOntology(filepathToStore);
     return file;
@@ -117,7 +122,7 @@ public class OntologyConcept {
         AddDomainData(owlclass, domainclasses, dataFactory, ontologyManager, ontology);
       }
     }
-    // Unused for now: Add subClassOf (duplicate/unionOf subclass entries are not supported)
+    // Unused for now: Add subClassOf
     for (OntologyConcept concept : ontologyConcepts) {
       if (concept.subClassof.equals("")) {
         continue;
